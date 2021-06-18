@@ -1,0 +1,7 @@
+configs/*
+scripts/*
+
+node_modules
+
+babel.config.js
+.postcssrc.js

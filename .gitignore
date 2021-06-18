@@ -40,6 +40,7 @@ dist
 dll
 main.js
 main.js.map
+main.prod.js.LICENSE.txt
 
 .idea
 npm-debug.log.*

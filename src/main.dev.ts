@@ -10,11 +10,14 @@
  */
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
+
 import path from 'path';
-import { app, BrowserWindow, shell } from 'electron';
+
+import { app, BrowserWindow } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import MenuBuilder from './menu';
+
+import { MenuBuilder } from './menu';
 
 export default class AppUpdater {
   constructor() {
@@ -68,10 +71,12 @@ const createWindow = async (): Promise<void> => {
     icon: getAssetPath('icon.png'),
     webPreferences: {
       nodeIntegration: true,
+      enableRemoteModule: true,
+      contextIsolation: false,
     },
   });
 
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
+  mainWindow.loadURL(`file://${__dirname}/windows/main/index.html`);
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
@@ -93,12 +98,6 @@ const createWindow = async (): Promise<void> => {
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
-
-  // Open urls in the user's browser
-  mainWindow.webContents.on('new-window', (event, url) => {
-    event.preventDefault();
-    shell.openExternal(url);
-  });
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line

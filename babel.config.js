@@ -17,8 +17,14 @@ module.exports = (api) => {
           corejs: '3',
         },
       ],
-      require('@babel/preset-typescript'),
+      [
+        require('@babel/preset-typescript'),
+        {
+          "onlyRemoveTypeImports": true
+        }
+      ],
       [require('@babel/preset-react'), { development }],
+      require('babel-preset-mobx'),
     ],
     plugins: [
       // Stage 1
@@ -27,7 +33,6 @@ module.exports = (api) => {
 
       // Stage 2
       [require('@babel/plugin-proposal-decorators'), { legacy: true }],
-      require('@babel/plugin-proposal-numeric-separator'),
 
       // Stage 3
       [require('@babel/plugin-proposal-class-properties'), { loose: false }],

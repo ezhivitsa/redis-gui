@@ -1,0 +1,62 @@
+@import 'variables.pcss';
+
+@import './modal_theme_light.pcss';
+@import './modal_theme_dark.pcss';
+
+.modal {
+  position: absolute;
+  max-width: 400px;
+  width: calc(100% - var(--grid4));
+  border-radius: var(--border-radius-200);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  &:focus-visible {
+    outline: 0;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: var(--grid1-neg);
+      right: var(--grid1-neg);
+      bottom: var(--grid1-neg);
+      left: var(--grid1-neg);
+      border: 2px dashed var(--color-orange-100);
+      border-radius: var(--border-radius-200);
+    }
+  }
+
+  &__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-overlay);
+    opacity: 0;
+    transition: opacity 200ms ease-in-out;
+
+    &:global(.ReactModal__Overlay--after-open) {
+      opacity: 1;
+    }
+
+    &:global(.ReactModal__Overlay--before-close) {
+      opacity: 0;
+    }
+  }
+
+  &__header {
+    padding: var(--grid4);
+    border-bottom: 1px solid;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__content {
+    &._view_default {
+      padding: var(--grid4) var(--grid2);
+    }
+  }
+}

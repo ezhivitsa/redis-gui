@@ -1,0 +1,9 @@
+{
+  "src/**/*.{ts,tsx}": [
+    "npx eslint \"src/**/*.{ts,tsx}\"",
+    "npx tsc --noEmit"
+  ],
+  "src/**/*.pcss": [
+    "npx stylelint \"src/**/*.pcss\""
+  ]
+}

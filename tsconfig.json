@@ -20,7 +20,9 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "allowJs": true
+    "allowJs": true,
+    "skipLibCheck": true,
+    "baseUrl": "./src"
   },
   "exclude": [
     "test",
@@ -28,6 +30,7 @@
     "src/main.prod.js",
     "src/renderer.prod.js",
     "src/dist",
-    ".erb/dll"
+    "dll",
+    "node_modules"
   ]
 }

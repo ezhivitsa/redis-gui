@@ -1,8 +1,0 @@
-{
-  "src/*.{js,jsx,ts,tsx}": [
-    "npx eslint \"src/**/*.{ts,tsx}\""
-  ],
-  "src/*.{pcss}": [
-    "npx stylelint \"src/**/*.pcss\""
-  ]
-}
