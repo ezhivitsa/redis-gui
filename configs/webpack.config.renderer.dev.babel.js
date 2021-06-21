@@ -79,6 +79,22 @@ export default merge(baseConfig, {
           },
         ],
       },
+      // css support
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+              modules: false
+            }
+          }
+        ]
+      },
       // PCSS support
       {
         test: /\.pcss$/,

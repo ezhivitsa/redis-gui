@@ -1,0 +1,27 @@
+@import 'variables.pcss';
+
+@import './table_theme_dark.pcss';
+@import './table_theme_light.pcss';
+
+.table {
+  display: grid;
+
+  &__column {
+    font-size: var(--font-size-500);
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+    padding: var(--grid2);
+
+    &._first-column {
+      border-left: 0;
+    }
+
+    &._size_s {
+      font-size: var(--font-size-200);
+    }
+
+    &._size_m {
+      font-size: var(--font-size-400);
+    }
+  }
+}

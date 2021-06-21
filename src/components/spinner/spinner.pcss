@@ -1,0 +1,54 @@
+@import 'variables.pcss';
+
+@import './spinner_theme_dark.pcss';
+@import './spinner_theme_light.pcss';
+
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &._view_block {
+    height: 100%;
+    min-height: calc(var(--grid5) * 10);
+  }
+  
+  &__loader {
+    display: inline-block;
+    position: relative;
+    width: var(--grid10);
+    height: var(--grid20);
+  }
+
+  &__item {
+    display: inline-block;
+    position: absolute;
+    width: var(--grid2);
+    animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+
+    &:nth-child(1) {
+      animation-delay: -0.24s;
+    }
+
+    &:nth-child(2) {
+      left: var(--grid4);
+      animation-delay: -0.12s;
+    }
+
+    &:nth-child(3) {
+      left: var(--grid8);
+      animation-delay: 0;
+    }
+  }
+}
+
+@keyframes lds-facebook {
+  0% {
+    top: 8px;
+    height: 64px;
+  }
+  50%, 100% {
+    top: 24px;
+    height: 32px;
+  }
+}

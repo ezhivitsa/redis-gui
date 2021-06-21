@@ -1,0 +1,21 @@
+@import 'variables.pcss';
+
+@import './button_theme_dark.pcss';
+@import './button_theme_light.pcss';
+
+.button {
+  border-radius: var(--border-radius-200);
+  border: 1px solid;
+  cursor: pointer;
+  padding: 0 var(--grid2);
+  line-height: var(--grid6);
+  outline: 0;
+
+  &._size_s {
+    font-size: var(--font-size-200);
+  }
+
+  &._size_m {
+    font-size: var(--font-size-400);
+  }
+}
