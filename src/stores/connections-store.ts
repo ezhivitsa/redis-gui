@@ -4,6 +4,8 @@ import { Connection } from 'lib/db';
 
 import { connections } from 'data';
 
+import { ConnectionStore } from './connection-store';
+
 export class ConnectionsStore {
   @observable
   connections: Connection[] | null = null;
@@ -14,8 +16,12 @@ export class ConnectionsStore {
   @observable
   selectedConnection: Connection | null = null;
 
-  constructor() {
+  private _connectionStore: ConnectionStore;
+
+  constructor(connectionStore: ConnectionStore) {
     makeObservable(this);
+
+    this._connectionStore = connectionStore;
   }
 
   @action
@@ -37,6 +43,18 @@ export class ConnectionsStore {
       });
     }
   }
+
+  openEditConnection(): void {
+    this._connectionStore.setConnection(this.selectedConnection);
+  }
+
+  openCreateConnection(): void {
+    this._connectionStore.setConnection(null);
+  }
+
+  deleteConnection(): void {}
+
+  cloneConnection(): void {}
 
   @action
   setSelected(connection: Connection): void {

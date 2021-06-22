@@ -1,5 +1,6 @@
 import React, { ReactElement, ReactNode } from 'react';
 import ReactModal from 'react-modal';
+import classnames from 'classnames';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import { useStyles } from 'lib/theme';
@@ -18,6 +19,7 @@ export enum ModalView {
 
 interface Props {
   children?: ReactNode;
+  className?: string;
   open?: boolean;
   onClose?: () => void;
   title: string;
@@ -25,13 +27,13 @@ interface Props {
 }
 
 export function Modal(props: Props): ReactElement {
-  const { children, open, title, onClose, view } = props;
+  const { children, open, title, onClose, view, className } = props;
   const cn = useStyles(styles, 'modal');
 
   return (
     <ReactModal
       isOpen={open || false}
-      className={cn()}
+      className={classnames(cn(), className)}
       overlayClassName={cn('overlay')}
       closeTimeoutMS={200}
       onRequestClose={onClose}

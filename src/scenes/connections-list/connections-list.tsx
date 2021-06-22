@@ -3,13 +3,17 @@ import { observer } from 'mobx-react-lite';
 
 import { Connection } from 'lib/db';
 
-import { ConnectionsStoreProvider, useNewConnectionsStore, useConnectionsStore } from 'providers';
+import { useConnectionsStore } from 'providers';
 
 import { Spinner, SpinnerView } from 'components/spinner';
 
 import { ComponentsListTable } from './components/components-list-table';
 
-const ConnectionsListComponent = observer((): ReactElement => {
+interface Props {
+  onDoubleClick: () => void;
+}
+
+export const ConnectionsList = observer(({ onDoubleClick }: Props): ReactElement => {
   const connectionsStore = useConnectionsStore();
   const { isLoading, connections } = connectionsStore;
 
@@ -25,19 +29,20 @@ const ConnectionsListComponent = observer((): ReactElement => {
     connectionsStore.setSelected(connection);
   }
 
+  function handleConnectionConnect(connection: Connection): void {
+    connectionsStore.setSelected(connection);
+    onDoubleClick();
+  }
+
   if (isLoading || !connections) {
     return <Spinner view={SpinnerView.Block} />;
   }
 
-  return <ComponentsListTable list={connections} onConnectionClick={handleConnectionClick} />;
-});
-
-export function ConnectionsList(): ReactElement {
-  const connectionsStore = useNewConnectionsStore();
-
   return (
-    <ConnectionsStoreProvider value={connectionsStore}>
-      <ConnectionsListComponent />
-    </ConnectionsStoreProvider>
+    <ComponentsListTable
+      list={connections}
+      onConnectionClick={handleConnectionClick}
+      onConnectionDoubleClick={handleConnectionConnect}
+    />
   );
-}
+});

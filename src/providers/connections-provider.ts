@@ -1,9 +1,10 @@
 import { createContext, useContext, useMemo } from 'react';
 
-import { ConnectionsStore } from 'stores';
+import { ConnectionsStore, ConnectionStore } from 'stores';
 
-export const ConnectionsStoreContext = createContext(new ConnectionsStore());
+export const ConnectionsStoreContext = createContext(new ConnectionsStore(new ConnectionStore()));
 export const ConnectionsStoreProvider = ConnectionsStoreContext.Provider;
 
 export const useConnectionsStore = (): ConnectionsStore => useContext(ConnectionsStoreContext);
-export const useNewConnectionsStore = (): ConnectionsStore => useMemo(() => new ConnectionsStore(), []);
+export const useNewConnectionsStore = (connectionStore: ConnectionStore): ConnectionsStore =>
+  useMemo(() => new ConnectionsStore(connectionStore), [connectionStore]);

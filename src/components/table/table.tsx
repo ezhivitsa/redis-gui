@@ -15,6 +15,7 @@ interface Props<C extends string, D extends Record<string, any>> {
   data: D[];
   renderColumn: (column: C, item: D) => ReactNode;
   onRowClick?: (item: D) => void;
+  onRowDoubleClick?: (item: D) => void;
   heading: Record<C, string>;
   style?: Partial<Record<C, CSSProperties>>;
   size: TableSize;
@@ -26,6 +27,7 @@ export function Table<C extends string, D extends Record<string, any>>({
   heading,
   renderColumn,
   onRowClick,
+  onRowDoubleClick,
   style,
   size,
 }: Props<C, D>): ReactElement {
@@ -34,6 +36,12 @@ export function Table<C extends string, D extends Record<string, any>>({
   function handleRowClick(item: D) {
     return () => {
       onRowClick?.(item);
+    };
+  }
+
+  function handleRowDoubleClick(item: D) {
+    return () => {
+      onRowDoubleClick?.(item);
     };
   }
 
@@ -66,6 +74,7 @@ export function Table<C extends string, D extends Record<string, any>>({
         role="button"
         tabIndex={0}
         onClick={handleRowClick(item)}
+        onDoubleClick={handleRowDoubleClick(item)}
         onKeyDown={handleRowKeyDown(item)}
       >
         {renderColumn(column, item)}
