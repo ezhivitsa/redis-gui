@@ -1,0 +1,21 @@
+@import 'variables.pcss';
+
+.tabs_theme_dark {
+  .tabs {
+    &__item {
+      color: var(--color-grey-400);
+
+      &:hover {
+        color: var(--color-grey-300);
+      }
+
+      &._active {
+        color: var(--color-grey-300);
+
+        &::before {
+          background: var(--color-grey-300);
+        }
+      }
+    }
+  }
+}
