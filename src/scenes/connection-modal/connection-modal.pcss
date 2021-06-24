@@ -1,3 +1,29 @@
+@import 'variables.pcss';
+
 .connection-modal {
   max-width: 500px;
+
+  &__tabs {
+    margin-bottom: var(--grid4);
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid;
+    margin: var(--grid4) var(--grid2-neg) 0;
+    padding: var(--grid2) var(--grid2) 0;
+  }
+
+  &__action-btn {
+    margin-left: var(--grid3);
+  }
+}
+
+.connection-modal_theme_dark {
+  .connection-modal {
+    &__actions {
+      border-top-color: var(--color-grey-900);
+    }
+  }
 }

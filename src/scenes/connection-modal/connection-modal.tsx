@@ -1,10 +1,17 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, ReactNode, useState, useEffect } from 'react';
+import { Formik, FormikProps } from 'formik';
 
 import { Connection } from 'lib/db';
 import { useStyles } from 'lib/theme';
 
+import { ConnectionFormikValues } from 'stores';
+import { useConnectionStore } from 'providers';
+
 import { Modal } from 'components/modal';
 import { Tabs, TabItem } from 'components/tabs';
+import { Button, ButtonSize, ButtonView } from 'components/button';
+
+import { ConnectionTabForm } from './components/connection-tab-form';
 
 import styles from './connection-modal.pcss';
 
@@ -44,9 +51,64 @@ export function ConnectionModal({ open, connection, onClose }: Props): ReactElem
   const cn = useStyles(styles, 'connection-modal');
   const [activeTab, setActiveTab] = useState(ConnectionTab.Connection);
 
+  const connectionStore = useConnectionStore();
+  const { initialValues } = connectionStore;
+
+  useEffect(() => {
+    return () => {
+      connectionStore.dispose();
+    };
+  }, [connectionStore]);
+
+  function handleUpdateConnection(values: ConnectionFormikValues): void {
+    connectionStore.createOrUpdateConnection(values);
+  }
+
+  function renderForm(): ReactNode {
+    switch (activeTab) {
+      case ConnectionTab.Connection:
+        return <ConnectionTabForm />;
+
+      default:
+        return null;
+    }
+  }
+
+  function renderActions(formikProps: FormikProps<ConnectionFormikValues>): ReactNode {
+    return (
+      <div className={cn('actions')}>
+        <Button className={cn('action-btn')} size={ButtonSize.S} view={ButtonView.Default} onClick={onClose}>
+          Cancel
+        </Button>
+
+        <Button
+          className={cn('action-btn')}
+          size={ButtonSize.S}
+          view={ButtonView.Success}
+          onClick={formikProps.handleSubmit}
+        >
+          Save
+        </Button>
+      </div>
+    );
+  }
+
+  function renderFormContent(formikProps: FormikProps<ConnectionFormikValues>): ReactNode {
+    return (
+      <>
+        {renderForm()}
+        {renderActions(formikProps)}
+      </>
+    );
+  }
+
   return (
     <Modal open={open} title={connection ? 'Edit connection' : 'Create connection'} className={cn()} onClose={onClose}>
-      <Tabs items={tabs} active={activeTab} onChange={setActiveTab} />
+      <Tabs className={cn('tabs')} items={tabs} active={activeTab} onChange={setActiveTab} />
+
+      <Formik initialValues={initialValues} onSubmit={handleUpdateConnection}>
+        {renderFormContent}
+      </Formik>
     </Modal>
   );
 }

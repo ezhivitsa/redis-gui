@@ -1,0 +1,33 @@
+@import 'variables.pcss';
+
+@import './select_theme_dark.pcss';
+@import './select_theme_light.pcss';
+
+.select {
+  &__label {
+    display: block;
+    padding-bottom: var(--grid1);
+
+    &._size_s {
+      font-size: var(--font-size-200);
+    }
+  }
+
+  &__select {
+    border-radius: var(--border-radius-200);
+    border: 1px solid;
+    outline: none;
+    box-sizing: border-box;
+
+    &._size_s {
+      padding: 0 var(--grid2);
+      height: var(--grid6);
+      font-size: var(--font-size-200);
+    }
+
+    &._width_available {
+      display: block;
+      width: 100%;
+    }
+  }
+}

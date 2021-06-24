@@ -13,6 +13,11 @@ export enum SshAuthMethod {
   Password = 'password',
 }
 
+export enum ConnectionType {
+  Direct = 'direct',
+  Cluster = 'cluster',
+}
+
 export interface ConnectionTls {
   enabled: boolean;
   authenticationMethod: AuthenticationMethod;
@@ -42,6 +47,7 @@ export interface Connection {
   id: number;
   name?: string;
 
+  type: ConnectionType;
   post?: number;
   host?: string;
   family?: string;

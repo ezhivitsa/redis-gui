@@ -5,26 +5,16 @@
 
 .tabs {
   display: flex;
-  margin-left: var(--grid1-neg);
-  margin-right: var(--grid1-neg);
+  margin-left: var(--grid0_5-neg);
+  margin-right: var(--grid0_5-neg);
 
   &__item {
-    padding: var(--grid2);
+    padding: var(--grid2) var(--grid3);
     position: relative;
     cursor: pointer;
-    margin: 0 var(--grid1);
+    margin: 0 var(--grid0_5);
     outline: 0;
-
-    &._active {
-      &::before {
-        content: '';
-        position: absolute;
-        height: var(--grid1);
-        right: 0;
-        bottom: 0;
-        left: 0;
-        border-radius: var(--border-radius-100);
-      }
-    }
+    border-radius: var(--border-radius-200);
+    font-size: var(--font-size-200);
   }
 }

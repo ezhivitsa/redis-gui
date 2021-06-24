@@ -1,0 +1,20 @@
+@import 'variables.pcss';
+
+.input_theme_dark {
+  .input {
+    &__label {
+      color: var(--color-grey-300);
+    }
+
+    &__input {
+      border-color: var(--color-grey-900);
+      color: var(--color-grey-300);
+      background: var(--color-grey-800);
+
+      &:focus {
+        border-color: var(--color-blue-700);
+        box-shadow: 0 0 0 1px var(--color-blue-shadow);
+      }
+    }
+  }
+}

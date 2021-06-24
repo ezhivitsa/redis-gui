@@ -20,17 +20,17 @@ export function block(styles: Record<string, string>, blockName: string, theme?:
       if (typeof elementNameOrState === 'string') {
         element += `__${elementNameOrState}`;
 
-        resultClassNames = styles[toCamelCase(element)];
+        resultClassNames = styles[toCamelCase(element)] || '';
       } else if (typeof elementNameOrState === 'object') {
         state = elementNameOrState;
-        resultClassNames = styles[toCamelCase(blockName)];
+        resultClassNames = styles[toCamelCase(blockName)] || '';
 
         if (theme && themeStyleClass) {
           resultClassNames += ` ${themeStyleClass}`;
         }
       }
     } else {
-      resultClassNames = styles[toCamelCase(blockName)];
+      resultClassNames = styles[toCamelCase(blockName)] || '';
 
       if (theme && themeStyleClass) {
         resultClassNames += ` ${themeStyleClass}`;
@@ -57,6 +57,6 @@ export function block(styles: Record<string, string>, blockName: string, theme?:
       });
     }
 
-    return resultClassNames;
+    return resultClassNames.trim();
   };
 }
