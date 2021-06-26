@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react';
+import classnames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp, SizeProp } from '@fortawesome/fontawesome-svg-core';
 
@@ -13,16 +14,17 @@ export enum ButtonIconView {
 }
 
 interface Props {
+  className?: string;
   size?: SizeProp;
   icon: IconProp;
   view: ButtonIconView;
   onClick?: () => void;
 }
 
-export function ButtonIcon({ size, view, icon, onClick }: Props): ReactElement {
+export function ButtonIcon({ className, size, view, icon, onClick }: Props): ReactElement {
   const cn = useStyles(styles, 'button-icon');
 
-  return <FontAwesomeIcon className={cn({ view })} icon={icon} size={size} onClick={onClick} />;
+  return <FontAwesomeIcon className={classnames(cn({ view }), className)} icon={icon} size={size} onClick={onClick} />;
 }
 
 ButtonIcon.defaultProps = {

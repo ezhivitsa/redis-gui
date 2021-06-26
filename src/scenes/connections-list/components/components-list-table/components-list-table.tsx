@@ -29,7 +29,8 @@ export function ComponentsListTable({ list, onConnectionClick, onConnectionDoubl
         return item.name;
 
       case Column.Address:
-        return `${item.host || ''} ${item.post || ''}`.trim();
+        return '';
+      // return `${item.host || ''}${item.post || ''}`.trim();
 
       case Column.User:
         return item.username;

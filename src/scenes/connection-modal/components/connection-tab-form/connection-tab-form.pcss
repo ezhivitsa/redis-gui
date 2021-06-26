@@ -6,4 +6,39 @@
       margin-bottom: var(--grid2);
     }
   }
+
+  &__address {
+    display: flex;
+    align-items: center;
+
+    &:not(:last-of-type) {
+      margin-bottom: var(--grid2);
+    }
+  }
+
+  &__host {
+    flex: 2;
+    margin-right: var(--grid2);
+  }
+
+  &__port {
+    flex: 1;
+  }
+
+  &__remove-btn {
+    flex: 0;
+    margin-top: var(--grid5);
+    margin-left: var(--grid2);
+  }
+
+  &__add-btn-wrap {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--grid2);
+  }
+
+  &__addresses-label {
+    margin-top: var(--grid4);
+    margin-bottom: var(--grid2);
+  }
 }

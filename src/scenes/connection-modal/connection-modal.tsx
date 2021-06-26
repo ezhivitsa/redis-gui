@@ -1,5 +1,6 @@
 import React, { ReactElement, ReactNode, useState, useEffect } from 'react';
 import { Formik, FormikProps } from 'formik';
+import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 
 import { Connection } from 'lib/db';
 import { useStyles } from 'lib/theme';
@@ -12,6 +13,7 @@ import { Tabs, TabItem } from 'components/tabs';
 import { Button, ButtonSize, ButtonView } from 'components/button';
 
 import { ConnectionTabForm } from './components/connection-tab-form';
+import { AuthenticationForm } from './components/authentication-form';
 
 import styles from './connection-modal.pcss';
 
@@ -69,6 +71,9 @@ export function ConnectionModal({ open, connection, onClose }: Props): ReactElem
       case ConnectionTab.Connection:
         return <ConnectionTabForm />;
 
+      case ConnectionTab.Authentication:
+        return <AuthenticationForm />;
+
       default:
         return null;
     }
@@ -77,6 +82,10 @@ export function ConnectionModal({ open, connection, onClose }: Props): ReactElem
   function renderActions(formikProps: FormikProps<ConnectionFormikValues>): ReactNode {
     return (
       <div className={cn('actions')}>
+        <Button className={cn('test-connection-btn')} size={ButtonSize.S} view={ButtonView.Default} icon={faGlobe}>
+          Test connection
+        </Button>
+
         <Button className={cn('action-btn')} size={ButtonSize.S} view={ButtonView.Default} onClick={onClose}>
           Cancel
         </Button>

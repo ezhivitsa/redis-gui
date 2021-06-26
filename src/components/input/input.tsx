@@ -78,4 +78,5 @@ export function Input({ className, value, label, size, width, name, onChange, on
 
 Input.defaultProps = {
   size: InputSize.M,
+  value: '',
 };

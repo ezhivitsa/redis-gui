@@ -1,0 +1,39 @@
+@import 'variables.pcss';
+
+@import './checkbox_theme_dark.pcss';
+@import './checkbox_theme_light.pcss';
+
+.checkbox {
+  &__inner {
+    display: flex;
+    align-items: center;
+  }
+
+  &__input {
+    border: 0;
+    width: 0;
+    height: 0;
+  }
+
+  &__check {
+    box-sizing: border-box;
+    border: 1px solid;
+    cursor: pointer;
+    border-radius: var(--border-radius-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &._size_s {
+      width: var(--grid4);
+      height: var(--grid4);
+    }
+  }
+
+  &__label {
+    &._size_s {
+      margin-left: var(--grid2);
+      font-size: var(--font-size-200);
+    }
+  }
+}

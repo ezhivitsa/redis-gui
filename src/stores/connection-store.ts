@@ -1,20 +1,33 @@
 import { observable, action, computed, makeObservable } from 'mobx';
 
-import { Connection, ConnectionType } from 'lib/db';
+import { Connection, ConnectionType, ConnectionData } from 'lib/db';
 
 export enum ConnectionFormikField {
   Name = 'name',
   Type = 'type',
+  Addresses = 'addresses',
+  SentinelName = 'sentinel-name',
+  PerformAuth = 'perform-auth',
+}
+
+export enum ConnectionAddressFormikField {
+  Port = 'port',
+  Host = 'host',
 }
 
 export interface ConnectionFormikValues {
   [ConnectionFormikField.Name]?: string;
   [ConnectionFormikField.Type]: ConnectionType;
+  [ConnectionFormikField.Addresses]: ConnectionData[];
+  [ConnectionFormikField.SentinelName]?: string;
+  [ConnectionFormikField.PerformAuth]: boolean;
 }
 
 const defaultConnectionData: ConnectionFormikValues = {
   type: ConnectionType.Direct,
   name: 'New Connection',
+  addresses: [{ host: 'localhost', port: '6379' }],
+  'perform-auth': false,
 };
 
 export class ConnectionStore {
@@ -30,7 +43,9 @@ export class ConnectionStore {
 
   @computed
   get initialValues(): ConnectionFormikValues {
-    return this.connection ? { name: this.connection.name, type: this.connection.type } : defaultConnectionData;
+    return this.connection
+      ? { name: this.connection.name, type: this.connection.type, addresses: this.connection.connectionData }
+      : defaultConnectionData;
   }
 
   @action

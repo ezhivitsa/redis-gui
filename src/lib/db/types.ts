@@ -16,6 +16,7 @@ export enum SshAuthMethod {
 export enum ConnectionType {
   Direct = 'direct',
   Cluster = 'cluster',
+  Sentinel = 'sentinel',
 }
 
 export interface ConnectionTls {
@@ -43,13 +44,18 @@ export interface ConnectionSsh {
   askForPasswordEachTime: boolean;
 }
 
+export interface ConnectionData {
+  port?: string;
+  host?: string;
+}
+
 export interface Connection {
   id: number;
   name?: string;
 
   type: ConnectionType;
-  post?: number;
-  host?: string;
+  connectionData: ConnectionData[];
+
   family?: string;
   db?: number;
   password?: string;

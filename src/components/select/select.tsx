@@ -31,7 +31,7 @@ interface Props<V extends string> {
   id?: string;
   value?: V;
   items: SelectItem<V>[];
-  onChange?: (event: ChangeEvent<HTMLSelectElement>, value: V) => void;
+  onChange?: (value: V, event: ChangeEvent<HTMLSelectElement>) => void;
   onBlur?: (event: FocusEvent<HTMLSelectElement>) => void;
 }
 
@@ -57,7 +57,7 @@ export function Select<V extends string>({
   }, [id]);
 
   function handleSelectChange(event: ChangeEvent<HTMLSelectElement>): void {
-    onChange?.(event, event.target.value as V);
+    onChange?.(event.target.value as V, event);
   }
 
   function renderLabel(): ReactNode {
