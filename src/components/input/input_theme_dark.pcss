@@ -7,14 +7,22 @@
     }
 
     &__input {
-      border-color: var(--color-grey-900);
       color: var(--color-grey-300);
       background: var(--color-grey-850);
+    }
 
-      &:focus {
+    &__inner {
+      border-color: var(--color-grey-900);
+      background: var(--color-grey-850);
+
+      &._focused {
         border-color: var(--color-blue-700);
         box-shadow: 0 0 0 1px var(--color-blue-shadow);
       }
+    }
+
+    &__right-addon {
+      color: var(--color-grey-300);
     }
   }
 }

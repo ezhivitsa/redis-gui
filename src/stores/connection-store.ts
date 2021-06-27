@@ -6,8 +6,11 @@ export enum ConnectionFormikField {
   Name = 'name',
   Type = 'type',
   Addresses = 'addresses',
-  SentinelName = 'sentinel-name',
-  PerformAuth = 'perform-auth',
+  SentinelName = 'sentinelName',
+
+  PerformAuth = 'performAuth',
+  Username = 'username',
+  Password = 'password',
 }
 
 export enum ConnectionAddressFormikField {
@@ -20,14 +23,17 @@ export interface ConnectionFormikValues {
   [ConnectionFormikField.Type]: ConnectionType;
   [ConnectionFormikField.Addresses]: ConnectionData[];
   [ConnectionFormikField.SentinelName]?: string;
+
   [ConnectionFormikField.PerformAuth]: boolean;
+  [ConnectionFormikField.Username]?: string;
+  [ConnectionFormikField.Password]?: string;
 }
 
 const defaultConnectionData: ConnectionFormikValues = {
   type: ConnectionType.Direct,
   name: 'New Connection',
   addresses: [{ host: 'localhost', port: '6379' }],
-  'perform-auth': false,
+  performAuth: false,
 };
 
 export class ConnectionStore {
@@ -44,7 +50,12 @@ export class ConnectionStore {
   @computed
   get initialValues(): ConnectionFormikValues {
     return this.connection
-      ? { name: this.connection.name, type: this.connection.type, addresses: this.connection.connectionData }
+      ? {
+          name: this.connection.name,
+          type: this.connection.type,
+          addresses: this.connection.connectionData,
+          performAuth: this.connection.performAuth,
+        }
       : defaultConnectionData;
   }
 

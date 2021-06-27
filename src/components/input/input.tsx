@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import classnames from 'classnames';
 
 import { useStyles } from 'lib/theme';
+import { handleEnterEvent } from 'lib/keyboard';
 
 import styles from './input.pcss';
 
@@ -16,7 +17,9 @@ export enum InputWidth {
   Available = 'available',
 }
 
-interface Props {
+export type InputType = 'text' | 'password';
+
+export interface InputProps {
   className?: string;
   value?: string;
   label?: ReactNode;
@@ -24,14 +27,31 @@ interface Props {
   width?: InputWidth;
   id?: string;
   name?: string;
+  type?: InputType;
   onChange?: (value: string, event: ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
+  rightAddon?: ReactNode;
+  onRightAddonClick?: () => void;
 }
 
-export function Input({ className, value, label, size, width, name, onChange, onBlur, ...props }: Props): ReactElement {
+export function Input({
+  className,
+  value,
+  label,
+  size,
+  width,
+  name,
+  type,
+  onChange,
+  onBlur,
+  rightAddon,
+  onRightAddonClick,
+  ...props
+}: InputProps): ReactElement {
   const cn = useStyles(styles, 'input');
 
   const [id, setId] = useState(props.id);
+  const [focused, setFocused] = useState(false);
 
   useEffect(() => {
     if (!id) {
@@ -41,6 +61,15 @@ export function Input({ className, value, label, size, width, name, onChange, on
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>): void {
     onChange?.(event.target.value, event);
+  }
+
+  function handleFocus(): void {
+    setFocused(true);
+  }
+
+  function handleBlur(event: FocusEvent<HTMLInputElement>): void {
+    setFocused(false);
+    onBlur?.(event);
   }
 
   function renderLabel(): ReactNode {
@@ -62,16 +91,40 @@ export function Input({ className, value, label, size, width, name, onChange, on
         name={name}
         className={cn('input', { size, width })}
         value={value}
-        onBlur={onBlur}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         onChange={handleInputChange}
+        type={type}
       />
+    );
+  }
+
+  function renderRightAddon(): ReactNode {
+    if (!rightAddon) {
+      return null;
+    }
+
+    return (
+      <div
+        className={cn('right-addon', { withClick: Boolean(onRightAddonClick) })}
+        role={onRightAddonClick ? 'button' : undefined}
+        tabIndex={onRightAddonClick ? -1 : undefined}
+        onClick={onRightAddonClick}
+        onKeyDown={onRightAddonClick ? handleEnterEvent(onRightAddonClick) : undefined}
+      >
+        {rightAddon}
+      </div>
     );
   }
 
   return (
     <div className={classnames(cn(), className)}>
       {renderLabel()}
-      {renderInput()}
+
+      <div className={cn('inner', { focused, size, withRightAddon: Boolean(rightAddon) })}>
+        {renderInput()}
+        {renderRightAddon()}
+      </div>
     </div>
   );
 }

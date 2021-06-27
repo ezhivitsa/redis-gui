@@ -56,6 +56,8 @@ export interface Connection {
   type: ConnectionType;
   connectionData: ConnectionData[];
 
+  performAuth: boolean;
+
   family?: string;
   db?: number;
   password?: string;
