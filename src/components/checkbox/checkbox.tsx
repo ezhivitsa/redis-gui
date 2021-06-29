@@ -14,12 +14,19 @@ export enum CheckboxSize {
   M = 'm',
 }
 
+export enum CheckboxWidth {
+  Default = 'default',
+  Available = 'available',
+}
+
 interface Props {
   id?: string;
   className?: string;
   size?: CheckboxSize;
+  width?: CheckboxWidth;
   value?: boolean;
   label?: ReactNode;
+  disabled?: boolean;
   onChange?: (value: boolean, event: ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: FocusEvent) => void;
 }
@@ -29,7 +36,17 @@ const mapSizeToIconSize: Record<CheckboxSize, SizeProp> = {
   [CheckboxSize.M]: 'sm',
 };
 
-export function Checkbox({ className, size, value, label, onChange, onBlur, ...props }: Props): ReactElement {
+export function Checkbox({
+  disabled,
+  className,
+  size,
+  width,
+  value,
+  label,
+  onChange,
+  onBlur,
+  ...props
+}: Props): ReactElement {
   const cn = useStyles(styles, 'checkbox');
 
   const [id, setId] = useState(props.id);
@@ -41,8 +58,9 @@ export function Checkbox({ className, size, value, label, onChange, onBlur, ...p
   }, [id]);
 
   function handleChange(event: ChangeEvent<HTMLInputElement>): void {
-    console.log(event.target.checked);
-    onChange?.(event.target.checked, event);
+    if (!disabled) {
+      onChange?.(event.target.checked, event);
+    }
   }
 
   function renderLabel(): ReactNode {
@@ -54,11 +72,11 @@ export function Checkbox({ className, size, value, label, onChange, onBlur, ...p
   }
 
   return (
-    <div className={classnames(cn({ size }), className)}>
+    <div className={classnames(cn({ size, width }), className)}>
       <input id={id} className={cn('input')} type="checkbox" checked={value} onChange={handleChange} onBlur={onBlur} />
 
-      <label className={cn('inner')} htmlFor={id}>
-        <span className={cn('check', { size, checked: value })}>
+      <label className={cn('inner', { disabled })} htmlFor={id}>
+        <span className={cn('check', { size, checked: value, disabled })}>
           {value && <FontAwesomeIcon icon={faCheck} size={size && mapSizeToIconSize[size]} />}
         </span>
 
@@ -70,5 +88,6 @@ export function Checkbox({ className, size, value, label, onChange, onBlur, ...p
 
 Checkbox.defaultProps = {
   size: CheckboxSize.M,
+  width: CheckboxWidth.Default,
   value: false,
 };

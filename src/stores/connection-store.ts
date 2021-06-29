@@ -6,11 +6,15 @@ export enum ConnectionFormikField {
   Name = 'name',
   Type = 'type',
   Addresses = 'addresses',
+
   SentinelName = 'sentinelName',
+  SentinelPassword = 'sentinelPassword',
 
   PerformAuth = 'performAuth',
   Username = 'username',
   Password = 'password',
+
+  Ssh = 'ssh',
 }
 
 export enum ConnectionAddressFormikField {
@@ -18,15 +22,31 @@ export enum ConnectionAddressFormikField {
   Host = 'host',
 }
 
+export enum ConnectionSShFormikField {
+  Enabled = 'enabled',
+  Host = 'host',
+  Port = 'port',
+}
+
+export interface ConnectionSShFormikValues {
+  enabled: boolean;
+  host?: string;
+  port?: string;
+}
+
 export interface ConnectionFormikValues {
   [ConnectionFormikField.Name]?: string;
   [ConnectionFormikField.Type]: ConnectionType;
   [ConnectionFormikField.Addresses]: ConnectionData[];
+
   [ConnectionFormikField.SentinelName]?: string;
+  [ConnectionFormikField.SentinelPassword]?: string;
 
   [ConnectionFormikField.PerformAuth]: boolean;
   [ConnectionFormikField.Username]?: string;
   [ConnectionFormikField.Password]?: string;
+
+  [ConnectionFormikField.Ssh]: ConnectionSShFormikValues;
 }
 
 const defaultConnectionData: ConnectionFormikValues = {
@@ -34,6 +54,10 @@ const defaultConnectionData: ConnectionFormikValues = {
   name: 'New Connection',
   addresses: [{ host: 'localhost', port: '6379' }],
   performAuth: false,
+  ssh: {
+    enabled: false,
+    port: '22',
+  },
 };
 
 export class ConnectionStore {
@@ -53,8 +77,15 @@ export class ConnectionStore {
       ? {
           name: this.connection.name,
           type: this.connection.type,
-          addresses: this.connection.connectionData,
+
+          sentinelName: this.connection.name,
+          sentinelPassword: this.connection.sentinelPassword,
+
           performAuth: this.connection.performAuth,
+          addresses: this.connection.connectionData,
+          password: this.connection.password,
+
+          ssh: this.connection.ssh,
         }
       : defaultConnectionData;
   }

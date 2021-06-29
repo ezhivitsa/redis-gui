@@ -62,11 +62,12 @@ export interface Connection {
   db?: number;
   password?: string;
   username?: string;
+  sentinelPassword?: string;
   keyPrefix?: string;
   readOnly: boolean;
   stringNumbers?: boolean;
 
-  ssh?: ConnectionSsh;
+  ssh: ConnectionSsh;
   tls?: ConnectionTls;
 }
 

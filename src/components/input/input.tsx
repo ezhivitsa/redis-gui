@@ -28,6 +28,8 @@ export interface InputProps {
   id?: string;
   name?: string;
   type?: InputType;
+  hint?: ReactNode;
+  disabled?: boolean;
   onChange?: (value: string, event: ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
   rightAddon?: ReactNode;
@@ -42,6 +44,8 @@ export function Input({
   width,
   name,
   type,
+  hint,
+  disabled,
   onChange,
   onBlur,
   rightAddon,
@@ -60,7 +64,9 @@ export function Input({
   }, [id]);
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>): void {
-    onChange?.(event.target.value, event);
+    if (!disabled) {
+      onChange?.(event.target.value, event);
+    }
   }
 
   function handleFocus(): void {
@@ -117,14 +123,24 @@ export function Input({
     );
   }
 
+  function renderHint(): ReactNode {
+    if (!hint) {
+      return null;
+    }
+
+    return <div className={cn('hint', { size })}>{hint}</div>;
+  }
+
   return (
     <div className={classnames(cn(), className)}>
       {renderLabel()}
 
-      <div className={cn('inner', { focused, size, withRightAddon: Boolean(rightAddon) })}>
+      <div className={cn('inner', { focused, size, withRightAddon: Boolean(rightAddon), disabled })}>
         {renderInput()}
         {renderRightAddon()}
       </div>
+
+      {renderHint()}
     </div>
   );
 }

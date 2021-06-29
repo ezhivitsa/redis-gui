@@ -19,10 +19,21 @@
         border-color: var(--color-blue-700);
         box-shadow: 0 0 0 1px var(--color-blue-shadow);
       }
+
+      &._disabled {
+        &::before {
+          background: var(--color-white);
+          opacity: var(--opacity-400);
+        }
+      }
     }
 
     &__right-addon {
       color: var(--color-grey-300);
+    }
+
+    &__hint {
+      color: var(--color-grey-400);
     }
   }
 }

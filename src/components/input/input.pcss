@@ -44,6 +44,21 @@
     &._with-right-addon {
       padding-right: 0;
     }
+
+    &._disabled {
+      pointer-events: none;
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: -1px;
+        right: -1px;
+        bottom: -1px;
+        left: -1px;
+        border-radius: var(--border-radius-200);
+      }
+    }
   }
 
   &__right-addon {
@@ -55,6 +70,13 @@
 
     &._with-click {
       cursor: pointer;
+    }
+  }
+
+  &__hint {
+    &._size_s {
+      font-size: var(--font-size-100);
+      margin-top: var(--grid0_5);
     }
   }
 }

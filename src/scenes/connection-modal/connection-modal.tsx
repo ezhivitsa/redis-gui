@@ -14,6 +14,7 @@ import { Button, ButtonSize, ButtonView } from 'components/button';
 
 import { ConnectionTabForm } from './components/connection-tab-form';
 import { AuthenticationForm } from './components/authentication-form';
+import { SshForm } from './components/ssh-form';
 
 import styles from './connection-modal.pcss';
 
@@ -73,6 +74,9 @@ export function ConnectionModal({ open, connection, onClose }: Props): ReactElem
 
       case ConnectionTab.Authentication:
         return <AuthenticationForm />;
+
+      case ConnectionTab.Ssh:
+        return <SshForm />;
 
       default:
         return null;
