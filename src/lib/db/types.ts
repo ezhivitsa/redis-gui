@@ -37,7 +37,10 @@ export interface ConnectionSsh {
   port?: string;
   username?: string;
   authMethod: SshAuthMethod;
-  privateKey?: string;
+  privateKey?: {
+    name: string;
+    text?: string;
+  };
   passphrase?: string;
   askForPassphraseEachTime: boolean;
   password?: string;
