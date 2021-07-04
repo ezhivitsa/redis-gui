@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useStyles } from 'lib/theme';
+import { handleEnterEvent } from 'lib/keyboard';
 
 import { InputSize } from 'components/input';
 
@@ -74,19 +75,34 @@ export function UploadInput({ className, label, size, placeholder, value, onChan
 
   function renderName(): ReactNode {
     if (value) {
-      return <div className={cn('name')}>{value.name}</div>;
+      return <div className={cn('name', { size })}>{value.name}</div>;
     }
 
-    return <div className={cn('placeholder')}>{placeholder}</div>;
+    return (
+      <div
+        className={cn('name', { size, placeholder: true })}
+        onClick={handleButtonClick}
+        onKeyDown={handleEnterEvent(handleButtonClick)}
+        tabIndex={0}
+        role="button"
+      >
+        {placeholder}
+      </div>
+    );
   }
 
   function renderButton(): ReactNode {
-    return <button onClick={handleButtonClick}>...</button>;
+    return (
+      <button onClick={handleButtonClick} className={cn('btn', { size })}>
+        ...
+      </button>
+    );
   }
 
   return (
     <div className={classnames(cn(), className)}>
-      {renderLabel}
+      {renderLabel()}
+
       <div className={cn('inner')}>
         {renderName()}
         {renderButton()}

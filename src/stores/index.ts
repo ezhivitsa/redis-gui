@@ -5,4 +5,4 @@ export {
   ConnectionAddressFormikField,
   ConnectionSShFormikField,
 } from './connection-store';
-export type { ConnectionFormikValues } from './connection-store';
+export type { ConnectionFormikValues, ConnectionSShFormikValues } from './connection-store';

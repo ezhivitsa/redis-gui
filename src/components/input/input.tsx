@@ -114,7 +114,7 @@ export function Input({
       <div
         className={cn('right-addon', { withClick: Boolean(onRightAddonClick) })}
         role={onRightAddonClick ? 'button' : undefined}
-        tabIndex={onRightAddonClick ? -1 : undefined}
+        tabIndex={onRightAddonClick ? 0 : undefined}
         onClick={onRightAddonClick}
         onKeyDown={onRightAddonClick ? handleEnterEvent(onRightAddonClick) : undefined}
       >

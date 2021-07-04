@@ -1,5 +1,54 @@
+@import './upload-input_theme_dark.pcss';
+@import './upload-input_theme_light.pcss';
+
 .upload-input {
   &__input {
+    display: none;
     visibility: hidden;
+    width: 0;
+  }
+
+  &__label {
+    display: block;
+    padding-bottom: var(--grid1);
+
+    &._size_s {
+      line-height: var(--grid4);
+      font-size: var(--font-size-200);
+    }
+  }
+
+  &__inner {
+    display: flex;
+  }
+
+  &__name {
+    border-radius: var(--border-radius-200) 0 0 var(--border-radius-200);
+    border: 1px solid;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    flex: 1;
+    cursor: pointer;
+
+    &._size_s {
+      line-height: calc(var(--grid6) - 2px);
+      font-size: var(--font-size-200);
+      padding: 0 var(--grid2);
+    }
+  }
+
+  &__btn {
+    cursor: pointer;
+    flex: 0 0 40px;
+    text-align: center;
+    border: 1px solid;
+    border-radius: 0 var(--border-radius-200) var(--border-radius-200) 0;
+    outline: 0;
+
+    &._size_s {
+      padding: 0 var(--grid2);
+      margin-left: var(--grid2);
+    }
   }
 }
