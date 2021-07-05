@@ -28,6 +28,10 @@ export enum ConnectionSShFormikField {
   Port = 'port',
   AuthMethod = 'authMethod',
   PrivateKey = 'privateKey',
+  Passphrase = 'passphrase',
+  AskForPassphraseEachTime = 'askForPassphraseEachTime',
+  Password = 'password',
+  AskForPasswordEachTime = 'askForPasswordEachTime',
 }
 
 export interface ConnectionSShFormikValues {
@@ -39,6 +43,10 @@ export interface ConnectionSShFormikValues {
     name: string;
     text?: string;
   };
+  passphrase?: string;
+  askForPassphraseEachTime: boolean;
+  password?: string;
+  askForPasswordEachTime: boolean;
 }
 
 export interface ConnectionFormikValues {
@@ -65,6 +73,8 @@ const defaultConnectionData: ConnectionFormikValues = {
     enabled: false,
     port: '22',
     authMethod: SshAuthMethod.PrivateKey,
+    askForPassphraseEachTime: false,
+    askForPasswordEachTime: false,
   },
 };
 
