@@ -1,6 +1,6 @@
 import { observable, action, computed, makeObservable } from 'mobx';
 
-import { Connection, ConnectionType, ConnectionData, SshAuthMethod } from 'lib/db';
+import { Connection, ConnectionType, ConnectionData, SshAuthMethod, AuthenticationMethod } from 'lib/db';
 
 export enum ConnectionFormikField {
   Name = 'name',
@@ -15,6 +15,8 @@ export enum ConnectionFormikField {
   Password = 'password',
 
   Ssh = 'ssh',
+
+  Tls = 'tls',
 }
 
 export enum ConnectionAddressFormikField {
@@ -34,6 +36,11 @@ export enum ConnectionSShFormikField {
   AskForPasswordEachTime = 'askForPasswordEachTime',
 }
 
+export enum ConnectionTlsFormikField {
+  Enabled = 'enabled',
+  AuthenticationMethod = 'authenticationMethod',
+}
+
 export interface ConnectionSShFormikValues {
   enabled: boolean;
   host?: string;
@@ -49,6 +56,11 @@ export interface ConnectionSShFormikValues {
   askForPasswordEachTime: boolean;
 }
 
+export interface ConnectionTlsFormikValues {
+  enabled: boolean;
+  authenticationMethod: AuthenticationMethod;
+}
+
 export interface ConnectionFormikValues {
   [ConnectionFormikField.Name]?: string;
   [ConnectionFormikField.Type]: ConnectionType;
@@ -62,6 +74,8 @@ export interface ConnectionFormikValues {
   [ConnectionFormikField.Password]?: string;
 
   [ConnectionFormikField.Ssh]: ConnectionSShFormikValues;
+
+  [ConnectionFormikField.Tls]: ConnectionTlsFormikValues;
 }
 
 const defaultConnectionData: ConnectionFormikValues = {
@@ -75,6 +89,10 @@ const defaultConnectionData: ConnectionFormikValues = {
     authMethod: SshAuthMethod.PrivateKey,
     askForPassphraseEachTime: false,
     askForPasswordEachTime: false,
+  },
+  tls: {
+    enabled: false,
+    authenticationMethod: AuthenticationMethod.SelfSigned,
   },
 };
 
@@ -104,6 +122,7 @@ export class ConnectionStore {
           password: this.connection.password,
 
           ssh: this.connection.ssh,
+          tls: this.connection.tls,
         }
       : defaultConnectionData;
   }

@@ -9,7 +9,12 @@ function toCamelCase(value: string): string {
 /**
  * Module fro generating class names.
  */
-export function block(styles: Record<string, string>, blockName: string, theme?: string): ClassNameGenerator {
+export function block(
+  styles: Record<string, string>,
+  blockName: string,
+  theme?: string,
+  additionalClassName?: string,
+): ClassNameGenerator {
   return (elementNameOrState?: string | State, state?: State): string => {
     let resultClassNames = '';
     let element = blockName;
@@ -55,6 +60,10 @@ export function block(styles: Record<string, string>, blockName: string, theme?:
           resultClassNames += ` ${className}`;
         }
       });
+    }
+
+    if (additionalClassName) {
+      resultClassNames += ` ${additionalClassName}`;
     }
 
     return resultClassNames.trim();

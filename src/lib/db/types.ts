@@ -71,7 +71,7 @@ export interface Connection {
   stringNumbers?: boolean;
 
   ssh: ConnectionSsh;
-  tls?: ConnectionTls;
+  tls: ConnectionTls;
 }
 
 export interface DbSchema {
