@@ -16,10 +16,26 @@
       }
     }
 
+    &__name-wrap {
+      &._disabled {
+        &::before {
+          background: var(--color-white);
+          opacity: var(--opacity-400);
+        }
+      }
+    }
+
     &__btn {
       color: var(--color-grey-300);
       border-color: var(--color-grey-900);
       background: var(--color-grey-850);
+
+      &._disabled {
+        &::before {
+          background: var(--color-white);
+          opacity: var(--opacity-400);
+        }
+      }
     }
   }
 }

@@ -21,10 +21,20 @@ interface Props {
   placeholder?: string;
   value?: UploadValue;
   id?: string;
+  disabled?: boolean;
   onChange?: (value: UploadValue, event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function UploadInput({ className, label, size, placeholder, value, onChange, ...props }: Props): ReactElement {
+export function UploadInput({
+  className,
+  label,
+  size,
+  placeholder,
+  value,
+  disabled,
+  onChange,
+  ...props
+}: Props): ReactElement {
   const cn = useStyles(styles, 'upload-input');
 
   const [id, setId] = useState(props.id);
@@ -75,25 +85,29 @@ export function UploadInput({ className, label, size, placeholder, value, onChan
 
   function renderName(): ReactNode {
     if (value) {
-      return <div className={cn('name', { size })}>{value.name}</div>;
+      return (
+        <div className={cn('name-wrap')}>
+          <div className={cn('name', { size, disabled })}>{value.name}</div>
+        </div>
+      );
     }
 
     return (
       <div
-        className={cn('name', { size, placeholder: true })}
+        className={cn('name-wrap', { disabled })}
         onClick={handleButtonClick}
         onKeyDown={handleEnterEvent(handleButtonClick)}
         tabIndex={0}
         role="button"
       >
-        {placeholder}
+        <div className={cn('name', { size, placeholder: true })}>{placeholder}</div>
       </div>
     );
   }
 
   function renderButton(): ReactNode {
     return (
-      <button onClick={handleButtonClick} className={cn('btn', { size })}>
+      <button onClick={handleButtonClick} className={cn('btn', { size, disabled })}>
         ...
       </button>
     );

@@ -16,5 +16,14 @@
         box-shadow: 0 0 0 1px var(--color-blue-shadow);
       }
     }
+
+    &__select-wrap {
+      &._disabled {
+        &::before {
+          background: var(--color-white);
+          opacity: var(--opacity-400);
+        }
+      }
+    }
   }
 }

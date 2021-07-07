@@ -19,10 +19,15 @@ export enum ConnectionType {
   Sentinel = 'sentinel',
 }
 
+export interface FileData {
+  name: string;
+  text?: string;
+}
+
 export interface ConnectionTls {
   enabled: boolean;
   authenticationMethod: AuthenticationMethod;
-  ca?: string;
+  ca?: FileData;
   usePem: boolean;
   pem?: string;
   passphrase?: string;
@@ -37,10 +42,7 @@ export interface ConnectionSsh {
   port?: string;
   username?: string;
   authMethod: SshAuthMethod;
-  privateKey?: {
-    name: string;
-    text?: string;
-  };
+  privateKey?: FileData;
   passphrase?: string;
   askForPassphraseEachTime: boolean;
   password?: string;

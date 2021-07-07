@@ -1,6 +1,6 @@
 import { observable, action, computed, makeObservable } from 'mobx';
 
-import { Connection, ConnectionType, ConnectionData, SshAuthMethod, AuthenticationMethod } from 'lib/db';
+import { Connection, ConnectionType, ConnectionData, SshAuthMethod, AuthenticationMethod, FileData } from 'lib/db';
 
 export enum ConnectionFormikField {
   Name = 'name',
@@ -39,6 +39,7 @@ export enum ConnectionSShFormikField {
 export enum ConnectionTlsFormikField {
   Enabled = 'enabled',
   AuthenticationMethod = 'authenticationMethod',
+  CaCertificate = 'caCertificate',
 }
 
 export interface ConnectionSShFormikValues {
@@ -46,10 +47,7 @@ export interface ConnectionSShFormikValues {
   host?: string;
   port?: string;
   authMethod: SshAuthMethod;
-  privateKey?: {
-    name: string;
-    text?: string;
-  };
+  privateKey?: FileData;
   passphrase?: string;
   askForPassphraseEachTime: boolean;
   password?: string;
@@ -59,6 +57,7 @@ export interface ConnectionSShFormikValues {
 export interface ConnectionTlsFormikValues {
   enabled: boolean;
   authenticationMethod: AuthenticationMethod;
+  caCertificate?: FileData;
 }
 
 export interface ConnectionFormikValues {

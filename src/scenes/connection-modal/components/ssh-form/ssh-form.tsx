@@ -19,6 +19,9 @@ import styles from './ssh-form.pcss';
 export function SshForm(): ReactElement {
   const cn = useStyles(styles, 'ssh-form');
 
+  const [enabledField] = useField<ConnectionSShFormikValues[ConnectionSShFormikField.Enabled]>(
+    `${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.Enabled}`,
+  );
   const [authMethodField] = useField<ConnectionSShFormikValues[ConnectionSShFormikField.AuthMethod]>(
     `${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.AuthMethod}`,
   );
@@ -38,6 +41,8 @@ export function SshForm(): ReactElement {
   const [, , askForPasswordEachTimeHelper] = useField<
     ConnectionSShFormikValues[ConnectionSShFormikField.AskForPasswordEachTime]
   >(`${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.AskForPasswordEachTime}`);
+
+  const disabled = !enabledField.value;
 
   function handleAuthMethodChange(): void {
     privateKeyHelper.setValue(undefined);
@@ -64,6 +69,7 @@ export function SshForm(): ReactElement {
             size: InputSize.S,
             className: cn('item'),
             placeholder: 'DSA, RSA, and/or Windows/macOS ECDSA, Ed25519 keys',
+            disabled,
           }}
         />
 
@@ -75,6 +81,7 @@ export function SshForm(): ReactElement {
             size: InputSize.S,
             width: InputWidth.Available,
             className: cn('item'),
+            disabled,
           }}
         />
 
@@ -85,6 +92,7 @@ export function SshForm(): ReactElement {
             label: 'Ask for passphrase each time',
             size: CheckboxSize.S,
             className: cn('item'),
+            disabled,
           }}
         />
       </>
@@ -106,6 +114,7 @@ export function SshForm(): ReactElement {
             size: InputSize.S,
             width: InputWidth.Available,
             className: cn('item'),
+            disabled,
           }}
         />
 
@@ -116,6 +125,7 @@ export function SshForm(): ReactElement {
             label: 'Ask for password each time',
             size: CheckboxSize.S,
             className: cn('item'),
+            disabled,
           }}
         />
       </>
@@ -144,6 +154,7 @@ export function SshForm(): ReactElement {
             size: InputSize.S,
             width: InputWidth.Available,
             className: cn('host'),
+            disabled,
           }}
         />
 
@@ -155,6 +166,7 @@ export function SshForm(): ReactElement {
             size: InputSize.S,
             width: InputWidth.Available,
             className: cn('port'),
+            disabled,
           }}
         />
       </div>
@@ -178,6 +190,7 @@ export function SshForm(): ReactElement {
           width: SelectWidth.Available,
           className: cn('item'),
           onChange: handleAuthMethodChange,
+          disabled,
         }}
       />
 

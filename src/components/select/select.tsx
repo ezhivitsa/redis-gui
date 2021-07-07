@@ -31,6 +31,7 @@ interface Props<V extends string> {
   id?: string;
   value?: V;
   items: SelectItem<V>[];
+  disabled?: boolean;
   onChange?: (value: V, event: ChangeEvent<HTMLSelectElement>) => void;
   onBlur?: (event: FocusEvent<HTMLSelectElement>) => void;
 }
@@ -42,6 +43,7 @@ export function Select<V extends string>({
   label,
   items,
   value,
+  disabled,
   onChange,
   onBlur,
   ...props
@@ -82,15 +84,17 @@ export function Select<V extends string>({
 
   function renderSelect(): ReactNode {
     return (
-      <select
-        id={id}
-        className={cn('select', { size, width })}
-        onChange={handleSelectChange}
-        onBlur={onBlur}
-        value={value}
-      >
-        {items.map(renderOption)}
-      </select>
+      <div className={cn('select-wrap', { disabled })}>
+        <select
+          id={id}
+          className={cn('select', { size, width })}
+          onChange={handleSelectChange}
+          onBlur={onBlur}
+          value={value}
+        >
+          {items.map(renderOption)}
+        </select>
+      </div>
     );
   }
 

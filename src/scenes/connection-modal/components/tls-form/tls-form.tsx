@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import { useField } from 'formik';
 
 import { useStyles } from 'lib/theme';
@@ -8,6 +8,8 @@ import { ConnectionFormikField, ConnectionTlsFormikField, ConnectionTlsFormikVal
 
 import { Checkbox, CheckboxSize, CheckboxWidth } from 'components/checkbox';
 import { Select, SelectSize, SelectWidth } from 'components/select';
+import { UploadInput } from 'components/upload-input';
+import { InputSize } from 'components/input';
 import { FormikField } from 'components/formik-field';
 
 import styles from './tls-form.pcss';
@@ -21,12 +23,33 @@ export function TlsForm(): ReactElement {
   const [authenticationMethodField] = useField<
     ConnectionTlsFormikValues[ConnectionTlsFormikField.AuthenticationMethod]
   >(`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.AuthenticationMethod}`);
-  // const [, , tlsFieldHelper] = useField<ConnectionTlsFormikValues>(ConnectionFormikField.Tls);
+  const [, , caCertificateHelper] = useField<ConnectionTlsFormikValues[ConnectionTlsFormikField.CaCertificate]>(
+    ConnectionTlsFormikField.CaCertificate,
+  );
 
   const disabled = !enabledField.value;
 
   function handleAuthenticationMethodChange(): void {
-    // remove ca certificate
+    caCertificateHelper.setValue(undefined);
+  }
+
+  function renderCaCertificateFields(): ReactNode {
+    if (authenticationMethodField.value !== AuthenticationMethod.CaCertificate) {
+      return null;
+    }
+
+    return (
+      <FormikField
+        name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.CaCertificate}`}
+        component={UploadInput}
+        componentProps={{
+          label: 'CA Certificate',
+          size: InputSize.S,
+          className: cn('item'),
+          disabled,
+        }}
+      />
+    );
   }
 
   return (
@@ -63,6 +86,8 @@ export function TlsForm(): ReactElement {
           disabled,
         }}
       />
+
+      {renderCaCertificateFields()}
     </div>
   );
 }
