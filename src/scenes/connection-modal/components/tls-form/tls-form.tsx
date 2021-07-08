@@ -1,36 +1,61 @@
 import React, { ReactElement, ReactNode } from 'react';
-import { useField } from 'formik';
+import { useField, FieldInputProps, FieldMetaProps, FieldHelperProps } from 'formik';
 
 import { useStyles } from 'lib/theme';
-import { AuthenticationMethod } from 'lib/db';
+import { AuthenticationMethod, InvalidHostnames } from 'lib/db';
 
 import { ConnectionFormikField, ConnectionTlsFormikField, ConnectionTlsFormikValues } from 'stores';
 
 import { Checkbox, CheckboxSize, CheckboxWidth } from 'components/checkbox';
 import { Select, SelectSize, SelectWidth } from 'components/select';
 import { UploadInput } from 'components/upload-input';
-import { InputSize } from 'components/input';
+import { InputSize, InputWidth } from 'components/input';
+import { PasswordInput } from 'components/password-input';
 import { FormikField } from 'components/formik-field';
 
 import styles from './tls-form.pcss';
 
+function useTlsField<Field extends ConnectionTlsFormikField>(
+  field: Field,
+): [
+  FieldInputProps<ConnectionTlsFormikValues[Field]>,
+  FieldMetaProps<ConnectionTlsFormikValues[Field]>,
+  FieldHelperProps<ConnectionTlsFormikValues[Field]>,
+] {
+  return useField<ConnectionTlsFormikValues[Field]>(`${ConnectionFormikField.Tls}.${field}`);
+}
+
 export function TlsForm(): ReactElement {
   const cn = useStyles(styles, 'tls-form');
 
-  const [enabledField] = useField<ConnectionTlsFormikValues[ConnectionTlsFormikField.Enabled]>(
-    `${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.Enabled}`,
-  );
-  const [authenticationMethodField] = useField<
-    ConnectionTlsFormikValues[ConnectionTlsFormikField.AuthenticationMethod]
-  >(`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.AuthenticationMethod}`);
-  const [, , caCertificateHelper] = useField<ConnectionTlsFormikValues[ConnectionTlsFormikField.CaCertificate]>(
-    ConnectionTlsFormikField.CaCertificate,
-  );
+  const [enabledField] = useTlsField(ConnectionTlsFormikField.Enabled);
+  const [authenticationMethodField] = useTlsField(ConnectionTlsFormikField.AuthenticationMethod);
+  const [, , caCertificateHelper] = useTlsField(ConnectionTlsFormikField.CaCertificate);
+
+  const [usePemField] = useTlsField(ConnectionTlsFormikField.UsePem);
+  const [, , pemHelper] = useTlsField(ConnectionTlsFormikField.Pem);
+  const [, , passphraseHelper] = useTlsField(ConnectionTlsFormikField.Passphrase);
+  const [, , askForPassphraseHelper] = useTlsField(ConnectionTlsFormikField.AskForPassphraseEachTime);
+
+  const [advancedOptionsField] = useTlsField(ConnectionTlsFormikField.AdvancedOptions);
+  const [, , crlHelper] = useTlsField(ConnectionTlsFormikField.Crl);
+  const [, , invalidHostnamesHelper] = useTlsField(ConnectionTlsFormikField.InvalidHostnames);
 
   const disabled = !enabledField.value;
 
   function handleAuthenticationMethodChange(): void {
     caCertificateHelper.setValue(undefined);
+  }
+
+  function handleUsePemChange(): void {
+    pemHelper.setValue(undefined);
+    passphraseHelper.setValue('');
+    askForPassphraseHelper.setValue(false);
+  }
+
+  function handleAdvancedOptionsChange(): void {
+    crlHelper.setValue(undefined);
+    invalidHostnamesHelper.setValue(InvalidHostnames.NotAllowed);
   }
 
   function renderCaCertificateFields(): ReactNode {
@@ -49,6 +74,94 @@ export function TlsForm(): ReactElement {
           disabled,
         }}
       />
+    );
+  }
+
+  function renderPemFields(): ReactNode {
+    if (!usePemField.value) {
+      return null;
+    }
+
+    return (
+      <>
+        <FormikField
+          name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.Pem}`}
+          component={UploadInput}
+          componentProps={{
+            label: 'PEM Certificate/Key',
+            size: InputSize.S,
+            className: cn('item'),
+            disabled,
+          }}
+        />
+
+        <FormikField
+          name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.Passphrase}`}
+          component={PasswordInput}
+          componentProps={{
+            label: 'Passphrase',
+            size: InputSize.S,
+            width: InputWidth.Available,
+            className: cn('item'),
+            disabled,
+          }}
+        />
+
+        <FormikField
+          name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.AskForPassphraseEachTime}`}
+          component={Checkbox}
+          componentProps={{
+            label: 'Ask for passphrase each time',
+            size: CheckboxSize.S,
+            width: CheckboxWidth.Available,
+            className: cn('item'),
+            disabled,
+          }}
+        />
+      </>
+    );
+  }
+
+  function renderAdvancedOptionsFields(): ReactNode {
+    if (!advancedOptionsField.value) {
+      return null;
+    }
+
+    return (
+      <>
+        <FormikField
+          name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.Crl}`}
+          component={UploadInput}
+          componentProps={{
+            label: 'CRL (Revocation List)',
+            size: InputSize.S,
+            className: cn('item'),
+            disabled,
+          }}
+        />
+
+        <FormikField
+          name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.InvalidHostnames}`}
+          component={Select}
+          componentProps={{
+            label: 'Invalid Hostnames',
+            size: SelectSize.S,
+            width: SelectWidth.Available,
+            items: [
+              {
+                value: InvalidHostnames.NotAllowed,
+                text: 'Not Allowed',
+              },
+              {
+                value: InvalidHostnames.Allowed,
+                text: 'Allowed',
+              },
+            ],
+            className: cn('item'),
+            disabled,
+          }}
+        />
+      </>
     );
   }
 
@@ -83,11 +196,42 @@ export function TlsForm(): ReactElement {
             },
           ],
           onChange: handleAuthenticationMethodChange,
+          className: cn('item'),
           disabled,
         }}
       />
 
       {renderCaCertificateFields()}
+
+      <FormikField
+        name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.UsePem}`}
+        component={Checkbox}
+        componentProps={{
+          label: 'Use PEM Cert./Key',
+          size: CheckboxSize.S,
+          width: CheckboxWidth.Available,
+          onChange: handleUsePemChange,
+          className: cn('item'),
+          disabled,
+        }}
+      />
+
+      {renderPemFields()}
+
+      <FormikField
+        name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.AdvancedOptions}`}
+        component={Checkbox}
+        componentProps={{
+          label: 'Advanced Options',
+          size: CheckboxSize.S,
+          width: CheckboxWidth.Available,
+          onChange: handleAdvancedOptionsChange,
+          className: cn('item'),
+          disabled,
+        }}
+      />
+
+      {renderAdvancedOptionsFields()}
     </div>
   );
 }

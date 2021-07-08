@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react';
-import { useField } from 'formik';
+import { useField, FieldInputProps, FieldMetaProps, FieldHelperProps } from 'formik';
 import classnames from 'classnames';
 
 import { useStyles } from 'lib/theme';
@@ -16,31 +16,27 @@ import { FormikField } from 'components/formik-field';
 
 import styles from './ssh-form.pcss';
 
+function useSshField<Field extends ConnectionSShFormikField>(
+  field: Field,
+): [
+  FieldInputProps<ConnectionSShFormikValues[Field]>,
+  FieldMetaProps<ConnectionSShFormikValues[Field]>,
+  FieldHelperProps<ConnectionSShFormikValues[Field]>,
+] {
+  return useField<ConnectionSShFormikValues[Field]>(`${ConnectionFormikField.Ssh}.${field}`);
+}
+
 export function SshForm(): ReactElement {
   const cn = useStyles(styles, 'ssh-form');
 
-  const [enabledField] = useField<ConnectionSShFormikValues[ConnectionSShFormikField.Enabled]>(
-    `${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.Enabled}`,
-  );
-  const [authMethodField] = useField<ConnectionSShFormikValues[ConnectionSShFormikField.AuthMethod]>(
-    `${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.AuthMethod}`,
-  );
+  const [enabledField] = useSshField(ConnectionSShFormikField.Enabled);
+  const [authMethodField] = useSshField(ConnectionSShFormikField.AuthMethod);
 
-  const [, , privateKeyHelper] = useField<ConnectionSShFormikValues[ConnectionSShFormikField.PrivateKey]>(
-    `${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.PrivateKey}`,
-  );
-  const [, , passphraseHelper] = useField<ConnectionSShFormikValues[ConnectionSShFormikField.Passphrase]>(
-    `${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.Passphrase}`,
-  );
-  const [, , askForPassphraseEachTimeHelper] = useField<
-    ConnectionSShFormikValues[ConnectionSShFormikField.AskForPassphraseEachTime]
-  >(`${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.AskForPassphraseEachTime}`);
-  const [, , passwordHelper] = useField<ConnectionSShFormikValues[ConnectionSShFormikField.Password]>(
-    `${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.Password}`,
-  );
-  const [, , askForPasswordEachTimeHelper] = useField<
-    ConnectionSShFormikValues[ConnectionSShFormikField.AskForPasswordEachTime]
-  >(`${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.AskForPasswordEachTime}`);
+  const [, , privateKeyHelper] = useSshField(ConnectionSShFormikField.PrivateKey);
+  const [, , passphraseHelper] = useSshField(ConnectionSShFormikField.Passphrase);
+  const [, , askForPassphraseEachTimeHelper] = useSshField(ConnectionSShFormikField.AskForPassphraseEachTime);
+  const [, , passwordHelper] = useSshField(ConnectionSShFormikField.Password);
+  const [, , askForPasswordEachTimeHelper] = useSshField(ConnectionSShFormikField.AskForPasswordEachTime);
 
   const disabled = !enabledField.value;
 

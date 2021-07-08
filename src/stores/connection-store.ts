@@ -1,6 +1,14 @@
 import { observable, action, computed, makeObservable } from 'mobx';
 
-import { Connection, ConnectionType, ConnectionData, SshAuthMethod, AuthenticationMethod, FileData } from 'lib/db';
+import {
+  Connection,
+  ConnectionType,
+  ConnectionData,
+  SshAuthMethod,
+  AuthenticationMethod,
+  FileData,
+  InvalidHostnames,
+} from 'lib/db';
 
 export enum ConnectionFormikField {
   Name = 'name',
@@ -40,6 +48,13 @@ export enum ConnectionTlsFormikField {
   Enabled = 'enabled',
   AuthenticationMethod = 'authenticationMethod',
   CaCertificate = 'caCertificate',
+  UsePem = 'usePem',
+  Pem = 'pem',
+  Passphrase = 'passphrase',
+  AskForPassphraseEachTime = 'askForPassphraseEachTime',
+  AdvancedOptions = 'advancedOptions',
+  Crl = 'crl',
+  InvalidHostnames = 'invalidHostnames',
 }
 
 export interface ConnectionSShFormikValues {
@@ -58,6 +73,13 @@ export interface ConnectionTlsFormikValues {
   enabled: boolean;
   authenticationMethod: AuthenticationMethod;
   caCertificate?: FileData;
+  usePem: boolean;
+  pem?: FileData;
+  passphrase?: string;
+  askForPassphraseEachTime: boolean;
+  advancedOptions: boolean;
+  crl?: FileData;
+  invalidHostnames: InvalidHostnames;
 }
 
 export interface ConnectionFormikValues {
@@ -92,6 +114,10 @@ const defaultConnectionData: ConnectionFormikValues = {
   tls: {
     enabled: false,
     authenticationMethod: AuthenticationMethod.SelfSigned,
+    usePem: false,
+    askForPassphraseEachTime: false,
+    advancedOptions: false,
+    invalidHostnames: InvalidHostnames.NotAllowed,
   },
 };
 

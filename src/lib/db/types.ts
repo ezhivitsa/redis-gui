@@ -29,10 +29,11 @@ export interface ConnectionTls {
   authenticationMethod: AuthenticationMethod;
   ca?: FileData;
   usePem: boolean;
-  pem?: string;
+  pem?: FileData;
   passphrase?: string;
   askForPassphraseEachTime: boolean;
-  crl?: string;
+  advancedOptions: boolean;
+  crl?: FileData;
   invalidHostnames: InvalidHostnames;
 }
 
