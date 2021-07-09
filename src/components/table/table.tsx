@@ -19,6 +19,7 @@ interface Props<C extends string, D extends Record<string, any>> {
   heading: Record<C, string>;
   style?: Partial<Record<C, CSSProperties>>;
   size: TableSize;
+  className?: string;
 }
 
 export function Table<C extends string, D extends Record<string, any>>({
@@ -30,8 +31,9 @@ export function Table<C extends string, D extends Record<string, any>>({
   onRowDoubleClick,
   style,
   size,
+  className,
 }: Props<C, D>): ReactElement {
-  const cn = useStyles(styles, 'table');
+  const cn = useStyles(styles, 'table', className);
 
   function handleRowClick(item: D) {
     return () => {

@@ -11,6 +11,7 @@ enum Column {
 }
 
 interface Props {
+  className?: string;
   list: Connection[];
   onConnectionClick: (connection: Connection) => void;
   onConnectionDoubleClick: (connection: Connection) => void;
@@ -22,7 +23,12 @@ const columnName: Record<Column, string> = {
   [Column.User]: 'User',
 };
 
-export function ComponentsListTable({ list, onConnectionClick, onConnectionDoubleClick }: Props): ReactElement {
+export function ComponentsListTable({
+  className,
+  list,
+  onConnectionClick,
+  onConnectionDoubleClick,
+}: Props): ReactElement {
   function renderColumn(column: Column, item: Connection): ReactNode {
     switch (column) {
       case Column.Name:
@@ -39,6 +45,7 @@ export function ComponentsListTable({ list, onConnectionClick, onConnectionDoubl
 
   return (
     <Table
+      className={className}
       columns={[Column.Name, Column.Address, Column.User]}
       data={list}
       renderColumn={renderColumn}

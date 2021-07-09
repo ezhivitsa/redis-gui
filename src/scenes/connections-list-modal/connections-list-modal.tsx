@@ -81,7 +81,7 @@ export const ConnectionsListModal = observer(({ open, onClose }: Props): ReactEl
         </Button>
       </div>
 
-      <ConnectionsList onDoubleClick={handleConnectClick} />
+      <ConnectionsList onDoubleClick={handleConnectClick} className={cn('connections')} />
 
       {renderConnectionActions()}
     </Modal>

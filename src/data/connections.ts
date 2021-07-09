@@ -6,3 +6,5 @@ export async function list(): Promise<Connection[]> {
   const connections = (await dbPromise).getAll(DB_CONNECTIONS_STORE);
   return connections;
 }
+
+export async function create(data: Omit<Connection, 'id'>): Promise<Connection> {}

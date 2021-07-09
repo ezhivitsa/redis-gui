@@ -153,7 +153,13 @@ export class ConnectionStore {
   }
 
   @action
-  createOrUpdateConnection(data: ConnectionFormikValues): void {}
+  createOrUpdateConnection(data: ConnectionFormikValues): void {
+    if (this.connection) {
+      // create connection
+    } else {
+      // update connection
+    }
+  }
 
   @action
   setConnection(connection: Connection | null): void {

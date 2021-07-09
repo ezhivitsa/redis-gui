@@ -11,19 +11,9 @@
   left: 50%;
   transform: translate(-50%, -50%);
 
-  &:focus-visible {
+  &:focus-visible,
+  &:focus {
     outline: 0;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: var(--grid1-neg);
-      right: var(--grid1-neg);
-      bottom: var(--grid1-neg);
-      left: var(--grid1-neg);
-      border: 2px dashed var(--color-orange-100);
-      border-radius: var(--border-radius-200);
-    }
   }
 
   &__overlay {
