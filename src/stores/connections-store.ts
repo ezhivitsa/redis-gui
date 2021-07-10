@@ -2,7 +2,7 @@ import { action, runInAction, makeObservable, observable } from 'mobx';
 
 import { Connection } from 'lib/db';
 
-import { connections } from 'data';
+import { connectionsClient } from 'data';
 
 import { ConnectionStore } from './connection-store';
 
@@ -29,7 +29,7 @@ export class ConnectionsStore {
     this.isLoading = true;
 
     try {
-      const list = await connections.list();
+      const list = await connectionsClient.list();
 
       runInAction(() => {
         this.connections = list;

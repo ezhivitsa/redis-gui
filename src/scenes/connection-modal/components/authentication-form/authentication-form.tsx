@@ -1,25 +1,44 @@
 import React, { ReactElement, ReactNode } from 'react';
-import { useField } from 'formik';
+import { useField, FieldInputProps, FieldMetaProps, FieldHelperProps } from 'formik';
 
 import { ConnectionType } from 'lib/db';
 import { useStyles } from 'lib/theme';
 
-import { ConnectionFormikField, ConnectionFormikValues } from 'stores';
+import {
+  ConnectionFormikField,
+  ConnectionAuthFormikField,
+  ConnectionAuthFormikValues,
+  ConnectionMainFormikField,
+} from 'stores';
 
 import { FormikField } from 'components/formik-field';
 import { Checkbox, CheckboxSize, CheckboxWidth } from 'components/checkbox';
 import { Input } from 'components/input';
 import { PasswordInput, InputSize, InputWidth } from 'components/password-input';
 
+import { useMainField } from '../main-form';
+
 import styles from './authentication-form.pcss';
+
+function getFieldName(field: ConnectionAuthFormikField): string {
+  return `${ConnectionFormikField.Auth}.${field}`;
+}
+
+function useAuthField<Field extends ConnectionAuthFormikField>(
+  field: Field,
+): [
+  FieldInputProps<ConnectionAuthFormikValues[Field]>,
+  FieldMetaProps<ConnectionAuthFormikValues[Field]>,
+  FieldHelperProps<ConnectionAuthFormikValues[Field]>,
+] {
+  return useField<ConnectionAuthFormikValues[Field]>(getFieldName(field));
+}
 
 export function AuthenticationForm(): ReactElement {
   const cn = useStyles(styles, 'authentication-form');
 
-  const [typeField] = useField<ConnectionFormikValues[ConnectionFormikField.Type]>(ConnectionFormikField.Type);
-  const [performAuthField] = useField<ConnectionFormikValues[ConnectionFormikField.PerformAuth]>(
-    ConnectionFormikField.PerformAuth,
-  );
+  const [typeField] = useMainField(ConnectionMainFormikField.Type);
+  const [performAuthField] = useAuthField(ConnectionAuthFormikField.PerformAuth);
 
   const disabled = !performAuthField.value;
 
@@ -30,7 +49,7 @@ export function AuthenticationForm(): ReactElement {
 
     return (
       <FormikField
-        name={ConnectionFormikField.SentinelPassword}
+        name={getFieldName(ConnectionAuthFormikField.SentinelPassword)}
         component={PasswordInput}
         componentProps={{
           label: 'Sentinel Password',
@@ -47,7 +66,7 @@ export function AuthenticationForm(): ReactElement {
   return (
     <div>
       <FormikField
-        name={ConnectionFormikField.PerformAuth}
+        name={getFieldName(ConnectionAuthFormikField.PerformAuth)}
         component={Checkbox}
         componentProps={{
           label: 'Perform authentication',
@@ -58,7 +77,7 @@ export function AuthenticationForm(): ReactElement {
       />
 
       <FormikField
-        name={ConnectionFormikField.Username}
+        name={getFieldName(ConnectionAuthFormikField.Username)}
         component={Input}
         componentProps={{
           label: 'User Name',
@@ -70,7 +89,7 @@ export function AuthenticationForm(): ReactElement {
       />
 
       <FormikField
-        name={ConnectionFormikField.Password}
+        name={getFieldName(ConnectionAuthFormikField.Password)}
         component={PasswordInput}
         componentProps={{
           label: 'Password',

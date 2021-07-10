@@ -12,10 +12,11 @@ import { Modal } from 'components/modal';
 import { Tabs, TabItem } from 'components/tabs';
 import { Button, ButtonSize, ButtonView } from 'components/button';
 
-import { ConnectionTabForm } from './components/connection-tab-form';
+import { MainForm } from './components/main-form';
 import { AuthenticationForm } from './components/authentication-form';
 import { SshForm } from './components/ssh-form';
 import { TlsForm } from './components/tls-form';
+import { AdvancedForm } from './components/advanced-form';
 
 import styles from './connection-modal.pcss';
 
@@ -24,6 +25,7 @@ enum ConnectionTab {
   Authentication = 'authentication',
   Ssh = 'ssh',
   Tls = 'tls',
+  Advanced = 'advanced',
 }
 
 interface Props {
@@ -49,6 +51,10 @@ const tabs: TabItem<ConnectionTab>[] = [
     value: ConnectionTab.Tls,
     text: 'TLS',
   },
+  {
+    value: ConnectionTab.Advanced,
+    text: 'Advanced',
+  },
 ];
 
 export function ConnectionModal({ open, connection, onClose }: Props): ReactElement {
@@ -71,7 +77,7 @@ export function ConnectionModal({ open, connection, onClose }: Props): ReactElem
   function renderForm(): ReactNode {
     switch (activeTab) {
       case ConnectionTab.Connection:
-        return <ConnectionTabForm />;
+        return <MainForm />;
 
       case ConnectionTab.Authentication:
         return <AuthenticationForm />;
@@ -81,6 +87,9 @@ export function ConnectionModal({ open, connection, onClose }: Props): ReactElem
 
       case ConnectionTab.Tls:
         return <TlsForm />;
+
+      case ConnectionTab.Advanced:
+        return <AdvancedForm />;
 
       default:
         return null;

@@ -3,7 +3,17 @@ export {
   ConnectionStore,
   ConnectionFormikField,
   ConnectionAddressFormikField,
+  ConnectionMainFormikField,
   ConnectionSShFormikField,
   ConnectionTlsFormikField,
+  ConnectionAuthFormikField,
+  ConnectionAdvancedFormikField,
 } from './connection-store';
-export type { ConnectionFormikValues, ConnectionSShFormikValues, ConnectionTlsFormikValues } from './connection-store';
+export type {
+  ConnectionFormikValues,
+  ConnectionMainFormikValues,
+  ConnectionSShFormikValues,
+  ConnectionTlsFormikValues,
+  ConnectionAuthFormikValues,
+  ConnectionAdvancedFormikValues,
+} from './connection-store';

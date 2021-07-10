@@ -1,1 +1,1 @@
-export * as connections from './connections';
+export * as connectionsClient from './connections';

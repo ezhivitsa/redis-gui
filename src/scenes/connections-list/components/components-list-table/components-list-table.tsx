@@ -32,14 +32,14 @@ export function ComponentsListTable({
   function renderColumn(column: Column, item: Connection): ReactNode {
     switch (column) {
       case Column.Name:
-        return item.name;
+        return item.main.name;
 
       case Column.Address:
         return '';
       // return `${item.host || ''}${item.post || ''}`.trim();
 
       case Column.User:
-        return item.username;
+        return item.auth.username;
     }
   }
 

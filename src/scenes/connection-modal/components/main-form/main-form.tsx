@@ -1,11 +1,16 @@
 import React, { ReactElement, ReactNode } from 'react';
-import { FieldArray, FieldArrayRenderProps, useField } from 'formik';
+import { FieldArray, FieldArrayRenderProps, FieldInputProps, FieldMetaProps, FieldHelperProps, useField } from 'formik';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 import { ConnectionType } from 'lib/db';
 import { useStyles } from 'lib/theme';
 
-import { ConnectionFormikField, ConnectionAddressFormikField, ConnectionFormikValues } from 'stores';
+import {
+  ConnectionFormikField,
+  ConnectionAddressFormikField,
+  ConnectionMainFormikField,
+  ConnectionMainFormikValues,
+} from 'stores';
 
 import { FormikField } from 'components/formik-field';
 import { Select, SelectSize, SelectWidth } from 'components/select';
@@ -13,19 +18,30 @@ import { Input, InputSize, InputWidth } from 'components/input';
 import { ButtonIcon, ButtonIconView } from 'components/button-icon';
 import { Button, ButtonSize } from 'components/button';
 import { Label, LabelSize } from 'components/label';
+import { Checkbox, CheckboxSize, CheckboxWidth } from 'components/checkbox';
 
-import styles from './connection-tab-form.pcss';
+import styles from './main-form.pcss';
 
-export function ConnectionTabForm(): ReactElement {
+function getFieldName(field: ConnectionMainFormikField): string {
+  return `${ConnectionFormikField.Main}.${field}`;
+}
+
+export function useMainField<Field extends ConnectionMainFormikField>(
+  field: Field,
+): [
+  FieldInputProps<ConnectionMainFormikValues[Field]>,
+  FieldMetaProps<ConnectionMainFormikValues[Field]>,
+  FieldHelperProps<ConnectionMainFormikValues[Field]>,
+] {
+  return useField<ConnectionMainFormikValues[Field]>(getFieldName(field));
+}
+
+export function MainForm(): ReactElement {
   const cn = useStyles(styles, 'connection-tab-form');
 
-  const [typeField] = useField<ConnectionFormikValues[ConnectionFormikField.Type]>(ConnectionFormikField.Type);
-  const [addressesField, , addressesFieldHelpers] = useField<ConnectionFormikValues[ConnectionFormikField.Addresses]>(
-    ConnectionFormikField.Addresses,
-  );
-  const [, , sentinelNameFieldHelpers] = useField<ConnectionFormikValues[ConnectionFormikField.SentinelName]>(
-    ConnectionFormikField.SentinelName,
-  );
+  const [typeField] = useMainField(ConnectionMainFormikField.Type);
+  const [addressesField, , addressesFieldHelpers] = useMainField(ConnectionMainFormikField.Addresses);
+  const [, , sentinelNameFieldHelpers] = useMainField(ConnectionMainFormikField.SentinelName);
 
   function handleTypeChange(type: string): void {
     if (type === ConnectionType.Direct) {
@@ -41,7 +57,7 @@ export function ConnectionTabForm(): ReactElement {
     return (
       <div key={index} className={cn('address')}>
         <FormikField
-          name={`${ConnectionFormikField.Addresses}.${index}.${ConnectionAddressFormikField.Host}`}
+          name={`${getFieldName(ConnectionMainFormikField.Addresses)}.${index}.${ConnectionAddressFormikField.Host}`}
           component={Input}
           componentProps={{
             label: 'Host',
@@ -52,7 +68,7 @@ export function ConnectionTabForm(): ReactElement {
         />
 
         <FormikField
-          name={`${ConnectionFormikField.Addresses}.${index}.${ConnectionAddressFormikField.Port}`}
+          name={`${getFieldName(ConnectionMainFormikField.Addresses)}.${index}.${ConnectionAddressFormikField.Port}`}
           component={Input}
           componentProps={{
             label: 'Port',
@@ -107,7 +123,7 @@ export function ConnectionTabForm(): ReactElement {
 
     return (
       <FormikField
-        name={ConnectionFormikField.SentinelName}
+        name={getFieldName(ConnectionMainFormikField.SentinelName)}
         component={Input}
         componentProps={{
           label: 'Sentinel Name',
@@ -122,7 +138,7 @@ export function ConnectionTabForm(): ReactElement {
   return (
     <div>
       <FormikField
-        name={ConnectionFormikField.Type}
+        name={getFieldName(ConnectionMainFormikField.Type)}
         component={Select}
         componentProps={{
           label: 'Type',
@@ -139,7 +155,7 @@ export function ConnectionTabForm(): ReactElement {
       />
 
       <FormikField
-        name={ConnectionFormikField.Name}
+        name={getFieldName(ConnectionMainFormikField.Name)}
         component={Input}
         componentProps={{
           label: 'Name',
@@ -152,7 +168,7 @@ export function ConnectionTabForm(): ReactElement {
       {renderSentinelNameField()}
 
       <FieldArray
-        name={ConnectionFormikField.Addresses}
+        name={getFieldName(ConnectionMainFormikField.Addresses)}
         render={(arrayHelpers) => (
           <>
             {renderAddressesLabel()}
@@ -160,6 +176,17 @@ export function ConnectionTabForm(): ReactElement {
             {renderAddressActions(arrayHelpers)}
           </>
         )}
+      />
+
+      <FormikField
+        name={getFieldName(ConnectionMainFormikField.ReadOnly)}
+        component={Checkbox}
+        componentProps={{
+          label: 'Read Only Connection',
+          size: CheckboxSize.S,
+          width: CheckboxWidth.Available,
+          className: cn('item'),
+        }}
       />
     </div>
   );

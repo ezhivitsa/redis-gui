@@ -21,7 +21,7 @@ export enum ConnectionType {
 
 export interface FileData {
   name: string;
-  text?: string;
+  text: string;
 }
 
 export interface ConnectionTls {
@@ -30,7 +30,7 @@ export interface ConnectionTls {
   ca?: FileData;
   usePem: boolean;
   pem?: FileData;
-  passphrase?: string;
+  passphrase: string;
   askForPassphraseEachTime: boolean;
   advancedOptions: boolean;
   crl?: FileData;
@@ -39,42 +39,51 @@ export interface ConnectionTls {
 
 export interface ConnectionSsh {
   enabled: boolean;
-  host?: string;
-  port?: string;
-  username?: string;
+  host: string;
+  port: string;
+  username: string;
   authMethod: SshAuthMethod;
   privateKey?: FileData;
-  passphrase?: string;
+  passphrase: string;
   askForPassphraseEachTime: boolean;
-  password?: string;
+  password: string;
   askForPasswordEachTime: boolean;
 }
 
 export interface ConnectionData {
-  port?: string;
-  host?: string;
+  port: string;
+  host: string;
+}
+
+export interface ConnectionMain {
+  name: string;
+  type: ConnectionType;
+  addresses: ConnectionData[];
+  sentinelName: string;
+  readOnly: boolean;
+}
+
+export interface ConnectionAuth {
+  performAuth: boolean;
+  password: string;
+  username: string;
+  sentinelPassword: string;
+}
+
+export interface ConnectionAdvanced {
+  family: string;
+  db: number;
+  keyPrefix: string;
+  stringNumbers: boolean;
 }
 
 export interface Connection {
   id: number;
-  name?: string;
-
-  type: ConnectionType;
-  connectionData: ConnectionData[];
-
-  performAuth: boolean;
-
-  family?: string;
-  db?: number;
-  password?: string;
-  username?: string;
-  sentinelPassword?: string;
-  keyPrefix?: string;
-  readOnly: boolean;
-  stringNumbers?: boolean;
-
+  main: ConnectionMain;
+  auth: ConnectionAuth;
   ssh: ConnectionSsh;
   tls: ConnectionTls;
+  advanced: ConnectionAdvanced;
 }
 
 export interface DbSchema {

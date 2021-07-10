@@ -15,6 +15,10 @@ import { FormikField } from 'components/formik-field';
 
 import styles from './tls-form.pcss';
 
+function getFieldName(field: ConnectionTlsFormikField): string {
+  return `${ConnectionFormikField.Tls}.${field}`;
+}
+
 function useTlsField<Field extends ConnectionTlsFormikField>(
   field: Field,
 ): [
@@ -22,7 +26,7 @@ function useTlsField<Field extends ConnectionTlsFormikField>(
   FieldMetaProps<ConnectionTlsFormikValues[Field]>,
   FieldHelperProps<ConnectionTlsFormikValues[Field]>,
 ] {
-  return useField<ConnectionTlsFormikValues[Field]>(`${ConnectionFormikField.Tls}.${field}`);
+  return useField<ConnectionTlsFormikValues[Field]>(getFieldName(field));
 }
 
 export function TlsForm(): ReactElement {
@@ -65,7 +69,7 @@ export function TlsForm(): ReactElement {
 
     return (
       <FormikField
-        name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.CaCertificate}`}
+        name={getFieldName(ConnectionTlsFormikField.CaCertificate)}
         component={UploadInput}
         componentProps={{
           label: 'CA Certificate',
@@ -85,7 +89,7 @@ export function TlsForm(): ReactElement {
     return (
       <>
         <FormikField
-          name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.Pem}`}
+          name={getFieldName(ConnectionTlsFormikField.Pem)}
           component={UploadInput}
           componentProps={{
             label: 'PEM Certificate/Key',
@@ -96,7 +100,7 @@ export function TlsForm(): ReactElement {
         />
 
         <FormikField
-          name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.Passphrase}`}
+          name={getFieldName(ConnectionTlsFormikField.Passphrase)}
           component={PasswordInput}
           componentProps={{
             label: 'Passphrase',
@@ -130,7 +134,7 @@ export function TlsForm(): ReactElement {
     return (
       <>
         <FormikField
-          name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.Crl}`}
+          name={getFieldName(ConnectionTlsFormikField.Crl)}
           component={UploadInput}
           componentProps={{
             label: 'CRL (Revocation List)',
@@ -141,7 +145,7 @@ export function TlsForm(): ReactElement {
         />
 
         <FormikField
-          name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.InvalidHostnames}`}
+          name={getFieldName(ConnectionTlsFormikField.InvalidHostnames)}
           component={Select}
           componentProps={{
             label: 'Invalid Hostnames',
@@ -168,7 +172,7 @@ export function TlsForm(): ReactElement {
   return (
     <div>
       <FormikField
-        name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.Enabled}`}
+        name={getFieldName(ConnectionTlsFormikField.Enabled)}
         component={Checkbox}
         componentProps={{
           label: 'Use TLS protocol',
@@ -179,7 +183,7 @@ export function TlsForm(): ReactElement {
       />
 
       <FormikField
-        name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.AuthenticationMethod}`}
+        name={getFieldName(ConnectionTlsFormikField.AuthenticationMethod)}
         component={Select}
         componentProps={{
           label: 'Authentication Method',
@@ -204,7 +208,7 @@ export function TlsForm(): ReactElement {
       {renderCaCertificateFields()}
 
       <FormikField
-        name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.UsePem}`}
+        name={getFieldName(ConnectionTlsFormikField.UsePem)}
         component={Checkbox}
         componentProps={{
           label: 'Use PEM Cert./Key',
@@ -219,7 +223,7 @@ export function TlsForm(): ReactElement {
       {renderPemFields()}
 
       <FormikField
-        name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.AdvancedOptions}`}
+        name={getFieldName(ConnectionTlsFormikField.AdvancedOptions)}
         component={Checkbox}
         componentProps={{
           label: 'Advanced Options',

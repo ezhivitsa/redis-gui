@@ -10,21 +10,29 @@ import {
   InvalidHostnames,
 } from 'lib/db';
 
+import { connectionsClient } from 'data';
+
 export enum ConnectionFormikField {
+  Main = 'main',
+  Auth = 'auth',
+  Ssh = 'ssh',
+  Tls = 'tls',
+  Advanced = 'advanced',
+}
+
+export enum ConnectionMainFormikField {
   Name = 'name',
   Type = 'type',
   Addresses = 'addresses',
-
+  ReadOnly = 'readOnly',
   SentinelName = 'sentinelName',
-  SentinelPassword = 'sentinelPassword',
+}
 
+export enum ConnectionAuthFormikField {
   PerformAuth = 'performAuth',
   Username = 'username',
   Password = 'password',
-
-  Ssh = 'ssh',
-
-  Tls = 'tls',
+  SentinelPassword = 'sentinelPassword',
 }
 
 export enum ConnectionAddressFormikField {
@@ -36,6 +44,7 @@ export enum ConnectionSShFormikField {
   Enabled = 'enabled',
   Host = 'host',
   Port = 'port',
+  Username = 'username',
   AuthMethod = 'authMethod',
   PrivateKey = 'privateKey',
   Passphrase = 'passphrase',
@@ -57,67 +66,108 @@ export enum ConnectionTlsFormikField {
   InvalidHostnames = 'invalidHostnames',
 }
 
+export enum ConnectionAdvancedFormikField {
+  Family = 'family',
+  Db = 'db',
+  KeyPrefix = 'keyPrefix',
+  StringNumbers = 'stringNumbers',
+}
+
 export interface ConnectionSShFormikValues {
-  enabled: boolean;
-  host?: string;
-  port?: string;
-  authMethod: SshAuthMethod;
-  privateKey?: FileData;
-  passphrase?: string;
-  askForPassphraseEachTime: boolean;
-  password?: string;
-  askForPasswordEachTime: boolean;
+  [ConnectionSShFormikField.Enabled]: boolean;
+  [ConnectionSShFormikField.Host]: string;
+  [ConnectionSShFormikField.Port]: string;
+  [ConnectionSShFormikField.Username]: string;
+  [ConnectionSShFormikField.AuthMethod]: SshAuthMethod;
+  [ConnectionSShFormikField.PrivateKey]?: FileData;
+  [ConnectionSShFormikField.Passphrase]: string;
+  [ConnectionSShFormikField.AskForPassphraseEachTime]: boolean;
+  [ConnectionSShFormikField.Password]: string;
+  [ConnectionSShFormikField.AskForPasswordEachTime]: boolean;
 }
 
 export interface ConnectionTlsFormikValues {
-  enabled: boolean;
-  authenticationMethod: AuthenticationMethod;
-  caCertificate?: FileData;
-  usePem: boolean;
-  pem?: FileData;
-  passphrase?: string;
-  askForPassphraseEachTime: boolean;
-  advancedOptions: boolean;
-  crl?: FileData;
-  invalidHostnames: InvalidHostnames;
+  [ConnectionTlsFormikField.Enabled]: boolean;
+  [ConnectionTlsFormikField.AuthenticationMethod]: AuthenticationMethod;
+  [ConnectionTlsFormikField.CaCertificate]?: FileData;
+  [ConnectionTlsFormikField.UsePem]: boolean;
+  [ConnectionTlsFormikField.Pem]?: FileData;
+  [ConnectionTlsFormikField.Passphrase]: string;
+  [ConnectionTlsFormikField.AskForPassphraseEachTime]: boolean;
+  [ConnectionTlsFormikField.AdvancedOptions]: boolean;
+  [ConnectionTlsFormikField.Crl]?: FileData;
+  [ConnectionTlsFormikField.InvalidHostnames]: InvalidHostnames;
+}
+
+export interface ConnectionMainFormikValues {
+  [ConnectionMainFormikField.Name]: string;
+  [ConnectionMainFormikField.Type]: ConnectionType;
+  [ConnectionMainFormikField.Addresses]: ConnectionData[];
+  [ConnectionMainFormikField.SentinelName]: string;
+  [ConnectionMainFormikField.ReadOnly]: boolean;
+}
+
+export interface ConnectionAuthFormikValues {
+  [ConnectionAuthFormikField.PerformAuth]: boolean;
+  [ConnectionAuthFormikField.Password]: string;
+  [ConnectionAuthFormikField.Username]: string;
+  [ConnectionAuthFormikField.SentinelPassword]: string;
+}
+
+export interface ConnectionAdvancedFormikValues {
+  [ConnectionAdvancedFormikField.Family]: string;
+  [ConnectionAdvancedFormikField.Db]: number;
+  [ConnectionAdvancedFormikField.KeyPrefix]: string;
+  [ConnectionAdvancedFormikField.StringNumbers]: boolean;
 }
 
 export interface ConnectionFormikValues {
-  [ConnectionFormikField.Name]?: string;
-  [ConnectionFormikField.Type]: ConnectionType;
-  [ConnectionFormikField.Addresses]: ConnectionData[];
-
-  [ConnectionFormikField.SentinelName]?: string;
-  [ConnectionFormikField.SentinelPassword]?: string;
-
-  [ConnectionFormikField.PerformAuth]: boolean;
-  [ConnectionFormikField.Username]?: string;
-  [ConnectionFormikField.Password]?: string;
-
+  [ConnectionFormikField.Main]: ConnectionMainFormikValues;
+  [ConnectionFormikField.Auth]: ConnectionAuthFormikValues;
   [ConnectionFormikField.Ssh]: ConnectionSShFormikValues;
-
   [ConnectionFormikField.Tls]: ConnectionTlsFormikValues;
+  [ConnectionFormikField.Advanced]: ConnectionAdvancedFormikValues;
 }
 
 const defaultConnectionData: ConnectionFormikValues = {
-  type: ConnectionType.Direct,
-  name: 'New Connection',
-  addresses: [{ host: 'localhost', port: '6379' }],
-  performAuth: false,
+  main: {
+    name: 'New Connection',
+    type: ConnectionType.Direct,
+    addresses: [{ host: 'localhost', port: '6379' }],
+    sentinelName: '',
+    readOnly: false,
+  },
+  auth: {
+    performAuth: false,
+    password: '',
+    username: '',
+    sentinelPassword: '',
+  },
   ssh: {
     enabled: false,
+    host: '',
     port: '22',
+    username: '',
     authMethod: SshAuthMethod.PrivateKey,
+    passphrase: '',
     askForPassphraseEachTime: false,
+    password: '',
     askForPasswordEachTime: false,
   },
   tls: {
     enabled: false,
     authenticationMethod: AuthenticationMethod.SelfSigned,
     usePem: false,
+    passphrase: '',
     askForPassphraseEachTime: false,
     advancedOptions: false,
     invalidHostnames: InvalidHostnames.NotAllowed,
+  },
+  advanced: {
+    family: '4',
+    db: 0,
+    keyPrefix: '',
+    stringNumbers: false,
   },
 };
 
@@ -136,26 +186,15 @@ export class ConnectionStore {
   get initialValues(): ConnectionFormikValues {
     return this.connection
       ? {
-          name: this.connection.name,
-          type: this.connection.type,
-
-          sentinelName: this.connection.name,
-          sentinelPassword: this.connection.sentinelPassword,
-
-          performAuth: this.connection.performAuth,
-          addresses: this.connection.connectionData,
-          password: this.connection.password,
-
-          ssh: this.connection.ssh,
-          tls: this.connection.tls,
+          ...this.connection,
         }
       : defaultConnectionData;
   }
 
   @action
-  createOrUpdateConnection(data: ConnectionFormikValues): void {
+  async createOrUpdateConnection(data: ConnectionFormikValues): Promise<void> {
     if (this.connection) {
-      // create connection
+      const connectionData = await connectionsClient.create(data);
     } else {
       // update connection
     }

@@ -16,6 +16,10 @@ import { FormikField } from 'components/formik-field';
 
 import styles from './ssh-form.pcss';
 
+function getFieldName(field: ConnectionSShFormikField): string {
+  return `${ConnectionFormikField.Ssh}.${field}`;
+}
+
 function useSshField<Field extends ConnectionSShFormikField>(
   field: Field,
 ): [
@@ -23,7 +27,7 @@ function useSshField<Field extends ConnectionSShFormikField>(
   FieldMetaProps<ConnectionSShFormikValues[Field]>,
   FieldHelperProps<ConnectionSShFormikValues[Field]>,
 ] {
-  return useField<ConnectionSShFormikValues[Field]>(`${ConnectionFormikField.Ssh}.${field}`);
+  return useField<ConnectionSShFormikValues[Field]>(getFieldName(field));
 }
 
 export function SshForm(): ReactElement {
@@ -58,7 +62,7 @@ export function SshForm(): ReactElement {
     return (
       <>
         <FormikField
-          name={`${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.PrivateKey}`}
+          name={getFieldName(ConnectionSShFormikField.PrivateKey)}
           component={UploadInput}
           componentProps={{
             label: 'Private key',
@@ -70,7 +74,7 @@ export function SshForm(): ReactElement {
         />
 
         <FormikField
-          name={`${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.Passphrase}`}
+          name={getFieldName(ConnectionSShFormikField.Passphrase)}
           component={PasswordInput}
           componentProps={{
             label: 'Passphrase',
@@ -82,7 +86,7 @@ export function SshForm(): ReactElement {
         />
 
         <FormikField
-          name={`${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.AskForPassphraseEachTime}`}
+          name={getFieldName(ConnectionSShFormikField.AskForPassphraseEachTime)}
           component={Checkbox}
           componentProps={{
             label: 'Ask for passphrase each time',
@@ -103,7 +107,7 @@ export function SshForm(): ReactElement {
     return (
       <>
         <FormikField
-          name={`${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.Passphrase}`}
+          name={getFieldName(ConnectionSShFormikField.Passphrase)}
           component={PasswordInput}
           componentProps={{
             label: 'Password',
@@ -115,7 +119,7 @@ export function SshForm(): ReactElement {
         />
 
         <FormikField
-          name={`${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.AskForPasswordEachTime}`}
+          name={getFieldName(ConnectionSShFormikField.AskForPasswordEachTime)}
           component={Checkbox}
           componentProps={{
             label: 'Ask for password each time',
@@ -131,7 +135,7 @@ export function SshForm(): ReactElement {
   return (
     <div>
       <FormikField
-        name={`${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.Enabled}`}
+        name={getFieldName(ConnectionSShFormikField.Enabled)}
         component={Checkbox}
         componentProps={{
           label: 'Use SSH tunnel',
@@ -143,7 +147,7 @@ export function SshForm(): ReactElement {
 
       <div className={classnames(cn('address-item'), cn('item'))}>
         <FormikField
-          name={`${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.Host}`}
+          name={getFieldName(ConnectionSShFormikField.Host)}
           component={Input}
           componentProps={{
             label: 'Address Host',
@@ -155,7 +159,7 @@ export function SshForm(): ReactElement {
         />
 
         <FormikField
-          name={`${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.Port}`}
+          name={getFieldName(ConnectionSShFormikField.Port)}
           component={Input}
           componentProps={{
             label: 'Port',
@@ -168,7 +172,7 @@ export function SshForm(): ReactElement {
       </div>
 
       <FormikField
-        name={`${ConnectionFormikField.Ssh}.${ConnectionSShFormikField.AuthMethod}`}
+        name={getFieldName(ConnectionSShFormikField.AuthMethod)}
         component={Select}
         componentProps={{
           label: 'SSH Auth Method',
