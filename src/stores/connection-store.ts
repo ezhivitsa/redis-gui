@@ -1,4 +1,4 @@
-import { observable, action, computed, makeObservable } from 'mobx';
+import { observable, action, computed, makeObservable, runInAction } from 'mobx';
 
 import {
   Connection,
@@ -156,7 +156,7 @@ const defaultConnectionData: ConnectionFormikValues = {
   },
   tls: {
     enabled: false,
-    authenticationMethod: AuthenticationMethod.SelfSigned,
+    authenticationMethod: AuthenticationMethod.CaCertificate,
     usePem: false,
     passphrase: '',
     askForPassphraseEachTime: false,
@@ -178,6 +178,9 @@ export class ConnectionStore {
   @observable
   modalVisible = false;
 
+  @observable
+  isSaving = false;
+
   constructor() {
     makeObservable(this);
   }
@@ -193,11 +196,21 @@ export class ConnectionStore {
 
   @action
   async createOrUpdateConnection(data: ConnectionFormikValues): Promise<void> {
+    this.isSaving = true;
+
+    let connectionData: Connection;
+
     if (this.connection) {
-      const connectionData = await connectionsClient.create(data);
+      connectionData = await connectionsClient.update(this.connection.id, data);
     } else {
-      // update connection
+      connectionData = await connectionsClient.create(data);
     }
+
+    runInAction(() => {
+      this.connection = connectionData;
+      this.modalVisible = false;
+      this.isSaving = false;
+    });
   }
 
   @action

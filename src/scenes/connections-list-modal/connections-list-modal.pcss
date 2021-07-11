@@ -3,13 +3,20 @@
 .connections-list-modal {
   max-width: 600px;
 
+  &__delete-btn {
+    margin-right: auto;
+  }
+
   &__action-btn {
-    &:not(:first-of-type) {
-      margin-left: var(--grid2);
-    }
+    margin-left: var(--grid2);
   }
 
   &__connections {
     margin-top: var(--grid1);
+  }
+
+  &__actions {
+    display: flex;
+    margin-top: var(--grid4);
   }
 }

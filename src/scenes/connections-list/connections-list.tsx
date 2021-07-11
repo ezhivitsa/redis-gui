@@ -21,7 +21,7 @@ interface Props {
 export const ConnectionsList = observer(({ onDoubleClick, className }: Props): ReactElement => {
   const cn = useStyles(styles, 'connections-list');
   const connectionsStore = useConnectionsStore();
-  const { isLoading, connections } = connectionsStore;
+  const { isLoading, connections, selectedConnection } = connectionsStore;
 
   useEffect(() => {
     connectionsStore.loadData();
@@ -61,6 +61,7 @@ export const ConnectionsList = observer(({ onDoubleClick, className }: Props): R
       <ComponentsListTable
         className={className}
         list={connections}
+        active={selectedConnection}
         onConnectionClick={handleConnectionClick}
         onConnectionDoubleClick={handleConnectionConnect}
       />

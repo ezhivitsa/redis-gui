@@ -62,7 +62,7 @@ export function ConnectionModal({ open, connection, onClose }: Props): ReactElem
   const [activeTab, setActiveTab] = useState(ConnectionTab.Connection);
 
   const connectionStore = useConnectionStore();
-  const { initialValues } = connectionStore;
+  const { initialValues, isSaving } = connectionStore;
 
   useEffect(() => {
     return () => {
@@ -77,19 +77,19 @@ export function ConnectionModal({ open, connection, onClose }: Props): ReactElem
   function renderForm(): ReactNode {
     switch (activeTab) {
       case ConnectionTab.Connection:
-        return <MainForm />;
+        return <MainForm isSaving={isSaving} />;
 
       case ConnectionTab.Authentication:
-        return <AuthenticationForm />;
+        return <AuthenticationForm isSaving={isSaving} />;
 
       case ConnectionTab.Ssh:
-        return <SshForm />;
+        return <SshForm isSaving={isSaving} />;
 
       case ConnectionTab.Tls:
-        return <TlsForm />;
+        return <TlsForm isSaving={isSaving} />;
 
       case ConnectionTab.Advanced:
-        return <AdvancedForm />;
+        return <AdvancedForm isSaving={isSaving} />;
 
       default:
         return null;
@@ -99,11 +99,23 @@ export function ConnectionModal({ open, connection, onClose }: Props): ReactElem
   function renderActions(formikProps: FormikProps<ConnectionFormikValues>): ReactNode {
     return (
       <div className={cn('actions')}>
-        <Button className={cn('test-connection-btn')} size={ButtonSize.S} view={ButtonView.Default} icon={faGlobe}>
+        <Button
+          className={cn('test-connection-btn')}
+          size={ButtonSize.S}
+          view={ButtonView.Default}
+          icon={faGlobe}
+          disabled={isSaving}
+        >
           Test connection
         </Button>
 
-        <Button className={cn('action-btn')} size={ButtonSize.S} view={ButtonView.Default} onClick={onClose}>
+        <Button
+          className={cn('action-btn')}
+          size={ButtonSize.S}
+          view={ButtonView.Default}
+          onClick={onClose}
+          disabled={isSaving}
+        >
           Cancel
         </Button>
 
@@ -112,6 +124,8 @@ export function ConnectionModal({ open, connection, onClose }: Props): ReactElem
           size={ButtonSize.S}
           view={ButtonView.Success}
           onClick={formikProps.handleSubmit}
+          disabled={isSaving}
+          type="submit"
         >
           Save
         </Button>

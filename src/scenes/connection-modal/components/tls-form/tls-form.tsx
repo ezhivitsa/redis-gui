@@ -15,6 +15,10 @@ import { FormikField } from 'components/formik-field';
 
 import styles from './tls-form.pcss';
 
+interface Props {
+  isSaving: boolean;
+}
+
 function getFieldName(field: ConnectionTlsFormikField): string {
   return `${ConnectionFormikField.Tls}.${field}`;
 }
@@ -29,7 +33,7 @@ function useTlsField<Field extends ConnectionTlsFormikField>(
   return useField<ConnectionTlsFormikValues[Field]>(getFieldName(field));
 }
 
-export function TlsForm(): ReactElement {
+export function TlsForm({ isSaving }: Props): ReactElement {
   const cn = useStyles(styles, 'tls-form');
 
   const [enabledField] = useTlsField(ConnectionTlsFormikField.Enabled);
@@ -45,7 +49,7 @@ export function TlsForm(): ReactElement {
   const [, , crlHelper] = useTlsField(ConnectionTlsFormikField.Crl);
   const [, , invalidHostnamesHelper] = useTlsField(ConnectionTlsFormikField.InvalidHostnames);
 
-  const disabled = !enabledField.value;
+  const disabled = !enabledField.value || isSaving;
 
   function handleAuthenticationMethodChange(): void {
     caCertificateHelper.setValue(undefined);
@@ -179,6 +183,7 @@ export function TlsForm(): ReactElement {
           size: CheckboxSize.S,
           width: CheckboxWidth.Available,
           className: cn('item'),
+          disabled: isSaving,
         }}
       />
 

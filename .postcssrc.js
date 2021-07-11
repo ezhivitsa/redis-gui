@@ -15,7 +15,7 @@ module.exports = {
       ]
     }),
     postcssNested,
-    cssVariables(),
+    cssVariables({preserve: 'computed'}),
     postcssPresetEnv({
       stage: 2,
       features: {

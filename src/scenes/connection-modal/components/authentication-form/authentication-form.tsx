@@ -20,6 +20,10 @@ import { useMainField } from '../main-form';
 
 import styles from './authentication-form.pcss';
 
+interface Props {
+  isSaving: boolean;
+}
+
 function getFieldName(field: ConnectionAuthFormikField): string {
   return `${ConnectionFormikField.Auth}.${field}`;
 }
@@ -34,13 +38,13 @@ function useAuthField<Field extends ConnectionAuthFormikField>(
   return useField<ConnectionAuthFormikValues[Field]>(getFieldName(field));
 }
 
-export function AuthenticationForm(): ReactElement {
+export function AuthenticationForm({ isSaving }: Props): ReactElement {
   const cn = useStyles(styles, 'authentication-form');
 
   const [typeField] = useMainField(ConnectionMainFormikField.Type);
   const [performAuthField] = useAuthField(ConnectionAuthFormikField.PerformAuth);
 
-  const disabled = !performAuthField.value;
+  const disabled = !performAuthField.value || isSaving;
 
   function renderSentinelPassword(): ReactNode {
     if (typeField.value !== ConnectionType.Sentinel) {
@@ -73,6 +77,7 @@ export function AuthenticationForm(): ReactElement {
           size: CheckboxSize.S,
           width: CheckboxWidth.Available,
           className: cn('item'),
+          disabled: isSaving,
         }}
       />
 

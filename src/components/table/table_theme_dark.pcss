@@ -2,14 +2,23 @@
 
 .table_theme_dark {
   .table {
+    &__heading,
     &__column {
-      border-left-color: var(--color-grey-900);
-      border-bottom-color: var(--color-grey-900);
+      color: var(--color-grey-400);
+    }
 
-      &._heading {
-        color: var(--color-grey-300);
-        background: var(--color-grey-850);
+    &__column {
+      border-top-color: var(--color-grey-500);
+
+      &._hovered,
+      &._active {
+        background: var(--color-grey-750);
       }
+    }
+
+    &__heading {
+      color: var(--color-grey-300);
+      background: var(--color-grey-850);
     }
   }
 }

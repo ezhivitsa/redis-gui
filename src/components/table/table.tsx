@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, CSSProperties, KeyboardEvent } from 'react';
+import React, { ReactElement, ReactNode, CSSProperties, KeyboardEvent, useState } from 'react';
 
 import { useStyles } from 'lib/theme';
 import { isEnterEvent } from 'lib/keyboard';
@@ -20,7 +20,10 @@ interface Props<C extends string, D extends Record<string, any>> {
   style?: Partial<Record<C, CSSProperties>>;
   size: TableSize;
   className?: string;
+  activeItem?: D;
 }
+
+// ToDo: handle click outside
 
 export function Table<C extends string, D extends Record<string, any>>({
   columns,
@@ -32,8 +35,12 @@ export function Table<C extends string, D extends Record<string, any>>({
   style,
   size,
   className,
+  activeItem,
 }: Props<C, D>): ReactElement {
   const cn = useStyles(styles, 'table', className);
+  const [hoverItem, setHoverItem] = useState<D | null>(null);
+
+  const selectable = Boolean(onRowClick);
 
   function handleRowClick(item: D) {
     return () => {
@@ -55,13 +62,23 @@ export function Table<C extends string, D extends Record<string, any>>({
     };
   }
 
+  function handleMouseOver(item: D) {
+    return () => {
+      setHoverItem(item);
+    };
+  }
+
+  function handleMouseOut(item: D) {
+    return () => {
+      if (hoverItem === item) {
+        setHoverItem(null);
+      }
+    };
+  }
+
   function renderHeadings(): ReactNode[] {
-    return columns.map((column, index) => (
-      <div
-        key={`heading-${column}`}
-        className={cn('column', { heading: true, firstColumn: index === 0, size })}
-        style={style?.[column]}
-      >
+    return columns.map((column) => (
+      <div key={`heading-${column}`} className={cn('heading', { size })} style={style?.[column]}>
         {heading[column]}
       </div>
     ));
@@ -71,13 +88,17 @@ export function Table<C extends string, D extends Record<string, any>>({
     return columns.map((column) => (
       <div
         key={`column-${column}`}
-        className={cn('column')}
+        className={cn('column', { size, selectable, hovered: item === hoverItem, active: item === activeItem })}
         style={style?.[column]}
         role="button"
         tabIndex={0}
         onClick={handleRowClick(item)}
         onDoubleClick={handleRowDoubleClick(item)}
         onKeyDown={handleRowKeyDown(item)}
+        onMouseOver={selectable ? handleMouseOver(item) : undefined}
+        onFocus={selectable ? handleMouseOver(item) : undefined}
+        onMouseOut={selectable ? handleMouseOut(item) : undefined}
+        onBlur={selectable ? handleMouseOut(item) : undefined}
       >
         {renderColumn(column, item)}
       </div>

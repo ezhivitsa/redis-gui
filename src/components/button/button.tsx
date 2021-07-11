@@ -18,6 +18,8 @@ export enum ButtonView {
   Danger = 'danger',
 }
 
+type ButtonType = 'submit' | 'button' | 'reset';
+
 interface Props {
   children?: ReactNode;
   className?: string;
@@ -25,6 +27,8 @@ interface Props {
   view: ButtonView;
   onClick?: () => void;
   icon?: IconProp;
+  disabled?: boolean;
+  type?: ButtonType;
 }
 
 const mapSizeToIconSize: Record<ButtonSize, SizeProp> = {
@@ -32,8 +36,16 @@ const mapSizeToIconSize: Record<ButtonSize, SizeProp> = {
   [ButtonSize.M]: '1x',
 };
 
-export function Button({ children, className, size, view, onClick, icon }: Props): ReactElement {
+export function Button({ children, className, size, view, onClick, icon, disabled, type }: Props): ReactElement {
   const cn = useStyles(styles, 'button');
+
+  function handleClick(): void {
+    if (disabled) {
+      return;
+    }
+
+    onClick?.();
+  }
 
   function renderIcon(): ReactNode {
     if (!icon) {
@@ -48,7 +60,7 @@ export function Button({ children, className, size, view, onClick, icon }: Props
   }
 
   return (
-    <button className={classnames(cn({ size, view }), className)} onClick={onClick}>
+    <button className={classnames(cn({ size, view, disabled }), className)} onClick={handleClick} type={type}>
       {renderIcon()}
       <span>{children}</span>
     </button>

@@ -3,4 +3,9 @@
 
 .button-icon {
   cursor: pointer;
+
+  &._disabled {
+    pointer-events: none;
+    opacity: var(--opacity-200);
+  }
 }

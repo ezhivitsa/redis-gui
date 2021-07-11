@@ -33,12 +33,20 @@ export function block(
         if (theme && themeStyleClass) {
           resultClassNames += ` ${themeStyleClass}`;
         }
+
+        if (additionalClassName) {
+          resultClassNames += ` ${additionalClassName}`;
+        }
       }
     } else {
       resultClassNames = styles[toCamelCase(blockName)] || '';
 
       if (theme && themeStyleClass) {
         resultClassNames += ` ${themeStyleClass}`;
+      }
+
+      if (additionalClassName) {
+        resultClassNames += ` ${additionalClassName}`;
       }
     }
 
@@ -60,10 +68,6 @@ export function block(
           resultClassNames += ` ${className}`;
         }
       });
-    }
-
-    if (additionalClassName) {
-      resultClassNames += ` ${additionalClassName}`;
     }
 
     return resultClassNames.trim();

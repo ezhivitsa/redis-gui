@@ -15,6 +15,7 @@ interface Props {
   list: Connection[];
   onConnectionClick: (connection: Connection) => void;
   onConnectionDoubleClick: (connection: Connection) => void;
+  active: Connection | null;
 }
 
 const columnName: Record<Column, string> = {
@@ -26,6 +27,7 @@ const columnName: Record<Column, string> = {
 export function ComponentsListTable({
   className,
   list,
+  active,
   onConnectionClick,
   onConnectionDoubleClick,
 }: Props): ReactElement {
@@ -48,6 +50,7 @@ export function ComponentsListTable({
       className={className}
       columns={[Column.Name, Column.Address, Column.User]}
       data={list}
+      activeItem={active || undefined}
       renderColumn={renderColumn}
       heading={columnName}
       onRowClick={onConnectionClick}

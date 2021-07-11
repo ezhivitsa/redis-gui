@@ -22,6 +22,10 @@ import { Checkbox, CheckboxSize, CheckboxWidth } from 'components/checkbox';
 
 import styles from './main-form.pcss';
 
+interface Props {
+  isSaving: boolean;
+}
+
 function getFieldName(field: ConnectionMainFormikField): string {
   return `${ConnectionFormikField.Main}.${field}`;
 }
@@ -36,7 +40,7 @@ export function useMainField<Field extends ConnectionMainFormikField>(
   return useField<ConnectionMainFormikValues[Field]>(getFieldName(field));
 }
 
-export function MainForm(): ReactElement {
+export function MainForm({ isSaving }: Props): ReactElement {
   const cn = useStyles(styles, 'connection-tab-form');
 
   const [typeField] = useMainField(ConnectionMainFormikField.Type);
@@ -64,6 +68,7 @@ export function MainForm(): ReactElement {
             size: InputSize.S,
             width: InputWidth.Available,
             className: cn('host'),
+            disabled: isSaving,
           }}
         />
 
@@ -75,6 +80,7 @@ export function MainForm(): ReactElement {
             size: InputSize.S,
             width: InputWidth.Available,
             className: cn('port'),
+            disabled: isSaving,
           }}
         />
 
@@ -84,6 +90,7 @@ export function MainForm(): ReactElement {
             view={ButtonIconView.Danger}
             onClick={() => arrayHelpers.remove(index)}
             className={cn('remove-btn')}
+            disabled={isSaving}
           />
         )}
       </div>
@@ -97,7 +104,7 @@ export function MainForm(): ReactElement {
 
     return (
       <div className={cn('add-btn-wrap')}>
-        <Button size={ButtonSize.S} onClick={() => arrayHelpers.push({})}>
+        <Button size={ButtonSize.S} onClick={() => arrayHelpers.push({})} disabled={isSaving}>
           Add
         </Button>
       </div>
@@ -130,6 +137,7 @@ export function MainForm(): ReactElement {
           size: InputSize.S,
           width: InputWidth.Available,
           className: cn('item'),
+          disabled: isSaving,
         }}
       />
     );
@@ -151,6 +159,7 @@ export function MainForm(): ReactElement {
           width: SelectWidth.Available,
           className: cn('item'),
           onChange: handleTypeChange,
+          disabled: isSaving,
         }}
       />
 
@@ -162,6 +171,7 @@ export function MainForm(): ReactElement {
           size: InputSize.S,
           width: InputWidth.Available,
           className: cn('item'),
+          disabled: isSaving,
         }}
       />
 
@@ -186,6 +196,7 @@ export function MainForm(): ReactElement {
           size: CheckboxSize.S,
           width: CheckboxWidth.Available,
           className: cn('item'),
+          disabled: isSaving,
         }}
       />
     </div>

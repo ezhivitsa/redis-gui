@@ -1,3 +1,5 @@
+import { DBSchema } from 'idb';
+
 export enum AuthenticationMethod {
   SelfSigned = 'self-signed',
   CaCertificate = 'ca-certificate',
@@ -86,6 +88,9 @@ export interface Connection {
   advanced: ConnectionAdvanced;
 }
 
-export interface DbSchema {
-  connections: Connection;
+export interface Db extends DBSchema {
+  connections: {
+    value: Connection;
+    key: number;
+  };
 }

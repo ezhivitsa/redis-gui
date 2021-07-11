@@ -9,10 +9,24 @@ export async function list(): Promise<Connection[]> {
 
 export async function create(data: Omit<Connection, 'id'>): Promise<Connection> {
   const db = await dbPromise;
-  const key = await db.add(DB_CONNECTIONS_STORE, data);
+  const key = await db.add(DB_CONNECTIONS_STORE, data as Connection);
 
   return {
-    id: key as number,
+    id: key,
     ...data,
   };
+}
+
+export async function update(id: number, data: Omit<Connection, 'id'>): Promise<Connection> {
+  const db = await dbPromise;
+
+  const connectionData = { ...data, id };
+  await db.put(DB_CONNECTIONS_STORE, connectionData, id);
+
+  return connectionData;
+}
+
+export async function deleteItem(id: number): Promise<void> {
+  const db = await dbPromise;
+  await db.delete(DB_CONNECTIONS_STORE, id);
 }

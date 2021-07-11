@@ -6,15 +6,11 @@
 .table {
   display: grid;
 
-  &__column {
+  &__column,
+  &__heading {
     font-size: var(--font-size-500);
-    border-bottom: 1px solid;
-    border-left: 1px solid;
     padding: var(--grid2);
-
-    &._first-column {
-      border-left: 0;
-    }
+    outline: 0;
 
     &._size_s {
       font-size: var(--font-size-200);
@@ -22,6 +18,14 @@
 
     &._size_m {
       font-size: var(--font-size-400);
+    }
+  }
+
+  &__column {
+    border-top: 1px solid;
+
+    &._selectable {
+      cursor: pointer;
     }
   }
 }

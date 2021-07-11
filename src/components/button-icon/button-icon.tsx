@@ -19,12 +19,28 @@ interface Props {
   icon: IconProp;
   view: ButtonIconView;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
-export function ButtonIcon({ className, size, view, icon, onClick }: Props): ReactElement {
+export function ButtonIcon({ className, size, view, icon, disabled, onClick }: Props): ReactElement {
   const cn = useStyles(styles, 'button-icon');
 
-  return <FontAwesomeIcon className={classnames(cn({ view }), className)} icon={icon} size={size} onClick={onClick} />;
+  function handleClick(): void {
+    if (disabled) {
+      return;
+    }
+
+    onClick?.();
+  }
+
+  return (
+    <FontAwesomeIcon
+      className={classnames(cn({ view, disabled }), className)}
+      icon={icon}
+      size={size}
+      onClick={handleClick}
+    />
+  );
 }
 
 ButtonIcon.defaultProps = {

@@ -17,7 +17,7 @@ export enum InputWidth {
   Available = 'available',
 }
 
-export type InputType = 'text' | 'password';
+export type InputType = 'text' | 'password' | 'number';
 
 export interface InputProps {
   className?: string;
@@ -29,6 +29,9 @@ export interface InputProps {
   name?: string;
   type?: InputType;
   hint?: ReactNode;
+  step?: number;
+  min?: number;
+  max?: number;
   disabled?: boolean;
   onChange?: (value: string, event: ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
@@ -46,6 +49,9 @@ export function Input({
   type,
   hint,
   disabled,
+  step,
+  min,
+  max,
   onChange,
   onBlur,
   rightAddon,
@@ -101,6 +107,9 @@ export function Input({
         onBlur={handleBlur}
         onChange={handleInputChange}
         type={type}
+        step={step}
+        min={min}
+        max={max}
       />
     );
   }

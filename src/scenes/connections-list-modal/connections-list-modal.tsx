@@ -47,9 +47,9 @@ export const ConnectionsListModal = observer(({ open, onClose }: Props): ReactEl
     }
 
     return (
-      <div>
+      <div className={cn('actions')}>
         <Button
-          className={cn('action-btn')}
+          className={cn('delete-btn')}
           size={ButtonSize.S}
           view={ButtonView.Danger}
           icon={faTrashAlt}

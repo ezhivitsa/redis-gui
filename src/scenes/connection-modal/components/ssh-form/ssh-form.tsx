@@ -16,6 +16,10 @@ import { FormikField } from 'components/formik-field';
 
 import styles from './ssh-form.pcss';
 
+interface Props {
+  isSaving: boolean;
+}
+
 function getFieldName(field: ConnectionSShFormikField): string {
   return `${ConnectionFormikField.Ssh}.${field}`;
 }
@@ -30,7 +34,7 @@ function useSshField<Field extends ConnectionSShFormikField>(
   return useField<ConnectionSShFormikValues[Field]>(getFieldName(field));
 }
 
-export function SshForm(): ReactElement {
+export function SshForm({ isSaving }: Props): ReactElement {
   const cn = useStyles(styles, 'ssh-form');
 
   const [enabledField] = useSshField(ConnectionSShFormikField.Enabled);
@@ -42,7 +46,7 @@ export function SshForm(): ReactElement {
   const [, , passwordHelper] = useSshField(ConnectionSShFormikField.Password);
   const [, , askForPasswordEachTimeHelper] = useSshField(ConnectionSShFormikField.AskForPasswordEachTime);
 
-  const disabled = !enabledField.value;
+  const disabled = !enabledField.value || isSaving;
 
   function handleAuthMethodChange(): void {
     privateKeyHelper.setValue(undefined);
@@ -142,6 +146,7 @@ export function SshForm(): ReactElement {
           size: CheckboxSize.S,
           width: CheckboxWidth.Available,
           className: cn('item'),
+          disabled: isSaving,
         }}
       />
 
