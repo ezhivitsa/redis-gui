@@ -40,6 +40,10 @@ export const ConnectionsList = observer(({ onDoubleClick, className }: Props): R
     onDoubleClick();
   }
 
+  function handleResetConnection(): void {
+    connectionsStore.setSelected(null);
+  }
+
   if (isLoading || !connections) {
     return <Spinner view={SpinnerView.Block} />;
   }
@@ -64,6 +68,7 @@ export const ConnectionsList = observer(({ onDoubleClick, className }: Props): R
         active={selectedConnection}
         onConnectionClick={handleConnectionClick}
         onConnectionDoubleClick={handleConnectionConnect}
+        onResetConnection={handleResetConnection}
       />
 
       {renderNoConnectionsText()}

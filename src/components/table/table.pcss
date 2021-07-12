@@ -4,7 +4,10 @@
 @import './table_theme_light.pcss';
 
 .table {
-  display: grid;
+  &__headings,
+  &__rows {
+    display: grid;
+  }
 
   &__column,
   &__heading {

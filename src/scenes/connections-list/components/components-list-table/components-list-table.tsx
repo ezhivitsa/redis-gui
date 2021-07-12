@@ -15,6 +15,7 @@ interface Props {
   list: Connection[];
   onConnectionClick: (connection: Connection) => void;
   onConnectionDoubleClick: (connection: Connection) => void;
+  onResetConnection: () => void;
   active: Connection | null;
 }
 
@@ -30,6 +31,7 @@ export function ComponentsListTable({
   active,
   onConnectionClick,
   onConnectionDoubleClick,
+  onResetConnection,
 }: Props): ReactElement {
   function renderColumn(column: Column, item: Connection): ReactNode {
     switch (column) {
@@ -55,6 +57,7 @@ export function ComponentsListTable({
       heading={columnName}
       onRowClick={onConnectionClick}
       onRowDoubleClick={onConnectionDoubleClick}
+      onClickOutside={onResetConnection}
       size={TableSize.S}
     />
   );

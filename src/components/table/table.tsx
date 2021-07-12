@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, CSSProperties, KeyboardEvent, useState } from 'react';
+import React, { ReactElement, ReactNode, CSSProperties, KeyboardEvent, useState, useEffect, useRef } from 'react';
 
 import { useStyles } from 'lib/theme';
 import { isEnterEvent } from 'lib/keyboard';
@@ -16,14 +16,13 @@ interface Props<C extends string, D extends Record<string, any>> {
   renderColumn: (column: C, item: D) => ReactNode;
   onRowClick?: (item: D) => void;
   onRowDoubleClick?: (item: D) => void;
+  onClickOutside?: () => void;
   heading: Record<C, string>;
   style?: Partial<Record<C, CSSProperties>>;
   size: TableSize;
   className?: string;
   activeItem?: D;
 }
-
-// ToDo: handle click outside
 
 export function Table<C extends string, D extends Record<string, any>>({
   columns,
@@ -32,6 +31,7 @@ export function Table<C extends string, D extends Record<string, any>>({
   renderColumn,
   onRowClick,
   onRowDoubleClick,
+  onClickOutside,
   style,
   size,
   className,
@@ -39,8 +39,30 @@ export function Table<C extends string, D extends Record<string, any>>({
 }: Props<C, D>): ReactElement {
   const cn = useStyles(styles, 'table', className);
   const [hoverItem, setHoverItem] = useState<D | null>(null);
+  const rowsRef = useRef<HTMLDivElement>(null);
 
   const selectable = Boolean(onRowClick);
+
+  useEffect(() => {
+    document.addEventListener('click', handleDocumentClick);
+
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  });
+
+  function handleDocumentClick(event: MouseEvent): void {
+    const { current } = rowsRef;
+    const { target } = event;
+
+    if (!current || !(target instanceof HTMLElement)) {
+      return;
+    }
+
+    if (!current.contains(target)) {
+      onClickOutside?.();
+    }
+  }
 
   function handleRowClick(item: D) {
     return () => {
@@ -110,14 +132,24 @@ export function Table<C extends string, D extends Record<string, any>>({
   }
 
   return (
-    <div
-      className={cn()}
-      style={{
-        gridTemplateColumns: `repeat(${columns.length}, 1fr)`,
-      }}
-    >
-      {renderHeadings()}
-      {renderRows()}
+    <div className={cn()}>
+      <div
+        className={cn('headings')}
+        style={{
+          gridTemplateColumns: `repeat(${columns.length}, 1fr)`,
+        }}
+      >
+        {renderHeadings()}
+      </div>
+      <div
+        className={cn('rows')}
+        ref={rowsRef}
+        style={{
+          gridTemplateColumns: `repeat(${columns.length}, 1fr)`,
+        }}
+      >
+        {renderRows()}
+      </div>
     </div>
   );
 }

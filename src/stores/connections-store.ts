@@ -57,7 +57,7 @@ export class ConnectionsStore {
   cloneConnection(): void {}
 
   @action
-  setSelected(connection: Connection): void {
+  setSelected(connection: Connection | null): void {
     this.selectedConnection = connection;
   }
 
