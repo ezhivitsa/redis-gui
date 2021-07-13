@@ -10,12 +10,6 @@ export class ConnectionsStore {
   @observable
   connections: Connection[] | null = null;
 
-  @observable
-  isLoading = false;
-
-  @observable
-  selectedConnection: Connection | null = null;
-
   private _connectionStore: ConnectionStore;
 
   constructor(connectionStore: ConnectionStore) {
@@ -24,46 +18,38 @@ export class ConnectionsStore {
     this._connectionStore = connectionStore;
   }
 
-  @action
   async loadData(): Promise<void> {
-    this.isLoading = true;
+    const list = await connectionsClient.list();
 
-    try {
-      const list = await connectionsClient.list();
-
-      runInAction(() => {
-        this.connections = list;
-        this.isLoading = false;
-      });
-    } catch (err) {
-      console.error(err);
-
-      runInAction(() => {
-        this.isLoading = false;
-      });
-    }
+    runInAction(() => {
+      this.connections = list;
+    });
   }
 
   openEditConnection(): void {
-    this._connectionStore.setConnection(this.selectedConnection);
+    // this._connectionStore.setConnection(this.selectedConnection);
   }
 
   openCreateConnection(): void {
     this._connectionStore.setConnection(null);
   }
 
-  deleteConnection(): void {}
+  async deleteConnection(id: number): Promise<void> {
+    if (!this.connections?.some((conn) => conn.id === id)) {
+      return;
+    }
+
+    await connectionsClient.deleteItem(id);
+
+    runInAction(() => {
+      this.connections = this.connections?.filter((conn) => conn.id !== id) || null;
+    });
+  }
 
   cloneConnection(): void {}
 
   @action
-  setSelected(connection: Connection | null): void {
-    this.selectedConnection = connection;
-  }
-
-  @action
   dispose(): void {
     this.connections = null;
-    this.selectedConnection = null;
   }
 }

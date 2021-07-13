@@ -1,5 +1,4 @@
 import React, { ReactElement, ReactNode } from 'react';
-import { observer } from 'mobx-react-lite';
 import { faTrashAlt, faPen, faClone, faPlug } from '@fortawesome/free-solid-svg-icons';
 
 import { useStyles } from 'lib/theme';
@@ -18,28 +17,28 @@ interface Props {
   onClose: () => void;
 }
 
-export const ConnectionsListModal = observer(({ open, onClose }: Props): ReactElement => {
+export function ConnectionsListModal({ open, onClose }: Props): ReactElement {
   const cn = useStyles(styles, 'connections-list-modal');
-  const connectionsStore = useConnectionsStore();
-  const { selectedConnection } = connectionsStore;
+  // const connectionsStore = useConnectionsStore();
+  // const { selectedConnection, isDeleting } = connectionsStore;
 
-  function handleCreateConnection(): void {
-    connectionsStore.openCreateConnection();
-  }
+  // function handleCreateConnection(): void {
+  //   connectionsStore.openCreateConnection();
+  // }
 
-  function handleEditClick(): void {
-    connectionsStore.openEditConnection();
-  }
+  // function handleEditClick(): void {
+  //   connectionsStore.openEditConnection();
+  // }
 
-  function handleDeleteClick(): void {
-    connectionsStore.deleteConnection();
-  }
+  // function handleDeleteClick(): void {
+  //   connectionsStore.deleteConnection();
+  // }
 
-  function handleCloneClick(): void {
-    connectionsStore.cloneConnection();
-  }
+  // function handleCloneClick(): void {
+  //   connectionsStore.cloneConnection();
+  // }
 
-  function handleConnectClick(): void {}
+  // function handleConnectClick(): void {}
 
   function renderConnectionActions(): ReactNode {
     if (!selectedConnection) {
@@ -54,19 +53,38 @@ export const ConnectionsListModal = observer(({ open, onClose }: Props): ReactEl
           view={ButtonView.Danger}
           icon={faTrashAlt}
           onClick={handleDeleteClick}
+          disabled={isDeleting}
         >
           Delete
         </Button>
 
-        <Button className={cn('action-btn')} size={ButtonSize.S} icon={faPen} onClick={handleEditClick}>
+        <Button
+          className={cn('action-btn')}
+          size={ButtonSize.S}
+          icon={faPen}
+          onClick={handleEditClick}
+          disabled={isDeleting}
+        >
           Edit
         </Button>
 
-        <Button className={cn('action-btn')} size={ButtonSize.S} icon={faClone} onClick={handleCloneClick}>
+        <Button
+          className={cn('action-btn')}
+          size={ButtonSize.S}
+          icon={faClone}
+          onClick={handleCloneClick}
+          disabled={isDeleting}
+        >
           Clone
         </Button>
 
-        <Button className={cn('action-btn')} size={ButtonSize.S} icon={faPlug} onClick={handleConnectClick}>
+        <Button
+          className={cn('action-btn')}
+          size={ButtonSize.S}
+          icon={faPlug}
+          onClick={handleConnectClick}
+          disabled={isDeleting}
+        >
           Connect
         </Button>
       </div>
@@ -86,4 +104,4 @@ export const ConnectionsListModal = observer(({ open, onClose }: Props): ReactEl
       {renderConnectionActions()}
     </Modal>
   );
-});
+}
