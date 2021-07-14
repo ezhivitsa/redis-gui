@@ -1,47 +1,60 @@
-import React, { ReactElement, ReactNode } from 'react';
+import React, { ReactElement, ReactNode, useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
 import { faTrashAlt, faPen, faClone, faPlug } from '@fortawesome/free-solid-svg-icons';
 
 import { useStyles } from 'lib/theme';
 
-import { useConnectionsStore } from 'providers';
-
 import { Modal } from 'components/modal';
 import { Button, ButtonSize, ButtonView } from 'components/button';
 
-import { ConnectionsList } from 'scenes/connections-list';
+import { useStore } from './index';
+
+import { ConnectionsList } from './components/connections-list';
 
 import styles from './connections-list-modal.pcss';
 
-interface Props {
+export interface Props {
   open: boolean;
   onClose: () => void;
 }
 
-export function ConnectionsListModal({ open, onClose }: Props): ReactElement {
+export const ConnectionsListModalView = observer(({ open, onClose }: Props): ReactElement => {
   const cn = useStyles(styles, 'connections-list-modal');
+
+  const store = useStore();
+  const { selectedConnection, isDeleting } = store;
+
+  useEffect(() => {
+    store.onMounted();
+
+    return () => {
+      store.dispose();
+    };
+  }, []);
+
   // const connectionsStore = useConnectionsStore();
   // const { selectedConnection, isDeleting } = connectionsStore;
 
-  // function handleCreateConnection(): void {
-  //   connectionsStore.openCreateConnection();
-  // }
+  function handleCreateConnection(): void {
+    store.setCreateConnectionOpened(true);
+  }
 
-  // function handleEditClick(): void {
-  //   connectionsStore.openEditConnection();
-  // }
+  function handleEditClick(): void {
+    //   connectionsStore.openEditConnection();
+  }
 
-  // function handleDeleteClick(): void {
-  //   connectionsStore.deleteConnection();
-  // }
+  function handleDeleteClick(): void {
+    //   connectionsStore.deleteConnection();
+  }
 
-  // function handleCloneClick(): void {
-  //   connectionsStore.cloneConnection();
-  // }
+  function handleCloneClick(): void {
+    //   connectionsStore.cloneConnection();
+  }
 
-  // function handleConnectClick(): void {}
+  function handleConnectClick(): void {}
 
   function renderConnectionActions(): ReactNode {
-    if (!selectedConnection) {
+    if (selectedConnection === null) {
       return null;
     }
 
@@ -104,4 +117,4 @@ export function ConnectionsListModal({ open, onClose }: Props): ReactElement {
       {renderConnectionActions()}
     </Modal>
   );
-}
+});

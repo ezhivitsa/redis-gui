@@ -1,4 +1,4 @@
-import { makeObservable, observable, action, runInAction } from 'mobx';
+import { makeObservable, observable, action, runInAction, computed } from 'mobx';
 
 import { calculatePageState } from 'lib/page';
 import { Connection } from 'lib/db';
@@ -7,13 +7,11 @@ import { SceneStore, PageState } from 'types';
 
 import { ConnectionsStore } from 'stores';
 
-import { Props } from './types';
-
 interface Deps {
   connectionsStore: ConnectionsStore;
 }
 
-export class ConnectionsListModalStore extends SceneStore<Props> {
+export class ConnectionsListModalStore extends SceneStore {
   @observable
   private _isLoading = false;
 
@@ -21,7 +19,10 @@ export class ConnectionsListModalStore extends SceneStore<Props> {
   private _isDeleting = false;
 
   @observable
-  private _selectedConnection: number | null = null;
+  private _createConnectionOpened = false;
+
+  @observable
+  private _selectedConnectionId: number | null = null;
 
   @observable
   private _connectionsStore: ConnectionsStore;
@@ -34,11 +35,27 @@ export class ConnectionsListModalStore extends SceneStore<Props> {
     makeObservable(this);
   }
 
+  @computed
+  get isDeleting(): boolean {
+    return this._isDeleting;
+  }
+
+  @computed
   get sceneState(): PageState {
     return calculatePageState({
       loadingKeys: [this._isLoading],
       readyData: [this._connectionsStore.connections],
     });
+  }
+
+  @computed
+  get selectedConnection(): Connection | null {
+    return this._connectionsStore.connections?.find(({ id }) => id === this._selectedConnectionId) || null;
+  }
+
+  @computed
+  get connections(): Connection[] {
+    return this._connectionsStore.connections || [];
   }
 
   @action
@@ -54,13 +71,13 @@ export class ConnectionsListModalStore extends SceneStore<Props> {
 
   @action
   async deleteConnection(): Promise<void> {
-    if (!this._selectedConnection) {
+    if (!this._selectedConnectionId) {
       return;
     }
 
     this._isDeleting = true;
 
-    await this._connectionsStore.deleteConnection(this._selectedConnection);
+    await this._connectionsStore.deleteConnection(this._selectedConnectionId);
 
     runInAction(() => {
       this._isDeleting = false;
@@ -69,26 +86,20 @@ export class ConnectionsListModalStore extends SceneStore<Props> {
 
   @action
   setSelected(connection: Connection | null): void {
-    this._selectedConnection = connection?.id || null;
+    this._selectedConnectionId = connection?.id || null;
   }
 
   @action
   dispose(): void {
     this._isLoading = false;
     this._isDeleting = false;
-    this._selectedConnection = null;
+    this._selectedConnectionId = null;
 
     this._connectionsStore.dispose();
   }
 
-  collectProps(): Props {
-    return {
-      onMounted: this.onMounted,
-      setSelected: this.setSelected,
-      dispose: this.dispose,
-      sceneState: this.sceneState,
-      isDeleting: this._isDeleting,
-      connections: this._connectionsStore.connections,
-    };
+  @action
+  setCreateConnectionOpened(opened: boolean): void {
+    this._createConnectionOpened = opened;
   }
 }

@@ -4,18 +4,16 @@ import { Connection } from 'lib/db';
 
 import { connectionsClient } from 'data';
 
-import { ConnectionStore } from './connection-store';
+// import { ConnectionStore } from './connection-store';
 
 export class ConnectionsStore {
   @observable
   connections: Connection[] | null = null;
 
-  private _connectionStore: ConnectionStore;
-
-  constructor(connectionStore: ConnectionStore) {
+  constructor() {
     makeObservable(this);
 
-    this._connectionStore = connectionStore;
+    // this._connectionStore = connectionStore;
   }
 
   async loadData(): Promise<void> {
@@ -31,7 +29,7 @@ export class ConnectionsStore {
   }
 
   openCreateConnection(): void {
-    this._connectionStore.setConnection(null);
+    // this._connectionStore.setConnection(null);
   }
 
   async deleteConnection(id: number): Promise<void> {

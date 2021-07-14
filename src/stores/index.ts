@@ -17,3 +17,5 @@ export type {
   ConnectionAuthFormikValues,
   ConnectionAdvancedFormikValues,
 } from './connection-store';
+
+export { RootStore } from './root';

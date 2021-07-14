@@ -1,15 +1,17 @@
-import React, { ReactElement, ReactNode, useEffect } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import { observer } from 'mobx-react-lite';
+
+import { PageState } from 'types';
 
 import { Connection } from 'lib/db';
 import { useStyles } from 'lib/theme';
-
-import { useConnectionsStore } from 'providers';
 
 import { Spinner, SpinnerView } from 'components/spinner';
 import { Paragraph, ParagraphSize } from 'components/paragraph';
 
 import { ComponentsListTable } from './components/components-list-table';
+
+import { useStore } from 'scenes/connections-list-modal';
 
 import styles from './connections-list.pcss';
 
@@ -20,36 +22,29 @@ interface Props {
 
 export const ConnectionsList = observer(({ onDoubleClick, className }: Props): ReactElement => {
   const cn = useStyles(styles, 'connections-list');
-  const connectionsStore = useConnectionsStore();
-  const { isLoading, connections, selectedConnection } = connectionsStore;
 
-  useEffect(() => {
-    connectionsStore.loadData();
-
-    return () => {
-      connectionsStore.dispose();
-    };
-  }, [connectionsStore]);
+  const store = useStore();
+  const { sceneState, connections, selectedConnection } = store;
 
   function handleConnectionClick(connection: Connection): void {
-    connectionsStore.setSelected(connection);
+    store.setSelected(connection);
   }
 
   function handleConnectionConnect(connection: Connection): void {
-    connectionsStore.setSelected(connection);
+    store.setSelected(connection);
     onDoubleClick();
   }
 
   function handleResetConnection(): void {
-    connectionsStore.setSelected(null);
+    store.setSelected(null);
   }
 
-  if (isLoading || !connections) {
+  if (sceneState === PageState.LOADING) {
     return <Spinner view={SpinnerView.Block} />;
   }
 
   function renderNoConnectionsText(): ReactNode {
-    if (connections?.length) {
+    if (connections.length) {
       return null;
     }
 

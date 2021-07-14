@@ -1,14 +1,9 @@
 import { PageState } from './page';
 
-export abstract class SceneStore<
-  CollectedProps extends Record<string, any> = Record<string, any>,
-  OwnProps extends Record<string, any> = Record<string, any>,
-> {
+export abstract class SceneStore {
   get sceneState(): PageState | null {
     return null;
   }
-
-  abstract collectProps(ownProps: OwnProps): CollectedProps;
 
   onMounted(): void {
     return;
