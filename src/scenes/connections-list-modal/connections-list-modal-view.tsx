@@ -7,6 +7,8 @@ import { useStyles } from 'lib/theme';
 import { Modal } from 'components/modal';
 import { Button, ButtonSize, ButtonView } from 'components/button';
 
+import { ConnectionModal } from 'scenes/connection-modal';
+
 import { useStore } from './index';
 
 import { ConnectionsList } from './components/connections-list';
@@ -22,7 +24,7 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
   const cn = useStyles(styles, 'connections-list-modal');
 
   const store = useStore();
-  const { selectedConnection, isDeleting } = store;
+  const { selectedConnectionId, selectedConnection, isDeleting, createConnectionOpened } = store;
 
   useEffect(() => {
     store.onMounted();
@@ -31,9 +33,6 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
       store.dispose();
     };
   }, []);
-
-  // const connectionsStore = useConnectionsStore();
-  // const { selectedConnection, isDeleting } = connectionsStore;
 
   function handleCreateConnection(): void {
     store.setCreateConnectionOpened(true);
@@ -44,7 +43,7 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
   }
 
   function handleDeleteClick(): void {
-    //   connectionsStore.deleteConnection();
+    store.deleteConnection();
   }
 
   function handleCloneClick(): void {
@@ -52,6 +51,10 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
   }
 
   function handleConnectClick(): void {}
+
+  function handleCloneConnectionModal(): void {
+    store.setCreateConnectionOpened(false);
+  }
 
   function renderConnectionActions(): ReactNode {
     if (selectedConnection === null) {
@@ -115,6 +118,8 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
       <ConnectionsList onDoubleClick={handleConnectClick} className={cn('connections')} />
 
       {renderConnectionActions()}
+
+      <ConnectionModal open={createConnectionOpened} onClose={handleCloneConnectionModal} id={selectedConnectionId} />
     </Modal>
   );
 });

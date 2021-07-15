@@ -4,7 +4,11 @@ import { useField, FieldInputProps, FieldMetaProps, FieldHelperProps } from 'for
 import { useStyles } from 'lib/theme';
 import { AuthenticationMethod, InvalidHostnames } from 'lib/db';
 
-import { ConnectionFormikField, ConnectionTlsFormikField, ConnectionTlsFormikValues } from 'stores';
+import {
+  ConnectionFormikField,
+  ConnectionTlsFormikField,
+  ConnectionTlsFormikValues,
+} from 'scenes/connection-modal/types';
 
 import { Checkbox, CheckboxSize, CheckboxWidth } from 'components/checkbox';
 import { Select, SelectSize, SelectWidth } from 'components/select';

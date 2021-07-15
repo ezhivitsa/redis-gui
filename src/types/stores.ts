@@ -4,8 +4,4 @@ export abstract class SceneStore {
   get sceneState(): PageState | null {
     return null;
   }
-
-  onMounted(): void {
-    return;
-  }
 }

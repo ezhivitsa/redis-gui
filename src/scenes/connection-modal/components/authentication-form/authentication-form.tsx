@@ -9,7 +9,7 @@ import {
   ConnectionAuthFormikField,
   ConnectionAuthFormikValues,
   ConnectionMainFormikField,
-} from 'stores';
+} from 'scenes/connection-modal/types';
 
 import { FormikField } from 'components/formik-field';
 import { Checkbox, CheckboxSize, CheckboxWidth } from 'components/checkbox';

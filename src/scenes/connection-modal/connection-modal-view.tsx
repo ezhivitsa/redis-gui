@@ -1,12 +1,9 @@
 import React, { ReactElement, ReactNode, useState, useEffect } from 'react';
 import { Formik, FormikProps } from 'formik';
+import { observer } from 'mobx-react-lite';
 import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 
-import { Connection } from 'lib/db';
 import { useStyles } from 'lib/theme';
-
-import { ConnectionFormikValues } from 'stores';
-import { useConnectionStore } from 'providers';
 
 import { Modal } from 'components/modal';
 import { Tabs, TabItem } from 'components/tabs';
@@ -18,6 +15,10 @@ import { SshForm } from './components/ssh-form';
 import { TlsForm } from './components/tls-form';
 import { AdvancedForm } from './components/advanced-form';
 
+import { useStore } from './index';
+
+import { ConnectionFormikValues } from './types';
+
 import styles from './connection-modal.pcss';
 
 enum ConnectionTab {
@@ -28,8 +29,8 @@ enum ConnectionTab {
   Advanced = 'advanced',
 }
 
-interface Props {
-  connection?: Connection;
+export interface Props {
+  id?: number;
   onClose?: () => void;
   open: boolean;
 }
@@ -57,21 +58,24 @@ const tabs: TabItem<ConnectionTab>[] = [
   },
 ];
 
-export function ConnectionModal({ open, connection, onClose }: Props): ReactElement {
+export const ConnectionModalView = observer(({ open, id, onClose }: Props): ReactElement => {
   const cn = useStyles(styles, 'connection-modal');
   const [activeTab, setActiveTab] = useState(ConnectionTab.Connection);
 
-  const connectionStore = useConnectionStore();
+  const connectionStore = useStore();
   const { initialValues, isSaving } = connectionStore;
 
   useEffect(() => {
+    connectionStore.onMounted(id);
+
     return () => {
       connectionStore.dispose();
     };
-  }, [connectionStore]);
+  }, []);
 
-  function handleUpdateConnection(values: ConnectionFormikValues): void {
-    connectionStore.createOrUpdateConnection(values);
+  async function handleUpdateConnection(values: ConnectionFormikValues): Promise<void> {
+    await connectionStore.createOrUpdateConnection(values);
+    onClose?.();
   }
 
   function renderForm(): ReactNode {
@@ -143,7 +147,7 @@ export function ConnectionModal({ open, connection, onClose }: Props): ReactElem
   }
 
   return (
-    <Modal open={open} title={connection ? 'Edit connection' : 'Create connection'} className={cn()} onClose={onClose}>
+    <Modal open={open} title={id ? 'Edit connection' : 'Create connection'} className={cn()} onClose={onClose}>
       <Tabs className={cn('tabs')} items={tabs} active={activeTab} onChange={setActiveTab} />
 
       <Formik initialValues={initialValues} onSubmit={handleUpdateConnection}>
@@ -151,4 +155,4 @@ export function ConnectionModal({ open, connection, onClose }: Props): ReactElem
       </Formik>
     </Modal>
   );
-}
+});

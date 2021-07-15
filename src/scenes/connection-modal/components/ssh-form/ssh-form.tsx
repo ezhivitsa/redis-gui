@@ -5,7 +5,11 @@ import classnames from 'classnames';
 import { useStyles } from 'lib/theme';
 import { SshAuthMethod } from 'lib/db';
 
-import { ConnectionFormikField, ConnectionSShFormikField, ConnectionSShFormikValues } from 'stores';
+import {
+  ConnectionFormikField,
+  ConnectionSShFormikField,
+  ConnectionSShFormikValues,
+} from 'scenes/connection-modal/types';
 
 import { Checkbox, CheckboxSize, CheckboxWidth } from 'components/checkbox';
 import { Input, InputSize, InputWidth } from 'components/input';

@@ -10,7 +10,7 @@ import {
   ConnectionAddressFormikField,
   ConnectionMainFormikField,
   ConnectionMainFormikValues,
-} from 'stores';
+} from 'scenes/connection-modal/types';
 
 import { FormikField } from 'components/formik-field';
 import { Select, SelectSize, SelectWidth } from 'components/select';

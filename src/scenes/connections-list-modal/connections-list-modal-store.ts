@@ -41,11 +41,21 @@ export class ConnectionsListModalStore extends SceneStore {
   }
 
   @computed
+  get createConnectionOpened(): boolean {
+    return this._createConnectionOpened;
+  }
+
+  @computed
   get sceneState(): PageState {
     return calculatePageState({
       loadingKeys: [this._isLoading],
       readyData: [this._connectionsStore.connections],
     });
+  }
+
+  @computed
+  get selectedConnectionId(): number | undefined {
+    return this._selectedConnectionId || undefined;
   }
 
   @computed

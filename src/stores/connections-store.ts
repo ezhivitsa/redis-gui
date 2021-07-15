@@ -1,53 +1,54 @@
-import { action, runInAction, makeObservable, observable } from 'mobx';
+import { action, runInAction, makeObservable, observable, computed } from 'mobx';
 
 import { Connection } from 'lib/db';
 
 import { connectionsClient } from 'data';
 
-// import { ConnectionStore } from './connection-store';
-
 export class ConnectionsStore {
   @observable
-  connections: Connection[] | null = null;
+  private _connections?: Connection[];
 
   constructor() {
     makeObservable(this);
+  }
 
-    // this._connectionStore = connectionStore;
+  @computed
+  get connections(): Connection[] | undefined {
+    return this._connections;
   }
 
   async loadData(): Promise<void> {
     const list = await connectionsClient.list();
 
     runInAction(() => {
-      this.connections = list;
+      this._connections = list;
     });
   }
 
-  openEditConnection(): void {
-    // this._connectionStore.setConnection(this.selectedConnection);
-  }
-
-  openCreateConnection(): void {
-    // this._connectionStore.setConnection(null);
-  }
-
   async deleteConnection(id: number): Promise<void> {
-    if (!this.connections?.some((conn) => conn.id === id)) {
+    if (!this._connections?.some((conn) => conn.id === id)) {
       return;
     }
 
     await connectionsClient.deleteItem(id);
 
     runInAction(() => {
-      this.connections = this.connections?.filter((conn) => conn.id !== id) || null;
+      this._connections = this._connections?.filter((conn) => conn.id !== id);
     });
   }
 
-  cloneConnection(): void {}
+  @action
+  setConnection(connection: Connection): void {
+    const hasConnection = this._connections?.some(({ id }) => id === connection.id);
+    if (hasConnection) {
+      this._connections = this._connections?.map((conn) => (conn.id === connection.id ? connection : conn));
+    } else {
+      this._connections?.push(connection);
+    }
+  }
 
   @action
   dispose(): void {
-    this.connections = null;
+    this._connections = undefined;
   }
 }

@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 
 import { useStyles } from 'lib/theme';
 
-import { ConnectionFormikField, ConnectionAdvancedFormikField } from 'stores';
+import { ConnectionFormikField, ConnectionAdvancedFormikField } from 'scenes/connection-modal/types';
 
 import { FormikField } from 'components/formik-field';
 import { Input, InputSize, InputWidth } from 'components/input';
