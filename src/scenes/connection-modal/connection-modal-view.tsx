@@ -30,7 +30,7 @@ enum ConnectionTab {
 }
 
 export interface Props {
-  id?: number;
+  id?: string;
   onClose?: () => void;
   open: boolean;
 }
@@ -63,15 +63,15 @@ export const ConnectionModalView = observer(({ open, id, onClose }: Props): Reac
   const [activeTab, setActiveTab] = useState(ConnectionTab.Connection);
 
   const connectionStore = useStore();
-  const { initialValues, isSaving } = connectionStore;
+  const { initialValues, isSaving, isLoading } = connectionStore;
 
   useEffect(() => {
-    connectionStore.onMounted(id);
-
-    return () => {
+    if (open) {
+      connectionStore.onMounted(id);
+    } else {
       connectionStore.dispose();
-    };
-  }, []);
+    }
+  }, [open]);
 
   async function handleUpdateConnection(values: ConnectionFormikValues): Promise<void> {
     await connectionStore.createOrUpdateConnection(values);
@@ -146,13 +146,23 @@ export const ConnectionModalView = observer(({ open, id, onClose }: Props): Reac
     );
   }
 
+  function renderContent(): ReactNode {
+    if (isLoading) {
+      return null;
+    }
+
+    return (
+      <Formik initialValues={initialValues} onSubmit={handleUpdateConnection}>
+        {renderFormContent}
+      </Formik>
+    );
+  }
+
   return (
     <Modal open={open} title={id ? 'Edit connection' : 'Create connection'} className={cn()} onClose={onClose}>
       <Tabs className={cn('tabs')} items={tabs} active={activeTab} onChange={setActiveTab} />
 
-      <Formik initialValues={initialValues} onSubmit={handleUpdateConnection}>
-        {renderFormContent}
-      </Formik>
+      {renderContent()}
     </Modal>
   );
 });

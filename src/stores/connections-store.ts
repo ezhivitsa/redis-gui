@@ -25,7 +25,7 @@ export class ConnectionsStore {
     });
   }
 
-  async deleteConnection(id: number): Promise<void> {
+  async deleteConnection(id: string): Promise<void> {
     if (!this._connections?.some((conn) => conn.id === id)) {
       return;
     }
@@ -45,6 +45,18 @@ export class ConnectionsStore {
     } else {
       this._connections?.push(connection);
     }
+  }
+
+  async cloneConnection(id: string): Promise<void> {
+    const connection = this._connections?.find((conn) => conn.id === id);
+
+    if (!connection) {
+      return;
+    }
+
+    const { id: connectionId, ...clonedConnection } = connection;
+    const connectionData = await connectionsClient.create(JSON.parse(JSON.stringify(clonedConnection)));
+    this._connections?.push(connectionData);
   }
 
   @action

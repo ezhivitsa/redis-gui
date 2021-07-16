@@ -6,6 +6,6 @@ import { Db } from './types';
 
 export const dbPromise = openDB<Db>(DB_NAME, DB_VERSION, {
   upgrade(db) {
-    db.createObjectStore(DB_CONNECTIONS_STORE, { keyPath: 'id', autoIncrement: true });
+    db.createObjectStore(DB_CONNECTIONS_STORE, { keyPath: 'id' });
   },
 });

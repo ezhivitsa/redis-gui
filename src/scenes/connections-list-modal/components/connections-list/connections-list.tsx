@@ -56,7 +56,7 @@ export const ConnectionsList = observer(({ onDoubleClick, className }: Props): R
   }
 
   return (
-    <div>
+    <div className={cn()}>
       <ComponentsListTable
         className={className}
         list={connections}

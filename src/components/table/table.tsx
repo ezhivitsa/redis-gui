@@ -106,10 +106,10 @@ export function Table<C extends string, D extends Record<string, any>>({
     ));
   }
 
-  function renderRowColumns(item: D): ReactNode[] {
+  function renderRowColumns(item: D, index: number): ReactNode[] {
     return columns.map((column) => (
       <div
-        key={`column-${column}`}
+        key={`column-${column}-${item.id || index}`}
         className={cn('column', { size, selectable, hovered: item === hoverItem, active: item === activeItem })}
         style={style?.[column]}
         role="button"
@@ -128,7 +128,7 @@ export function Table<C extends string, D extends Record<string, any>>({
   }
 
   function renderRows(): ReactNode[] {
-    return data.reduce<ReactNode[]>((res, dataItem) => res.concat(renderRowColumns(dataItem)), []);
+    return data.reduce<ReactNode[]>((res, dataItem, index) => res.concat(renderRowColumns(dataItem, index)), []);
   }
 
   return (

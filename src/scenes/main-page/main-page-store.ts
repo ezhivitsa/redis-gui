@@ -1,14 +1,10 @@
 import { makeObservable, observable, action, computed } from 'mobx';
 
-import { SceneStore } from 'types';
-
-export class MainPageStore extends SceneStore {
+export class MainPageStore {
   @observable
   private _connectionsListOpened = false;
 
   constructor() {
-    super();
-
     makeObservable(this);
   }
 

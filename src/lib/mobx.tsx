@@ -1,12 +1,10 @@
 import React, { ReactElement, FC, createContext, useContext, useMemo } from 'react';
 
-import { SceneStore } from 'types';
-
-type UseStoreFn<Store extends SceneStore> = () => Store;
+type UseStoreFn<Store> = () => Store;
 
 type HocType = <OwnProps>(component: FC<OwnProps>) => FC<OwnProps>;
 
-export function glueStore<Store extends SceneStore>(store: Store): [UseStoreFn<Store>, HocType] {
+export function glueStore<Store>(store: Store): [UseStoreFn<Store>, HocType] {
   const StoreContext = createContext(store);
   const StoreProvider = StoreContext.Provider;
 

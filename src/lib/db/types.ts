@@ -80,7 +80,7 @@ export interface ConnectionAdvanced {
 }
 
 export interface Connection {
-  id: number;
+  id: string;
   main: ConnectionMain;
   auth: ConnectionAuth;
   ssh: ConnectionSsh;
@@ -91,6 +91,6 @@ export interface Connection {
 export interface Db extends DBSchema {
   connections: {
     value: Connection;
-    key: number;
+    key: string;
   };
 }

@@ -3,7 +3,7 @@ import { makeObservable, observable, action, runInAction, computed } from 'mobx'
 import { calculatePageState } from 'lib/page';
 import { Connection } from 'lib/db';
 
-import { SceneStore, PageState } from 'types';
+import { PageState } from 'types';
 
 import { ConnectionsStore } from 'stores';
 
@@ -11,7 +11,7 @@ interface Deps {
   connectionsStore: ConnectionsStore;
 }
 
-export class ConnectionsListModalStore extends SceneStore {
+export class ConnectionsListModalStore {
   @observable
   private _isLoading = false;
 
@@ -19,17 +19,21 @@ export class ConnectionsListModalStore extends SceneStore {
   private _isDeleting = false;
 
   @observable
+  private _isCloning = false;
+
+  @observable
   private _createConnectionOpened = false;
 
   @observable
-  private _selectedConnectionId: number | null = null;
+  private _selectedConnectionId: string | null = null;
+
+  @observable
+  private _editConnectionId: string | null = null;
 
   @observable
   private _connectionsStore: ConnectionsStore;
 
   constructor(deps: Deps) {
-    super();
-
     this._connectionsStore = deps.connectionsStore;
 
     makeObservable(this);
@@ -38,6 +42,11 @@ export class ConnectionsListModalStore extends SceneStore {
   @computed
   get isDeleting(): boolean {
     return this._isDeleting;
+  }
+
+  @computed
+  get isCloning(): boolean {
+    return this._isCloning;
   }
 
   @computed
@@ -54,8 +63,13 @@ export class ConnectionsListModalStore extends SceneStore {
   }
 
   @computed
-  get selectedConnectionId(): number | undefined {
+  get selectedConnectionId(): string | undefined {
     return this._selectedConnectionId || undefined;
+  }
+
+  @computed
+  get editConnectionId(): string | undefined {
+    return this._editConnectionId || undefined;
   }
 
   @computed
@@ -97,6 +111,42 @@ export class ConnectionsListModalStore extends SceneStore {
   @action
   setSelected(connection: Connection | null): void {
     this._selectedConnectionId = connection?.id || null;
+  }
+
+  @action
+  setEdit(connection: Connection | null): void {
+    this._selectedConnectionId = connection?.id || null;
+  }
+
+  @action
+  openCreateModal(): void {
+    this._editConnectionId = null;
+    this._createConnectionOpened = true;
+  }
+
+  @action
+  openEditModal(): void {
+    if (this._selectedConnectionId === null) {
+      return;
+    }
+
+    this._editConnectionId = this._selectedConnectionId;
+    this._createConnectionOpened = true;
+  }
+
+  @action
+  async cloneConnection(): Promise<void> {
+    if (this._selectedConnectionId === null) {
+      return;
+    }
+
+    this._isCloning = true;
+
+    await this._connectionsStore.cloneConnection(this._selectedConnectionId);
+
+    runInAction(() => {
+      this._isCloning = false;
+    });
   }
 
   @action

@@ -4,8 +4,6 @@ import { Connection, ConnectionType, SshAuthMethod, AuthenticationMethod, Invali
 
 import { ConnectionsStore, ConnectionStore } from 'stores';
 
-import { SceneStore } from 'types';
-
 import { ConnectionFormikValues } from './types';
 
 interface Deps {
@@ -55,19 +53,20 @@ const defaultConnectionData: ConnectionFormikValues = {
   },
 };
 
-export class ConnectionModalStore extends SceneStore {
+export class ConnectionModalStore {
   private _connectionsStore: ConnectionsStore;
   private _connectionStore: ConnectionStore;
 
   @observable
-  private _id?: number;
+  private _id?: string;
 
   @observable
   private _isSaving = false;
 
-  constructor(deps: Deps) {
-    super();
+  @observable
+  private _isLoading = true;
 
+  constructor(deps: Deps) {
     this._connectionsStore = deps.connectionsStore;
     this._connectionStore = deps.connectionStore;
 
@@ -80,18 +79,27 @@ export class ConnectionModalStore extends SceneStore {
   }
 
   @computed
+  get isLoading(): boolean {
+    return this._isLoading;
+  }
+
+  @computed
   get connection(): Connection | undefined {
     return this._connectionsStore.connections?.find(({ id }) => id === this._id);
   }
 
   @computed
   get initialValues(): ConnectionFormikValues {
-    return this.connection ? { ...this.connection } : defaultConnectionData;
+    const connectionData = this.connection || defaultConnectionData;
+
+    const { id, ...rest } = connectionData as Connection;
+    return JSON.parse(JSON.stringify(rest));
   }
 
   @action
-  onMounted(id?: number): void {
+  onMounted(id?: string): void {
     this._id = id;
+    this._isLoading = false;
   }
 
   @action
@@ -109,5 +117,6 @@ export class ConnectionModalStore extends SceneStore {
   @action
   dispose(): void {
     this._id = undefined;
+    this._isLoading = true;
   }
 }

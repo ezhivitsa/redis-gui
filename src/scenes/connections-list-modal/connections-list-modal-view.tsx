@@ -24,7 +24,9 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
   const cn = useStyles(styles, 'connections-list-modal');
 
   const store = useStore();
-  const { selectedConnectionId, selectedConnection, isDeleting, createConnectionOpened } = store;
+  const { editConnectionId, selectedConnection, isDeleting, isCloning, createConnectionOpened } = store;
+
+  const hasSelectedConnection = selectedConnection !== null;
 
   useEffect(() => {
     store.onMounted();
@@ -35,11 +37,11 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
   }, []);
 
   function handleCreateConnection(): void {
-    store.setCreateConnectionOpened(true);
+    store.openCreateModal();
   }
 
   function handleEditClick(): void {
-    //   connectionsStore.openEditConnection();
+    store.openEditModal();
   }
 
   function handleDeleteClick(): void {
@@ -47,7 +49,7 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
   }
 
   function handleCloneClick(): void {
-    //   connectionsStore.cloneConnection();
+    store.cloneConnection();
   }
 
   function handleConnectClick(): void {}
@@ -57,9 +59,9 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
   }
 
   function renderConnectionActions(): ReactNode {
-    if (selectedConnection === null) {
-      return null;
-    }
+    // if (selectedConnection === null) {
+    //   return null;
+    // }
 
     return (
       <div className={cn('actions')}>
@@ -69,7 +71,7 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
           view={ButtonView.Danger}
           icon={faTrashAlt}
           onClick={handleDeleteClick}
-          disabled={isDeleting}
+          disabled={isDeleting || isCloning || !hasSelectedConnection}
         >
           Delete
         </Button>
@@ -79,7 +81,7 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
           size={ButtonSize.S}
           icon={faPen}
           onClick={handleEditClick}
-          disabled={isDeleting}
+          disabled={isDeleting || isCloning || !hasSelectedConnection}
         >
           Edit
         </Button>
@@ -89,7 +91,7 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
           size={ButtonSize.S}
           icon={faClone}
           onClick={handleCloneClick}
-          disabled={isDeleting}
+          disabled={isDeleting || isCloning || !hasSelectedConnection}
         >
           Clone
         </Button>
@@ -99,7 +101,7 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
           size={ButtonSize.S}
           icon={faPlug}
           onClick={handleConnectClick}
-          disabled={isDeleting}
+          disabled={isDeleting || isCloning || !hasSelectedConnection}
         >
           Connect
         </Button>
@@ -119,7 +121,7 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
 
       {renderConnectionActions()}
 
-      <ConnectionModal open={createConnectionOpened} onClose={handleCloneConnectionModal} id={selectedConnectionId} />
+      <ConnectionModal open={createConnectionOpened} onClose={handleCloneConnectionModal} id={editConnectionId} />
     </Modal>
   );
 });

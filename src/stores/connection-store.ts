@@ -3,7 +3,7 @@ import { Connection } from 'lib/db';
 import { connectionsClient } from 'data';
 
 export class ConnectionStore {
-  async createOrUpdate(data: Omit<Connection, 'id'>, id?: number): Promise<Connection> {
+  async createOrUpdate(data: Omit<Connection, 'id'>, id?: string): Promise<Connection> {
     let connectionData: Connection;
 
     if (id) {
