@@ -110,7 +110,7 @@ export interface ConnectionAuthFormikValues {
 }
 
 export interface ConnectionAdvancedFormikValues {
-  [ConnectionAdvancedFormikField.Family]: string;
+  [ConnectionAdvancedFormikField.Family]: number;
   [ConnectionAdvancedFormikField.Db]: number;
   [ConnectionAdvancedFormikField.KeyPrefix]: string;
   [ConnectionAdvancedFormikField.StringNumbers]: boolean;

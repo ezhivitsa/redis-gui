@@ -6,6 +6,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "ioredis": "4.27.6"
+    "ioredis": "4.27.6",
+    "tunnel-ssh": "4.1.4"
   }
 }

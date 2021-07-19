@@ -26,9 +26,10 @@ export function AdvancedForm({ isSaving }: Props): ReactElement {
     <div>
       <FormikField
         name={getFieldName(ConnectionAdvancedFormikField.Family)}
-        component={Input}
+        component={NumberInput}
         componentProps={{
           label: 'Version of IP stack',
+          minValue: 0,
           size: InputSize.S,
           width: InputWidth.Available,
           className: cn('item'),

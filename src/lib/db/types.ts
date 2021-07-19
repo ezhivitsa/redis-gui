@@ -73,7 +73,7 @@ export interface ConnectionAuth {
 }
 
 export interface ConnectionAdvanced {
-  family: string;
+  family: number;
   db: number;
   keyPrefix: string;
   stringNumbers: boolean;
