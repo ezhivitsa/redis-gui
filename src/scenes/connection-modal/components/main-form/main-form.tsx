@@ -188,6 +188,7 @@ export function MainForm({ isSaving }: Props): ReactElement {
         )}
       />
 
+      {/* ToDo: make this for cluster and maybe sentinel */}
       <FormikField
         name={getFieldName(ConnectionMainFormikField.ReadOnly)}
         component={Checkbox}

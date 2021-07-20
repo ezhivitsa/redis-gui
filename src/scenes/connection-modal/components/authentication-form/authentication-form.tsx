@@ -51,6 +51,7 @@ export function AuthenticationForm({ isSaving }: Props): ReactElement {
       return null;
     }
 
+    // ToDo: Check can we use password here instead of sentinel password
     return (
       <FormikField
         name={getFieldName(ConnectionAuthFormikField.SentinelPassword)}
