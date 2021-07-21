@@ -1,18 +1,25 @@
 import Redis, { RedisOptions, Redis as IORedisOrig, ClusterNode, ClusterOptions, Cluster } from 'ioredis';
 
-interface IRedis {
-  connect(): Promise<void>;
-  disconnect(): void;
-}
+import { AskedRedisAuthData, IRedis } from './types';
 
 export class IoRedis implements IRedis {
   private _redis?: IORedisOrig;
 
   constructor(private _options: RedisOptions) {}
 
-  async connect(): Promise<void> {
+  async connect(data: AskedRedisAuthData): Promise<void> {
     return new Promise((resolve, reject) => {
-      this._redis = new Redis(this._options);
+      const options: RedisOptions = {
+        ...this._options,
+        tls: this._options.tls
+          ? {
+              ...this._options.tls,
+              passphrase: this._options.tls.passphrase || data.tlsPassphrase,
+            }
+          : undefined,
+      };
+
+      this._redis = new Redis(options);
 
       this._redis.on('ready', () => {
         resolve();
@@ -38,9 +45,24 @@ export class IoRedisCluster implements IRedis {
 
   constructor(private _nodes: ClusterNode[], private _options?: ClusterOptions) {}
 
-  connect(): Promise<void> {
+  connect(data: AskedRedisAuthData): Promise<void> {
     return new Promise((resolve, reject) => {
-      this._redis = new Redis.Cluster(this._nodes, this._options);
+      const redisOptions: RedisOptions | undefined = this._options?.redisOptions
+        ? {
+            ...this._options?.redisOptions,
+            tls: this._options?.redisOptions.tls
+              ? {
+                  ...this._options?.redisOptions.tls,
+                  passphrase: this._options?.redisOptions.tls.passphrase || data.tlsPassphrase,
+                }
+              : undefined,
+          }
+        : undefined;
+
+      this._redis = new Redis.Cluster(this._nodes, {
+        ...this._options,
+        redisOptions,
+      });
 
       this._redis.on('ready', () => {
         resolve();

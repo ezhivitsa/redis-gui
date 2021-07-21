@@ -3,6 +3,8 @@ import { Server } from 'net';
 
 import tunnel, { Config as TunnelSshConfig } from 'tunnel-ssh';
 
+import { AskedSshAuthData } from './types';
+
 const tunnelAsync = promisify(tunnel);
 
 export class TunnelSsh {
@@ -10,12 +12,18 @@ export class TunnelSsh {
 
   constructor(private _config?: TunnelSshConfig) {}
 
-  async connect(): Promise<void> {
+  async connect(data: AskedSshAuthData): Promise<void> {
     if (!this._config) {
       return;
     }
 
-    this._sshServer = await tunnelAsync(this._config);
+    const config: TunnelSshConfig = {
+      ...this._config,
+      password: this._config.password || data.password,
+      passphrase: this._config.passphrase || data.passphrase,
+    };
+
+    this._sshServer = await tunnelAsync(config);
   }
 
   async disconnect(): Promise<void> {

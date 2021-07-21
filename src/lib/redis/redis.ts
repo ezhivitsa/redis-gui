@@ -1,11 +1,12 @@
 import { Config as TunnelSshConfig } from 'tunnel-ssh';
-import { RedisOptions } from 'ioredis';
 
-import { Connection } from 'lib/db';
+import { Connection, ConnectionType } from 'lib/db';
 
-import { getSshConfig, getRedisConfig } from './configs';
-import { IoRedis } from './ioredis';
+import { getSshConfig, getRedisClusterConfig, getRedisDirectConfig, getRedisSentinelConfig } from './configs';
+import { IoRedis, IoRedisCluster } from './ioredis';
 import { TunnelSsh } from './tunnel-ssh';
+
+import { IRedis } from './types';
 
 export class Redis {
   private _sshPassphrase?: string;
@@ -13,11 +14,18 @@ export class Redis {
   private _tlsPassphrase?: string;
 
   private _tunnelSsh: TunnelSsh;
-  private _ioRedis: IoRedis;
+  private _ioRedis: IRedis;
 
   constructor(private _connection: Connection) {
-    this._ioRedis = new IoRedis(this._redisConfig);
     this._tunnelSsh = new TunnelSsh(this._sshConfig);
+
+    if (this._connection.main.type === ConnectionType.Direct) {
+      this._ioRedis = new IoRedis(getRedisDirectConfig(this._connection));
+    } else if (this._connection.main.type === ConnectionType.Cluster) {
+      this._ioRedis = new IoRedisCluster(...getRedisClusterConfig(this._connection));
+    } else {
+      this._ioRedis = new IoRedis(getRedisSentinelConfig(this._connection));
+    }
   }
 
   private get _sshConfig(): TunnelSshConfig | undefined {
@@ -27,12 +35,6 @@ export class Redis {
     }
 
     return getSshConfig(ssh);
-  }
-
-  private get _redisConfig(): RedisOptions {
-    const { main, advanced, auth, tls } = this._connection;
-
-    return getRedisConfig({ main, advanced, auth, tls });
   }
 
   get askForSshPassphraseEachTime(): boolean {
@@ -62,8 +64,11 @@ export class Redis {
   }
 
   async connect(): Promise<void> {
-    await this._tunnelSsh.connect();
-    await this._ioRedis.connect();
+    await this._tunnelSsh.connect({
+      passphrase: this._sshPassphrase,
+      password: this._sshPassword,
+    });
+    await this._ioRedis.connect({ tlsPassphrase: this._tlsPassphrase });
   }
 
   async disconnect(): Promise<void> {
