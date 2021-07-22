@@ -2,12 +2,12 @@ import React, { ReactElement } from 'react';
 
 import { useStyles } from 'lib/theme';
 
-import { ConnectionFormikField, ConnectionAdvancedFormikField } from 'scenes/connection-modal/types';
+import { FormikField } from 'ui/formik-field';
+import { Input, InputSize, InputWidth } from 'ui/input';
+import { NumberInput } from 'ui/number-input';
+import { Checkbox, CheckboxSize, CheckboxWidth } from 'ui/checkbox';
 
-import { FormikField } from 'components/formik-field';
-import { Input, InputSize, InputWidth } from 'components/input';
-import { NumberInput } from 'components/number-input';
-import { Checkbox, CheckboxSize, CheckboxWidth } from 'components/checkbox';
+import { ConnectionFormikField, ConnectionAdvancedFormikField } from 'scenes/connection-modal/types';
 
 import styles from './advanced-form.pcss';
 

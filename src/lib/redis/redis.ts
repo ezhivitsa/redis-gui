@@ -16,7 +16,7 @@ export class Redis {
   private _tunnelSsh: TunnelSsh;
   private _ioRedis: IRedis;
 
-  constructor(private _connection: Connection) {
+  constructor(private _connection: Omit<Connection, 'id'>) {
     this._tunnelSsh = new TunnelSsh(this._sshConfig);
 
     if (this._connection.main.type === ConnectionType.Direct) {
@@ -45,6 +45,15 @@ export class Redis {
   get askForSshPasswordEachTime(): boolean {
     const { ssh } = this._connection;
     return ssh.enabled && ssh.askForPasswordEachTime;
+  }
+
+  get askForTlsPassphraseEachTime(): boolean {
+    const { tls } = this._connection;
+    return tls.enabled && tls.askForPassphraseEachTime;
+  }
+
+  get hasDataToAsk(): boolean {
+    return this.askForSshPassphraseEachTime || this.askForSshPasswordEachTime || this.askForTlsPassphraseEachTime;
   }
 
   get useSshTunnel(): boolean {

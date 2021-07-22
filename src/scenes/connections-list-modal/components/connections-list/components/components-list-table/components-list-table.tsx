@@ -2,7 +2,7 @@ import React, { ReactElement, ReactNode } from 'react';
 
 import { Connection } from 'lib/db';
 
-import { Table, TableSize } from 'components/table';
+import { Table, TableSize } from 'ui/table';
 
 enum Column {
   Name = 'name',

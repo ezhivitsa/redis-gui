@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useStyles } from 'lib/theme';
 import { handleEnterEvent } from 'lib/keyboard';
 
-import { InputSize } from 'components/input';
+import { InputSize } from 'ui/input';
 
 import styles from './upload-input.pcss';
 

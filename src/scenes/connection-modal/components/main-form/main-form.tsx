@@ -5,20 +5,20 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { ConnectionType } from 'lib/db';
 import { useStyles } from 'lib/theme';
 
+import { FormikField } from 'ui/formik-field';
+import { Select, SelectSize, SelectWidth } from 'ui/select';
+import { Input, InputSize, InputWidth } from 'ui/input';
+import { ButtonIcon, ButtonIconView } from 'ui/button-icon';
+import { Button, ButtonSize } from 'ui/button';
+import { Label, LabelSize } from 'ui/label';
+import { Checkbox, CheckboxSize, CheckboxWidth } from 'ui/checkbox';
+
 import {
   ConnectionFormikField,
   ConnectionAddressFormikField,
   ConnectionMainFormikField,
   ConnectionMainFormikValues,
 } from 'scenes/connection-modal/types';
-
-import { FormikField } from 'components/formik-field';
-import { Select, SelectSize, SelectWidth } from 'components/select';
-import { Input, InputSize, InputWidth } from 'components/input';
-import { ButtonIcon, ButtonIconView } from 'components/button-icon';
-import { Button, ButtonSize } from 'components/button';
-import { Label, LabelSize } from 'components/label';
-import { Checkbox, CheckboxSize, CheckboxWidth } from 'components/checkbox';
 
 import styles from './main-form.pcss';
 

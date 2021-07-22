@@ -5,8 +5,8 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import { useStyles } from 'lib/theme';
 
-import { Heading, HeadingSize, HeadingView } from 'components/heading';
-import { ButtonIcon } from 'components/button-icon';
+import { Heading, HeadingSize, HeadingView } from 'ui/heading';
+import { ButtonIcon } from 'ui/button-icon';
 
 import styles from './modal.pcss';
 

@@ -6,8 +6,8 @@ import { PageState } from 'types';
 import { Connection } from 'lib/db';
 import { useStyles } from 'lib/theme';
 
-import { Spinner, SpinnerView } from 'components/spinner';
-import { Paragraph, ParagraphSize } from 'components/paragraph';
+import { Spinner, SpinnerView } from 'ui/spinner';
+import { Paragraph, ParagraphSize } from 'ui/paragraph';
 
 import { ComponentsListTable } from './components/components-list-table';
 

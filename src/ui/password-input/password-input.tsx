@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons';
 
-import { Input, InputProps, InputType, InputSize } from 'components/input';
+import { Input, InputProps, InputType, InputSize } from 'ui/input';
 
 type Props = Omit<InputProps, 'rightAddon' | 'onRightAddonClick' | 'type'>;
 

@@ -4,8 +4,8 @@ import { faTrashAlt, faPen, faClone, faPlug } from '@fortawesome/free-solid-svg-
 
 import { useStyles } from 'lib/theme';
 
-import { Modal } from 'components/modal';
-import { Button, ButtonSize, ButtonView } from 'components/button';
+import { Modal } from 'ui/modal';
+import { Button, ButtonSize, ButtonView } from 'ui/button';
 
 import { ConnectionModal } from 'scenes/connection-modal';
 

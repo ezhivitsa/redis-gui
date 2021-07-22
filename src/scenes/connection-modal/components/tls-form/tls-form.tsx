@@ -4,18 +4,18 @@ import { useField, FieldInputProps, FieldMetaProps, FieldHelperProps } from 'for
 import { useStyles } from 'lib/theme';
 import { AuthenticationMethod, InvalidHostnames } from 'lib/db';
 
+import { Checkbox, CheckboxSize, CheckboxWidth } from 'ui/checkbox';
+import { Select, SelectSize, SelectWidth } from 'ui/select';
+import { UploadInput } from 'ui/upload-input';
+import { InputSize, InputWidth } from 'ui/input';
+import { PasswordInput } from 'ui/password-input';
+import { FormikField } from 'ui/formik-field';
+
 import {
   ConnectionFormikField,
   ConnectionTlsFormikField,
   ConnectionTlsFormikValues,
 } from 'scenes/connection-modal/types';
-
-import { Checkbox, CheckboxSize, CheckboxWidth } from 'components/checkbox';
-import { Select, SelectSize, SelectWidth } from 'components/select';
-import { UploadInput } from 'components/upload-input';
-import { InputSize, InputWidth } from 'components/input';
-import { PasswordInput } from 'components/password-input';
-import { FormikField } from 'components/formik-field';
 
 import styles from './tls-form.pcss';
 

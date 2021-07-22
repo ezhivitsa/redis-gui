@@ -1,6 +1,7 @@
 import { makeObservable, action, observable, computed, runInAction } from 'mobx';
 
 import { Connection, ConnectionType, SshAuthMethod, AuthenticationMethod, InvalidHostnames } from 'lib/db';
+import { Redis } from 'lib/redis';
 
 import { ConnectionsStore, ConnectionStore } from 'stores';
 
@@ -9,6 +10,12 @@ import { ConnectionFormikValues } from './types';
 interface Deps {
   connectionsStore: ConnectionsStore;
   connectionStore: ConnectionStore;
+}
+
+interface AskData {
+  sshPassphrase?: boolean;
+  sshPassword?: boolean;
+  tlsPassphrase?: boolean;
 }
 
 const defaultConnectionData: ConnectionFormikValues = {
@@ -46,7 +53,7 @@ const defaultConnectionData: ConnectionFormikValues = {
     invalidHostnames: InvalidHostnames.NotAllowed,
   },
   advanced: {
-    family: '4',
+    family: 4,
     db: 0,
     keyPrefix: '',
     stringNumbers: false,
@@ -58,6 +65,9 @@ export class ConnectionModalStore {
   private _connectionStore: ConnectionStore;
 
   @observable
+  private _redis?: Redis;
+
+  @observable
   private _id?: string;
 
   @observable
@@ -65,6 +75,9 @@ export class ConnectionModalStore {
 
   @observable
   private _isLoading = true;
+
+  @observable
+  private _showAskDataForm = false;
 
   constructor(deps: Deps) {
     this._connectionsStore = deps.connectionsStore;
@@ -84,6 +97,11 @@ export class ConnectionModalStore {
   }
 
   @computed
+  get showAskDataForm(): boolean {
+    return this._showAskDataForm;
+  }
+
+  @computed
   get connection(): Connection | undefined {
     return this._connectionsStore.connections?.find(({ id }) => id === this._id);
   }
@@ -94,6 +112,15 @@ export class ConnectionModalStore {
 
     const { id, ...rest } = connectionData as Connection;
     return JSON.parse(JSON.stringify(rest));
+  }
+
+  @computed
+  get askData(): AskData {
+    return {
+      sshPassphrase: this._redis?.askForSshPassphraseEachTime,
+      sshPassword: this._redis?.askForSshPasswordEachTime,
+      tlsPassphrase: this._redis?.askForTlsPassphraseEachTime,
+    };
   }
 
   @action
@@ -112,6 +139,19 @@ export class ConnectionModalStore {
     runInAction(() => {
       this._isSaving = false;
     });
+  }
+
+  @action
+  setAskDataFormOpen(open: boolean): void {
+    this._showAskDataForm = open;
+  }
+
+  @action
+  createTestConnection(values: ConnectionFormikValues): void {
+    this._redis = new Redis(values);
+    if (this._redis.hasDataToAsk) {
+      this._showAskDataForm = true;
+    }
   }
 
   @action

@@ -4,17 +4,17 @@ import { useField, FieldInputProps, FieldMetaProps, FieldHelperProps } from 'for
 import { ConnectionType } from 'lib/db';
 import { useStyles } from 'lib/theme';
 
+import { FormikField } from 'ui/formik-field';
+import { Checkbox, CheckboxSize, CheckboxWidth } from 'ui/checkbox';
+import { Input } from 'ui/input';
+import { PasswordInput, InputSize, InputWidth } from 'ui/password-input';
+
 import {
   ConnectionFormikField,
   ConnectionAuthFormikField,
   ConnectionAuthFormikValues,
   ConnectionMainFormikField,
 } from 'scenes/connection-modal/types';
-
-import { FormikField } from 'components/formik-field';
-import { Checkbox, CheckboxSize, CheckboxWidth } from 'components/checkbox';
-import { Input } from 'components/input';
-import { PasswordInput, InputSize, InputWidth } from 'components/password-input';
 
 import { useMainField } from '../main-form';
 

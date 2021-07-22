@@ -5,9 +5,11 @@ import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 
 import { useStyles } from 'lib/theme';
 
-import { Modal } from 'components/modal';
-import { Tabs, TabItem } from 'components/tabs';
-import { Button, ButtonSize, ButtonView } from 'components/button';
+import { Modal } from 'ui/modal';
+import { Tabs, TabItem } from 'ui/tabs';
+import { Button, ButtonSize, ButtonView } from 'ui/button';
+
+import { AskDataForm, AskDataValues } from 'components/ask-data-form';
 
 import { MainForm } from './components/main-form';
 import { AuthenticationForm } from './components/authentication-form';
@@ -63,7 +65,7 @@ export const ConnectionModalView = observer(({ open, id, onClose }: Props): Reac
   const [activeTab, setActiveTab] = useState(ConnectionTab.Connection);
 
   const connectionStore = useStore();
-  const { initialValues, isSaving, isLoading } = connectionStore;
+  const { initialValues, isSaving, isLoading, showAskDataForm, askData } = connectionStore;
 
   useEffect(() => {
     if (open) {
@@ -77,6 +79,16 @@ export const ConnectionModalView = observer(({ open, id, onClose }: Props): Reac
     await connectionStore.createOrUpdateConnection(values);
     onClose?.();
   }
+
+  function handleTestClick(values: ConnectionFormikValues): void {
+    connectionStore.createTestConnection(values);
+  }
+
+  function handleCloseAskDataForm(): void {
+    connectionStore.setAskDataFormOpen(false);
+  }
+
+  function handleSaveAskData(values: AskDataValues): void {}
 
   function renderForm(): ReactNode {
     switch (activeTab) {
@@ -109,6 +121,7 @@ export const ConnectionModalView = observer(({ open, id, onClose }: Props): Reac
           view={ButtonView.Default}
           icon={faGlobe}
           disabled={isSaving}
+          onClick={() => handleTestClick(formikProps.values)}
         >
           Test connection
         </Button>
@@ -163,6 +176,15 @@ export const ConnectionModalView = observer(({ open, id, onClose }: Props): Reac
       <Tabs className={cn('tabs')} items={tabs} active={activeTab} onChange={setActiveTab} />
 
       {renderContent()}
+
+      <AskDataForm
+        open={showAskDataForm}
+        onClose={handleCloseAskDataForm}
+        onSave={handleSaveAskData}
+        askSshPassphrase={askData.sshPassphrase}
+        askSshPassword={askData.sshPassword}
+        askTlsPassphrase={askData.tlsPassphrase}
+      />
     </Modal>
   );
 });
