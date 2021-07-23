@@ -16,6 +16,7 @@ import { AuthenticationForm } from './components/authentication-form';
 import { SshForm } from './components/ssh-form';
 import { TlsForm } from './components/tls-form';
 import { AdvancedForm } from './components/advanced-form';
+import { TestConnectResult } from './components/test-connect-result';
 
 import { useStore } from './index';
 
@@ -88,7 +89,9 @@ export const ConnectionModalView = observer(({ open, id, onClose }: Props): Reac
     connectionStore.setAskDataFormOpen(false);
   }
 
-  function handleSaveAskData(values: AskDataValues): void {}
+  function handleSaveAskData(values: AskDataValues): void {
+    connectionStore.testConnect(values);
+  }
 
   function renderForm(): ReactNode {
     switch (activeTab) {
@@ -185,6 +188,8 @@ export const ConnectionModalView = observer(({ open, id, onClose }: Props): Reac
         askSshPassword={askData.sshPassword}
         askTlsPassphrase={askData.tlsPassphrase}
       />
+
+      <TestConnectResult />
     </Modal>
   );
 });

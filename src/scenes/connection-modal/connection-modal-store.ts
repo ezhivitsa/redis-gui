@@ -18,6 +18,12 @@ interface AskData {
   tlsPassphrase?: boolean;
 }
 
+interface AskDataValues {
+  sshPassphrase?: string;
+  sshPassword?: string;
+  tlsPassphrase?: string;
+}
+
 const defaultConnectionData: ConnectionFormikValues = {
   main: {
     name: 'New Connection',
@@ -68,6 +74,9 @@ export class ConnectionModalStore {
   private _redis?: Redis;
 
   @observable
+  private _connectError?: Error;
+
+  @observable
   private _id?: string;
 
   @observable
@@ -77,7 +86,13 @@ export class ConnectionModalStore {
   private _isLoading = true;
 
   @observable
+  private _isConnecting = false;
+
+  @observable
   private _showAskDataForm = false;
+
+  @observable
+  private _showConnectionResult = false;
 
   constructor(deps: Deps) {
     this._connectionsStore = deps.connectionsStore;
@@ -102,6 +117,11 @@ export class ConnectionModalStore {
   }
 
   @computed
+  get showConnectionResult(): boolean {
+    return this._showConnectionResult;
+  }
+
+  @computed
   get connection(): Connection | undefined {
     return this._connectionsStore.connections?.find(({ id }) => id === this._id);
   }
@@ -121,6 +141,11 @@ export class ConnectionModalStore {
       sshPassword: this._redis?.askForSshPasswordEachTime,
       tlsPassphrase: this._redis?.askForTlsPassphraseEachTime,
     };
+  }
+
+  @computed
+  get connectError(): Error | undefined {
+    return this._connectError;
   }
 
   @action
@@ -152,6 +177,40 @@ export class ConnectionModalStore {
     if (this._redis.hasDataToAsk) {
       this._showAskDataForm = true;
     }
+  }
+
+  @action
+  async testConnect(values: AskDataValues): Promise<void> {
+    if (!this._redis) {
+      return;
+    }
+
+    const { askForSshPassphraseEachTime, askForSshPasswordEachTime, askForTlsPassphraseEachTime } = this._redis;
+
+    if (askForSshPassphraseEachTime) {
+      this._redis.setSshPassphrase(values.sshPassphrase || '');
+    }
+    if (askForSshPasswordEachTime) {
+      this._redis.setSshPassword(values.sshPassword || '');
+    }
+    if (askForTlsPassphraseEachTime) {
+      this._redis.setTlsPassphrase(values.tlsPassphrase || '');
+    }
+
+    this._isConnecting = true;
+    this._showConnectionResult = true;
+
+    try {
+      await this._redis.connect();
+    } catch (error) {
+      runInAction(() => {
+        this._connectError = error;
+      });
+    }
+
+    runInAction(() => {
+      this._isConnecting = false;
+    });
   }
 
   @action
