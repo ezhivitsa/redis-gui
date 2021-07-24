@@ -4,9 +4,7 @@
 @import './checkbox_theme_light.pcss';
 
 .checkbox {
-  &._width_default {
-    display: inline-block;
-  }
+  font-size: 0;
 
   &__inner {
     align-items: center;
@@ -14,6 +12,10 @@
 
     &._disabled {
       pointer-events: none;
+    }
+
+    &._width_default {
+      display: inline-flex;
     }
   }
 
@@ -33,6 +35,8 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    flex-shrink: 0;
+    font-size: initial;
 
     &._size_s {
       width: var(--grid4);
@@ -41,7 +45,7 @@
 
     &._disabled {
       &::before {
-        content: '';
+        content: '';;
         position: absolute;
         top: -1px;
         right: -1px;
@@ -58,6 +62,10 @@
     &._size_s {
       margin-left: var(--grid2);
       font-size: var(--font-size-200);
+    }
+
+    &._width_available {
+      flex: 1;
     }
   }
 }

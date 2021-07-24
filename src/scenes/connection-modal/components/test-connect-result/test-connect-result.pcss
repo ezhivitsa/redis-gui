@@ -3,11 +3,25 @@
 .test-connect-result {
   &__message {
     display: flex;
-    margin: var(--grid2) 0;
     align-items: center;
+    margin: var(--grid2) 0;
   }
 
   &__message-text {
     margin-left: var(--grid2);
+  }
+}
+
+.test-connect-result_theme_dark {
+  .test-connect-result {
+    &__icon {
+      &._type_danger {
+        color: var(--color-red-700);
+      }
+
+      &._type_success {
+        color: var(--color-blue-700);
+      }
+    }
   }
 }

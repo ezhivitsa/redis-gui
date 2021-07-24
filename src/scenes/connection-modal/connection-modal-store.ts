@@ -127,6 +127,11 @@ export class ConnectionModalStore {
   }
 
   @computed
+  get isConnecting(): boolean {
+    return this._isConnecting;
+  }
+
+  @computed
   get initialValues(): ConnectionFormikValues {
     const connectionData = this.connection || defaultConnectionData;
 
@@ -176,11 +181,18 @@ export class ConnectionModalStore {
     this._redis = new Redis(values);
     if (this._redis.hasDataToAsk) {
       this._showAskDataForm = true;
+    } else {
+      this.testConnect();
     }
   }
 
   @action
-  async testConnect(values: AskDataValues): Promise<void> {
+  setConnectionResultOpen(open: boolean): void {
+    this._showConnectionResult = open;
+  }
+
+  @action
+  async testConnect(values: AskDataValues = {}): Promise<void> {
     if (!this._redis) {
       return;
     }

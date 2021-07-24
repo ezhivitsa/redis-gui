@@ -68,14 +68,14 @@ export function Checkbox({
       return null;
     }
 
-    return <div className={cn('label', { size })}>{label}</div>;
+    return <div className={cn('label', { size, width })}>{label}</div>;
   }
 
   return (
     <div className={classnames(cn({ size, width }), className)}>
       <input id={id} className={cn('input')} type="checkbox" checked={value} onChange={handleChange} onBlur={onBlur} />
 
-      <label className={cn('inner', { disabled })} htmlFor={id}>
+      <label className={cn('inner', { disabled, width })} htmlFor={id}>
         <span className={cn('check', { size, checked: value, disabled })}>
           {value && <FontAwesomeIcon icon={faCheck} size={size && mapSizeToIconSize[size]} />}
         </span>

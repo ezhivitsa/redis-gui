@@ -84,7 +84,7 @@ export function AskDataForm({
   }
 
   return (
-    <Modal open={open} onClose={onClose} title="Pass Data">
+    <Modal open={open} onClose={onClose} title="Data For Connection">
       <Formik
         initialValues={{
           sshPassphrase: askSshPassphrase ? '' : undefined,

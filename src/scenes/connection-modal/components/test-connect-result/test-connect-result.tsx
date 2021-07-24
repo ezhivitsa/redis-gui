@@ -21,10 +21,10 @@ interface Props {
 export function TestConnectResult({ open, onClose, isConnecting, connectionError }: Props): ReactElement {
   const cn = useStyles(styles, 'test-connect-result');
 
-  function renderMessage(icon: IconProp, message: ReactNode): ReactNode {
+  function renderMessage(icon: IconProp, iconType: string, message: ReactNode): ReactNode {
     return (
       <div className={cn('message')}>
-        <FontAwesomeIcon size="2x" icon={icon} />
+        <FontAwesomeIcon size="1x" icon={icon} className={cn('icon', { type: iconType })} />
         <Paragraph size={ParagraphSize.S} className={cn('message-text')}>
           {message}
         </Paragraph>
@@ -38,14 +38,14 @@ export function TestConnectResult({ open, onClose, isConnecting, connectionError
     }
 
     if (connectionError) {
-      return renderMessage(faExclamationCircle, connectionError.message);
+      return renderMessage(faExclamationCircle, 'danger', connectionError.message);
     }
 
-    return renderMessage(faCheckCircle, 'No Errors');
+    return renderMessage(faCheckCircle, 'success', 'No Errors');
   }
 
   return (
-    <Modal title="Test Connection" open={open} onClose={onClose}>
+    <Modal title="Test Connection" open={open} onClose={onClose} className={cn()}>
       {renderContent()}
     </Modal>
   );

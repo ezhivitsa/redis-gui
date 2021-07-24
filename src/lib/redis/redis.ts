@@ -9,6 +9,8 @@ import { TunnelSsh } from './tunnel-ssh';
 import { IRedis } from './types';
 
 export class Redis {
+  private _connection: Omit<Connection, 'id'>;
+
   private _sshPassphrase?: string;
   private _sshPassword?: string;
   private _tlsPassphrase?: string;
@@ -16,7 +18,8 @@ export class Redis {
   private _tunnelSsh: TunnelSsh;
   private _ioRedis: IRedis;
 
-  constructor(private _connection: Omit<Connection, 'id'>) {
+  constructor(connection: Omit<Connection, 'id'>) {
+    this._connection = connection;
     this._tunnelSsh = new TunnelSsh(this._sshConfig);
 
     if (this._connection.main.type === ConnectionType.Direct) {
