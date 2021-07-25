@@ -4,8 +4,11 @@ import { AskedRedisAuthData, IRedis } from './types';
 
 export class IoRedis implements IRedis {
   private _redis?: IORedisOrig;
+  private _options: RedisOptions;
 
-  constructor(private _options: RedisOptions) {}
+  constructor(options: RedisOptions) {
+    this._options = options;
+  }
 
   async connect(data: AskedRedisAuthData): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -42,8 +45,13 @@ export class IoRedis implements IRedis {
 
 export class IoRedisCluster implements IRedis {
   private _redis?: Cluster;
+  private _nodes: ClusterNode[];
+  private _options?: ClusterOptions;
 
-  constructor(private _nodes: ClusterNode[], private _options?: ClusterOptions) {}
+  constructor(nodes: ClusterNode[], options?: ClusterOptions) {
+    this._nodes = nodes;
+    this._options = options;
+  }
 
   connect(data: AskedRedisAuthData): Promise<void> {
     return new Promise((resolve, reject) => {

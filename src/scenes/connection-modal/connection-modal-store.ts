@@ -74,6 +74,9 @@ export class ConnectionModalStore {
   private _redis?: Redis;
 
   @observable
+  private _sshError?: Error;
+
+  @observable
   private _connectError?: Error;
 
   @observable
@@ -149,8 +152,18 @@ export class ConnectionModalStore {
   }
 
   @computed
+  get sshError(): Error | undefined {
+    return this._sshError;
+  }
+
+  @computed
   get connectError(): Error | undefined {
     return this._connectError;
+  }
+
+  @computed
+  get shouldSshConnect(): boolean {
+    return this._redis?.useSshTunnel || false;
   }
 
   @action
@@ -213,7 +226,17 @@ export class ConnectionModalStore {
     this._showConnectionResult = true;
 
     try {
-      await this._redis.connect();
+      await this._redis.connectSsh();
+    } catch (error) {
+      runInAction(() => {
+        this._sshError = error;
+        this._isConnecting = false;
+      });
+      return;
+    }
+
+    try {
+      await this._redis.connectRedis();
     } catch (error) {
       runInAction(() => {
         this._connectError = error;

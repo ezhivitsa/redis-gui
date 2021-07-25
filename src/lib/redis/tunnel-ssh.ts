@@ -9,8 +9,11 @@ const tunnelAsync = promisify(tunnel);
 
 export class TunnelSsh {
   private _sshServer?: Server;
+  private _config?: TunnelSshConfig;
 
-  constructor(private _config?: TunnelSshConfig) {}
+  constructor(config?: TunnelSshConfig) {
+    this._config = config;
+  }
 
   async connect(data: AskedSshAuthData): Promise<void> {
     if (!this._config) {

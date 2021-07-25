@@ -1,4 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react';
+import { observer } from 'mobx-react-lite';
 import { faExclamationCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -9,17 +10,19 @@ import { Modal } from 'ui/modal';
 import { Spinner, SpinnerView } from 'ui/spinner';
 import { Paragraph, ParagraphSize } from 'ui/paragraph';
 
+import { useStore } from 'scenes/connection-modal';
+
 import styles from './test-connect-result.pcss';
 
-interface Props {
-  open: boolean;
-  onClose: () => void;
-  isConnecting: boolean;
-  connectionError?: Error;
-}
-
-export function TestConnectResult({ open, onClose, isConnecting, connectionError }: Props): ReactElement {
+export const TestConnectResult = observer((): ReactElement => {
   const cn = useStyles(styles, 'test-connect-result');
+
+  const store = useStore();
+  const { showConnectionResult, isConnecting, connectError, sshError, shouldSshConnect } = store;
+
+  function handleConnectionResultClose(): void {
+    store.setConnectionResultOpen(false);
+  }
 
   function renderMessage(icon: IconProp, iconType: string, message: ReactNode): ReactNode {
     return (
@@ -32,21 +35,30 @@ export function TestConnectResult({ open, onClose, isConnecting, connectionError
     );
   }
 
+  function renderResult(prefix: string, error: Error | undefined): ReactNode {
+    if (error) {
+      return renderMessage(faExclamationCircle, 'danger', `${prefix}: ${error.message}`);
+    }
+
+    return renderMessage(faCheckCircle, 'success', `${prefix}: no errors`);
+  }
+
   function renderContent(): ReactNode {
     if (isConnecting) {
       return <Spinner view={SpinnerView.Block} />;
     }
 
-    if (connectionError) {
-      return renderMessage(faExclamationCircle, 'danger', connectionError.message);
-    }
-
-    return renderMessage(faCheckCircle, 'success', 'No Errors');
+    return (
+      <div className={cn('content')}>
+        {shouldSshConnect && renderResult('SSH connection', sshError)}
+        {(!shouldSshConnect || !sshError) && renderResult('Redis connection', connectError)}
+      </div>
+    );
   }
 
   return (
-    <Modal title="Test Connection" open={open} onClose={onClose} className={cn()}>
+    <Modal title="Test Connection" open={showConnectionResult} onClose={handleConnectionResultClose} className={cn()}>
       {renderContent()}
     </Modal>
   );
-}
+});

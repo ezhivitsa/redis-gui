@@ -66,16 +66,7 @@ export const ConnectionModalView = observer(({ open, id, onClose }: Props): Reac
   const [activeTab, setActiveTab] = useState(ConnectionTab.Connection);
 
   const connectionStore = useStore();
-  const {
-    initialValues,
-    isSaving,
-    isLoading,
-    showAskDataForm,
-    askData,
-    showConnectionResult,
-    isConnecting,
-    connectError,
-  } = connectionStore;
+  const { initialValues, isSaving, isLoading, showAskDataForm, askData } = connectionStore;
 
   useEffect(() => {
     if (open) {
@@ -101,10 +92,6 @@ export const ConnectionModalView = observer(({ open, id, onClose }: Props): Reac
 
   function handleSaveAskData(values: AskDataValues): void {
     connectionStore.testConnect(values);
-  }
-
-  function handleConnectionResultClose(): void {
-    connectionStore.setConnectionResultOpen(false);
   }
 
   function renderForm(): ReactNode {
@@ -203,12 +190,7 @@ export const ConnectionModalView = observer(({ open, id, onClose }: Props): Reac
         askTlsPassphrase={askData.tlsPassphrase}
       />
 
-      <TestConnectResult
-        open={showConnectionResult}
-        onClose={handleConnectionResultClose}
-        isConnecting={isConnecting}
-        connectionError={connectError}
-      />
+      <TestConnectResult />
     </Modal>
   );
 });

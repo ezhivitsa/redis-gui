@@ -76,10 +76,18 @@ export class Redis {
   }
 
   async connect(): Promise<void> {
+    await this.connectSsh();
+    await this.connectRedis();
+  }
+
+  async connectSsh(): Promise<void> {
     await this._tunnelSsh.connect({
       passphrase: this._sshPassphrase,
       password: this._sshPassword,
     });
+  }
+
+  async connectRedis(): Promise<void> {
     await this._ioRedis.connect({ tlsPassphrase: this._tlsPassphrase });
   }
 
