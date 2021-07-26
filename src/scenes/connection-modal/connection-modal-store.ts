@@ -224,6 +224,8 @@ export class ConnectionModalStore {
 
     this._isConnecting = true;
     this._showConnectionResult = true;
+    this._connectError = undefined;
+    this._sshError = undefined;
 
     try {
       await this._redis.connectSsh();
@@ -246,6 +248,8 @@ export class ConnectionModalStore {
     runInAction(() => {
       this._isConnecting = false;
     });
+
+    await this._redis.disconnect();
   }
 
   @action

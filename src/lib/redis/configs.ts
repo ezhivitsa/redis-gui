@@ -74,7 +74,7 @@ export function getRedisDirectConfig({ main, auth, tls, advanced }: RedisConfigD
   const options: RedisOptions = {};
 
   options.port = Number(main.addresses[0]?.port) || undefined;
-  options.host = main.addresses[0]?.port || undefined;
+  options.host = main.addresses[0]?.host || undefined;
 
   return {
     ...options,
