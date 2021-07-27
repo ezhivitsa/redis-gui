@@ -7,7 +7,7 @@ export interface AskedRedisAuthData {
   tlsPassphrase?: string;
 }
 
-export interface IRedis {
-  connect(data: AskedRedisAuthData): Promise<void>;
-  disconnect(): void;
+export interface PrefixesAndKeys {
+  prefixes: string[];
+  keys: string[];
 }

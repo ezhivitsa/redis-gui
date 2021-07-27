@@ -6,7 +6,9 @@ import { getSshConfig, getRedisClusterConfig, getRedisDirectConfig, getRedisSent
 import { IoRedis, IoRedisCluster } from './ioredis';
 import { TunnelSsh } from './tunnel-ssh';
 
-import { IRedis } from './types';
+import { BaseRedis } from './base-redis';
+
+import { PrefixesAndKeys } from './types';
 
 export class Redis {
   private _connection: Omit<Connection, 'id'>;
@@ -16,7 +18,7 @@ export class Redis {
   private _tlsPassphrase?: string;
 
   private _tunnelSsh: TunnelSsh;
-  private _ioRedis: IRedis;
+  private _ioRedis: BaseRedis;
 
   constructor(connection: Omit<Connection, 'id'>) {
     this._connection = connection;
@@ -94,5 +96,16 @@ export class Redis {
   async disconnect(): Promise<void> {
     this._ioRedis.disconnect();
     await this._tunnelSsh.disconnect();
+  }
+
+  async getPrefixesAndKeys(prefix: string[] = []): Promise<PrefixesAndKeys> {
+    if (!this._ioRedis) {
+      return {
+        keys: [],
+        prefixes: [],
+      };
+    }
+
+    return this._ioRedis.getPrefixesAndKeys(prefix);
   }
 }
