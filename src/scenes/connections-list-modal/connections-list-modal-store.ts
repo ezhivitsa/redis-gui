@@ -2,6 +2,7 @@ import { makeObservable, observable, action, runInAction, computed } from 'mobx'
 
 import { calculatePageState } from 'lib/page';
 import { Connection } from 'lib/db';
+import { Redis } from 'lib/redis';
 
 import { PageState } from 'types';
 
@@ -9,6 +10,18 @@ import { ConnectionsStore } from 'stores';
 
 interface Deps {
   connectionsStore: ConnectionsStore;
+}
+
+interface AskData {
+  sshPassphrase?: boolean;
+  sshPassword?: boolean;
+  tlsPassphrase?: boolean;
+}
+
+interface AskDataValues {
+  sshPassphrase?: string;
+  sshPassword?: string;
+  tlsPassphrase?: string;
 }
 
 export class ConnectionsListModalStore {
@@ -22,6 +35,12 @@ export class ConnectionsListModalStore {
   private _isCloning = false;
 
   @observable
+  private _isConnecting = false;
+
+  @observable
+  private _showAskDataForm = false;
+
+  @observable
   private _createConnectionOpened = false;
 
   @observable
@@ -32,6 +51,8 @@ export class ConnectionsListModalStore {
 
   @observable
   private _connectionsStore: ConnectionsStore;
+
+  private _redis?: Redis;
 
   constructor(deps: Deps) {
     this._connectionsStore = deps.connectionsStore;
@@ -82,6 +103,25 @@ export class ConnectionsListModalStore {
     return this._connectionsStore.connections || [];
   }
 
+  @computed
+  get isConnecting(): boolean {
+    return this._isConnecting;
+  }
+
+  @computed
+  get showAskDataForm(): boolean {
+    return this._showAskDataForm;
+  }
+
+  @computed
+  get askData(): AskData {
+    return {
+      sshPassphrase: this._redis?.askForSshPassphraseEachTime,
+      sshPassword: this._redis?.askForSshPasswordEachTime,
+      tlsPassphrase: this._redis?.askForTlsPassphraseEachTime,
+    };
+  }
+
   @action
   async onMounted(): Promise<void> {
     this._isLoading = true;
@@ -119,6 +159,11 @@ export class ConnectionsListModalStore {
   }
 
   @action
+  setAskDataFormOpen(open: boolean): void {
+    this._showAskDataForm = open;
+  }
+
+  @action
   openCreateModal(): void {
     this._editConnectionId = null;
     this._createConnectionOpened = true;
@@ -150,9 +195,53 @@ export class ConnectionsListModalStore {
   }
 
   @action
+  openConnection(): void {
+    if (!this.selectedConnection) {
+      return;
+    }
+
+    this._redis = new Redis(this.selectedConnection);
+    if (this._redis.hasDataToAsk) {
+      this._showAskDataForm = true;
+    } else {
+      this.connect();
+    }
+  }
+
+  @action
+  async connect(values: AskDataValues = {}): Promise<void> {
+    if (!this._redis) {
+      return;
+    }
+
+    const { askForSshPassphraseEachTime, askForSshPasswordEachTime, askForTlsPassphraseEachTime } = this._redis;
+
+    if (askForSshPassphraseEachTime) {
+      this._redis.setSshPassphrase(values.sshPassphrase || '');
+    }
+    if (askForSshPasswordEachTime) {
+      this._redis.setSshPassword(values.sshPassword || '');
+    }
+    if (askForTlsPassphraseEachTime) {
+      this._redis.setTlsPassphrase(values.tlsPassphrase || '');
+    }
+
+    this._isConnecting = true;
+    this._showAskDataForm = false;
+
+    await this._redis.connect();
+
+    runInAction(() => {
+      this._isConnecting = false;
+    });
+  }
+
+  @action
   dispose(): void {
     this._isLoading = false;
     this._isDeleting = false;
+    this._isConnecting = false;
+    this._showAskDataForm = false;
     this._selectedConnectionId = null;
 
     this._connectionsStore.dispose();

@@ -222,6 +222,7 @@ export class ConnectionModalStore {
       this._redis.setTlsPassphrase(values.tlsPassphrase || '');
     }
 
+    this._showAskDataForm = false;
     this._isConnecting = true;
     this._showConnectionResult = true;
     this._connectError = undefined;

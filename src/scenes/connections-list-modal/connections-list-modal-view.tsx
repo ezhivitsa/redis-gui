@@ -7,6 +7,8 @@ import { useStyles } from 'lib/theme';
 import { Modal } from 'ui/modal';
 import { Button, ButtonSize, ButtonView } from 'ui/button';
 
+import { AskDataForm, AskDataValues } from 'components/ask-data-form';
+
 import { ConnectionModal } from 'scenes/connection-modal';
 
 import { useStore } from './index';
@@ -18,13 +20,22 @@ import styles from './connections-list-modal.pcss';
 export interface Props {
   open: boolean;
   onClose: () => void;
+  onConnect: () => void;
 }
 
 export const ConnectionsListModalView = observer(({ open, onClose }: Props): ReactElement => {
   const cn = useStyles(styles, 'connections-list-modal');
 
   const store = useStore();
-  const { editConnectionId, selectedConnection, isDeleting, isCloning, createConnectionOpened } = store;
+  const {
+    editConnectionId,
+    selectedConnection,
+    isDeleting,
+    isCloning,
+    createConnectionOpened,
+    showAskDataForm,
+    askData,
+  } = store;
 
   const hasSelectedConnection = selectedConnection !== null;
 
@@ -52,10 +63,22 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
     store.cloneConnection();
   }
 
-  function handleConnectClick(): void {}
+  function handleConnectClick(): void {
+    store.openConnection();
+    // ToDo: if not open modal to fill data then send redis to parent
+  }
 
   function handleCloneConnectionModal(): void {
     store.setCreateConnectionOpened(false);
+  }
+
+  function handleCloseAskDataForm(): void {
+    store.setAskDataFormOpen(false);
+  }
+
+  function handleSaveAskData(values: AskDataValues): void {
+    store.connect(values);
+    // ToDo: send redis to parent
   }
 
   function renderConnectionActions(): ReactNode {
@@ -122,6 +145,15 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
       {renderConnectionActions()}
 
       <ConnectionModal open={createConnectionOpened} onClose={handleCloneConnectionModal} id={editConnectionId} />
+
+      <AskDataForm
+        open={showAskDataForm}
+        onClose={handleCloseAskDataForm}
+        onSave={handleSaveAskData}
+        askSshPassphrase={askData.sshPassphrase}
+        askSshPassword={askData.sshPassword}
+        askTlsPassphrase={askData.tlsPassphrase}
+      />
     </Modal>
   );
 });

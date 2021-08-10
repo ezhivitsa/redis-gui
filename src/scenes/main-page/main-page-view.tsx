@@ -88,6 +88,8 @@ export const MainPageView = observer((): ReactElement => {
     setCurrentResizerX(event.clientX);
   }
 
+  function handleConnect(): void {}
+
   return (
     <div className={cn()}>
       <div className={cn('actions')}>
@@ -112,7 +114,11 @@ export const MainPageView = observer((): ReactElement => {
         <div className={cn('data')} />
       </div>
 
-      <ConnectionsListModal open={connectionsListOpened} onClose={handleConnectionsModalClose} />
+      <ConnectionsListModal
+        open={connectionsListOpened}
+        onClose={handleConnectionsModalClose}
+        onConnect={handleConnect}
+      />
     </div>
   );
 });

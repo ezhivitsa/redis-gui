@@ -65,6 +65,10 @@ export class Redis {
     return this._connection.ssh.enabled;
   }
 
+  get name(): string {
+    return this._connection.main.name;
+  }
+
   setSshPassphrase(passphrase: string): void {
     this._sshPassphrase = passphrase;
   }

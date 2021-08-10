@@ -1,1 +1,1 @@
-export { Spinner, SpinnerView } from './spinner';
+export { Spinner, SpinnerView, SpinnerSize } from './spinner';
