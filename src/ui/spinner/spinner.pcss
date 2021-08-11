@@ -16,39 +16,80 @@
   &__loader {
     display: inline-block;
     position: relative;
-    width: var(--grid10);
-    height: var(--grid20);
+
+    &._size_xs {
+      width: var(--grid2_5);
+      height: var(--grid4);
+    }
+
+    &._size_m {
+      width: var(--grid10);
+      height: var(--grid20);
+    }
   }
 
   &__item {
     display: inline-block;
     position: absolute;
-    width: var(--grid2);
-    animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+
+    &._size_xs {
+      width: var(--grid0_5);
+      animation: lds-xs 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+
+      &:nth-child(2) {
+        left: var(--grid1);
+      }
+
+      &:nth-child(3) {
+        left: var(--grid2);
+      }
+    }
+    
+    &._size_m {
+      width: var(--grid2);
+      animation: lds-m 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+
+      &:nth-child(2) {
+        left: var(--grid4);
+      }
+
+      &:nth-child(3) {
+        left: var(--grid8);
+      }
+    }
 
     &:nth-child(1) {
       animation-delay: -0.24s;
     }
 
     &:nth-child(2) {
-      left: var(--grid4);
       animation-delay: -0.12s;
     }
 
     &:nth-child(3) {
-      left: var(--grid8);
       animation-delay: 0;
     }
   }
 }
 
-@keyframes lds-facebook {
+@keyframes lds-xs {
   0% {
-    top: 8px;
-    height: 64px;
+    top: 0;
+    height: var(--grid4);
   }
   50%, 100% {
-    top: 24px;
-    height: 32px;
+    top: var(--grid1);
+    height: var(--grid2);
+  }
+}
+
+@keyframes lds-m {
+  0% {
+    top: var(--grid2);
+    height: var(--grid16);
+  }
+  50%, 100% {
+    top: var(--grid6);
+    height: var(--grid8);
   }
 }

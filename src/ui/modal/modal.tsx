@@ -37,6 +37,7 @@ export function Modal(props: Props): ReactElement {
       overlayClassName={cn('overlay')}
       closeTimeoutMS={200}
       onRequestClose={onClose}
+      portalClassName={cn('portal')}
     >
       <div className={cn('header')}>
         <Heading size={HeadingSize.M} view={HeadingView.Condensed}>

@@ -10,7 +10,7 @@ export enum SpinnerView {
 }
 
 export enum SpinnerSize {
-  XS = 'sx',
+  XS = 'xs',
   S = 's',
   M = 'm',
 }
@@ -24,11 +24,11 @@ export function Spinner({ view, size }: Props): ReactElement {
   const cn = useStyles(styles, 'spinner');
 
   return (
-    <div className={cn({ view, size })}>
-      <div className={cn('loader')}>
-        <div className={cn('item')} />
-        <div className={cn('item')} />
-        <div className={cn('item')} />
+    <div className={cn({ view })}>
+      <div className={cn('loader', { size })}>
+        <div className={cn('item', { size })} />
+        <div className={cn('item', { size })} />
+        <div className={cn('item', { size })} />
       </div>
     </div>
   );

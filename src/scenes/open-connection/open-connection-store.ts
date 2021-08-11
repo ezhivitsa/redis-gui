@@ -1,33 +1,39 @@
-import { action, observable, runInAction, computed } from 'mobx';
+import { action, observable, runInAction, computed, makeObservable } from 'mobx';
 
 import { Redis } from 'lib/redis';
 
 import { ConnectionData } from './types';
-
-const PREFIX_SEPARATOR = ':';
 
 export class OpenConnectionStore {
   @observable
   private _redis?: Redis;
 
   @observable
-  private _data: ConnectionData = {};
+  private _data: ConnectionData = {
+    isLoading: false,
+    open: false,
+    keys: [],
+    prefixes: {},
+  };
 
-  @observable
-  private _openPrefixes = new Set<string>();
-
-  @observable
-  private _loadingPrefixes = new Set<string>();
+  constructor() {
+    makeObservable(this);
+  }
 
   private _getPrefixData(prefix: string[]): ConnectionData {
     let data = this._data;
 
     for (let i = 0; i < prefix.length; i += 1) {
-      if (!data[prefix[i]]) {
-        data[prefix[i]] = {};
+      if (!data.prefixes[prefix[i]]) {
+        data.prefixes[prefix[i]] = {
+          isLoading: false,
+          open: false,
+          keys: [],
+          prefixes: {},
+        };
       }
 
-      data = data[prefix[i]] as ConnectionData;
+      data = data.prefixes[prefix[i]];
     }
 
     return data;
@@ -38,27 +44,9 @@ export class OpenConnectionStore {
     return this._data;
   }
 
-  isLoadingPrefix(prefix: string[]): boolean {
-    return this._loadingPrefixes.has(prefix.join(PREFIX_SEPARATOR));
-  }
-
-  isPrefixOpen(prefix: string[]): boolean {
-    return this._openPrefixes.has(prefix.join(PREFIX_SEPARATOR));
-  }
-
   @action
   setRedis(redis: Redis): void {
     this._redis = redis;
-  }
-
-  @action
-  openPrefix(prefix: string[]): void {
-    this._openPrefixes.add(prefix.join(PREFIX_SEPARATOR));
-  }
-
-  @action
-  closePrefix(prefix: string[]): void {
-    this._openPrefixes.delete(prefix.join(PREFIX_SEPARATOR));
   }
 
   @action
@@ -67,32 +55,50 @@ export class OpenConnectionStore {
       return;
     }
 
-    const prefixStr = prefix.join(PREFIX_SEPARATOR);
-    this._loadingPrefixes.add(prefixStr);
-
     const { keys, prefixes } = await this._redis.getPrefixesAndKeys(prefix);
-
+    console.log(keys, prefixes);
     const data = this._getPrefixData(prefix);
 
     runInAction(() => {
+      data.isLoading = true;
       data.open = true;
 
       for (let i = 0; i < prefixes.length; i += 1) {
-        data[prefixes[i]] = {};
+        data.prefixes[prefixes[i]] = {
+          isLoading: false,
+          open: false,
+          keys: [],
+          prefixes: {},
+        };
       }
 
-      for (let i = 0; i < keys.length; i += 1) {
-        data[keys[i]] = true;
-      }
-
-      this._loadingPrefixes.delete(prefixStr);
+      data.keys = keys;
+      data.isLoading = false;
     });
   }
 
   @action
+  toggleOpen(prefix: string[]): void {
+    const data = this._getPrefixData(prefix);
+
+    if (data.open) {
+      data.open = false;
+      data.keys = [];
+      data.prefixes = {};
+    } else {
+      data.open = true;
+      this.getPrefixesAndKeys(prefix);
+    }
+  }
+
+  @action
   dispose(): void {
-    this._loadingPrefixes.clear();
-    this._data = {};
+    this._data = {
+      isLoading: false,
+      open: false,
+      keys: [],
+      prefixes: {},
+    };
     this._redis = undefined;
   }
 }

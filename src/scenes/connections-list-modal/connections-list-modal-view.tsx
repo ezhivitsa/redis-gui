@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { faTrashAlt, faPen, faClone, faPlug } from '@fortawesome/free-solid-svg-icons';
 
 import { useStyles } from 'lib/theme';
+import { Redis } from 'lib/redis';
 
 import { Modal } from 'ui/modal';
 import { Button, ButtonSize, ButtonView } from 'ui/button';
@@ -20,10 +21,10 @@ import styles from './connections-list-modal.pcss';
 export interface Props {
   open: boolean;
   onClose: () => void;
-  onConnect: () => void;
+  onConnect: (redis: Redis) => void;
 }
 
-export const ConnectionsListModalView = observer(({ open, onClose }: Props): ReactElement => {
+export const ConnectionsListModalView = observer(({ open, onClose, onConnect }: Props): ReactElement => {
   const cn = useStyles(styles, 'connections-list-modal');
 
   const store = useStore();
@@ -35,6 +36,8 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
     createConnectionOpened,
     showAskDataForm,
     askData,
+    isConnected,
+    redis,
   } = store;
 
   const hasSelectedConnection = selectedConnection !== null;
@@ -46,6 +49,13 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
       store.dispose();
     };
   }, []);
+
+  useEffect(() => {
+    if (isConnected && redis) {
+      onConnect(redis);
+      onClose();
+    }
+  }, [isConnected, redis]);
 
   function handleCreateConnection(): void {
     store.openCreateModal();
@@ -65,7 +75,6 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
 
   function handleConnectClick(): void {
     store.openConnection();
-    // ToDo: if not open modal to fill data then send redis to parent
   }
 
   function handleCloneConnectionModal(): void {
@@ -78,14 +87,9 @@ export const ConnectionsListModalView = observer(({ open, onClose }: Props): Rea
 
   function handleSaveAskData(values: AskDataValues): void {
     store.connect(values);
-    // ToDo: send redis to parent
   }
 
   function renderConnectionActions(): ReactNode {
-    // if (selectedConnection === null) {
-    //   return null;
-    // }
-
     return (
       <div className={cn('actions')}>
         <Button

@@ -44,6 +44,9 @@ export class ConnectionsListModalStore {
   private _createConnectionOpened = false;
 
   @observable
+  private _isConnected = false;
+
+  @observable
   private _selectedConnectionId: string | null = null;
 
   @observable
@@ -120,6 +123,15 @@ export class ConnectionsListModalStore {
       sshPassword: this._redis?.askForSshPasswordEachTime,
       tlsPassphrase: this._redis?.askForTlsPassphraseEachTime,
     };
+  }
+
+  @computed
+  get isConnected(): boolean {
+    return this._isConnected;
+  }
+
+  get redis(): Redis | undefined {
+    return this._redis;
   }
 
   @action
@@ -227,12 +239,14 @@ export class ConnectionsListModalStore {
     }
 
     this._isConnecting = true;
+    this._isConnected = false;
     this._showAskDataForm = false;
 
     await this._redis.connect();
 
     runInAction(() => {
       this._isConnecting = false;
+      this._isConnected = true;
     });
   }
 
@@ -242,7 +256,9 @@ export class ConnectionsListModalStore {
     this._isDeleting = false;
     this._isConnecting = false;
     this._showAskDataForm = false;
+    this._isConnected = false;
     this._selectedConnectionId = null;
+    this._redis = undefined;
 
     this._connectionsStore.dispose();
   }

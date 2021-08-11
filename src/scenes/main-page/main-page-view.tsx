@@ -4,6 +4,7 @@ import { throttle } from 'lodash';
 import { faServer } from '@fortawesome/free-solid-svg-icons';
 
 import { useStyles } from 'lib/theme';
+import { Redis } from 'lib/redis';
 
 import { ButtonIcon } from 'ui/button-icon';
 
@@ -88,7 +89,9 @@ export const MainPageView = observer((): ReactElement => {
     setCurrentResizerX(event.clientX);
   }
 
-  function handleConnect(): void {}
+  function handleConnect(redis: Redis): void {
+    pageStore.addOpenConnection(redis);
+  }
 
   return (
     <div className={cn()}>

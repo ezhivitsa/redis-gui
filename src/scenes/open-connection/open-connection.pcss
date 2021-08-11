@@ -1,14 +1,28 @@
+@import 'variables.pcss';
+
 .open-connection {
+  &:not(:last-of-type) {
+    margin-bottom: var(--grid2);
+  }
+
   &__connection {
     display: flex;
+    align-items: center;
   }
 
   &__arrow-icon {
-    margin-right: var(--grid1);
-    transition: all 0.5s;
+    margin-right: var(--grid2);
+    transition: all 0.2s;
 
     &._open {
       transform: rotate(90deg);
     }
+  }
+
+  &__name {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-left: var(--grid1);
   }
 }

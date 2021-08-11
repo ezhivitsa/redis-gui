@@ -16,7 +16,7 @@ export abstract class BaseRedis {
     for (let i = 0; i < keys.length; i++) {
       const key: string = keys[i];
       const keyEnd = prefix && key.startsWith(matchPrefix) ? key.substring(prefix.length) : key;
-      const isKey = key.includes(KEY_SEPARATOR);
+      const isKey = !keyEnd.includes(KEY_SEPARATOR);
 
       if (isKey) {
         result.keys.push(keyEnd);

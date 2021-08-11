@@ -1,7 +1,12 @@
 import { Redis } from 'lib/redis';
 
 export interface ConnectionData {
-  [prefix: string]: ConnectionData | true;
+  isLoading: boolean;
+  open: boolean;
+  keys: string[];
+  prefixes: {
+    [prefix: string]: ConnectionData;
+  };
 }
 
 export interface Props {
