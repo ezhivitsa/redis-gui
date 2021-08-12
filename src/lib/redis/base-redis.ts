@@ -11,17 +11,17 @@ export abstract class BaseRedis {
 
   protected _getPrefixesAndKeysFromKeys(keys: string[], prefix: string[] = []): PrefixesAndKeys {
     const result: PrefixesAndKeys = { keys: [], prefixes: [] };
-    const matchPrefix = this._getMatchPrefix(prefix);
+    const matchPrefix = prefix.join(KEY_SEPARATOR);
 
     for (let i = 0; i < keys.length; i++) {
       const key: string = keys[i];
-      const keyEnd = prefix && key.startsWith(matchPrefix) ? key.substring(prefix.length) : key;
+      const keyEnd = matchPrefix && key.startsWith(matchPrefix) ? key.substring(matchPrefix.length + 1) : key;
       const isKey = !keyEnd.includes(KEY_SEPARATOR);
 
       if (isKey) {
         result.keys.push(keyEnd);
       } else {
-        const resultPrefix = key.substring(0, key.indexOf(KEY_SEPARATOR));
+        const resultPrefix = keyEnd.substring(0, keyEnd.indexOf(KEY_SEPARATOR));
         result.prefixes.push(resultPrefix);
       }
     }

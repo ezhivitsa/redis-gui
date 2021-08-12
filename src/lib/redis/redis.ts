@@ -1,4 +1,5 @@
 import { Config as TunnelSshConfig } from 'tunnel-ssh';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Connection, ConnectionType } from 'lib/db';
 
@@ -11,6 +12,7 @@ import { BaseRedis } from './base-redis';
 import { PrefixesAndKeys } from './types';
 
 export class Redis {
+  private _id: string;
   private _connection: Omit<Connection, 'id'>;
 
   private _sshPassphrase?: string;
@@ -21,6 +23,8 @@ export class Redis {
   private _ioRedis: BaseRedis;
 
   constructor(connection: Omit<Connection, 'id'>) {
+    this._id = uuidv4();
+
     this._connection = connection;
     this._tunnelSsh = new TunnelSsh(this._sshConfig);
 
@@ -40,6 +44,10 @@ export class Redis {
     }
 
     return getSshConfig(ssh);
+  }
+
+  get id(): string {
+    return this._id;
   }
 
   get askForSshPassphraseEachTime(): boolean {

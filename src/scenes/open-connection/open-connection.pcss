@@ -5,7 +5,8 @@
     margin-bottom: var(--grid2);
   }
 
-  &__connection {
+  &__connection,
+  &__key {
     display: flex;
     align-items: center;
   }
@@ -24,5 +25,29 @@
     text-overflow: ellipsis;
     overflow: hidden;
     margin-left: var(--grid1);
+  }
+
+  &__content {
+    margin-left: var(--grid1);
+    padding: var(--grid1) 0 var(--grid0_5) var(--grid3);
+    border-left: 1px dashed;
+  }
+
+  &__data-item {
+    &:not(:last-of-type) {
+      margin-bottom: var(--grid1);
+    }
+  }
+
+  &__key {
+    cursor: pointer;
+  }
+}
+
+.open-connection_theme_dark {
+  .open-connection {
+    &__content {
+      border-left-color: var(--color-grey-400);
+    }
   }
 }

@@ -25,18 +25,18 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement => {
   const cn = useStyles(styles, 'open-connection');
 
   const store = useStore();
-  const { data } = store;
+  const data = store.getData(redis);
 
   useEffect(() => {
     store.setRedis(redis);
 
     return () => {
-      store.dispose();
+      store.dispose(redis);
     };
   }, []);
 
   function handleToggleOpenPrefix(prefix: string[]): void {
-    store.toggleOpen(prefix);
+    store.toggleOpen(redis, prefix);
   }
 
   function renderIcon(connectionData: ConnectionData, iconType?: IconType): ReactNode {
@@ -57,21 +57,57 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement => {
     return null;
   }
 
-  return (
-    <div className={cn()}>
-      <div className={cn('connection')}>
-        <ButtonIcon
-          icon={faChevronRight}
-          className={cn('arrow-icon', { open: data.open })}
-          onClick={() => handleToggleOpenPrefix([])}
-        />
+  function renderKey(key: string): ReactNode {
+    return (
+      <div className={cn('key')}>
+        <FontAwesomeIcon icon={mapTypeToIcon[IconType.Key]} size="sm" />
 
-        {renderIcon(data, IconType.Database)}
-
-        <span className={cn('name')} title={redis.name}>
-          {redis.name}
+        <span className={cn('name')} title={key}>
+          {key}
         </span>
       </div>
-    </div>
-  );
+    );
+  }
+
+  function renderDataContent(prefix: string[], connectionData: ConnectionData): ReactNode {
+    return (
+      <div className={cn('content')}>
+        {Object.keys(connectionData.prefixes).map((key) => (
+          <div key={key} className={cn('data-item')}>
+            {renderData([...prefix, key], key, connectionData.prefixes[key])}
+          </div>
+        ))}
+
+        {connectionData.keys.map((key) => (
+          <div className={cn('data-item')} key={key}>
+            {renderKey(key)}
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  function renderData(prefix: string[], name: string, connectionData: ConnectionData, iconType?: IconType): ReactNode {
+    return (
+      <>
+        <div className={cn('connection')}>
+          <ButtonIcon
+            icon={faChevronRight}
+            className={cn('arrow-icon', { open: connectionData.open })}
+            onClick={() => handleToggleOpenPrefix(prefix)}
+          />
+
+          {renderIcon(connectionData, iconType)}
+
+          <span className={cn('name')} title={name}>
+            {name}
+          </span>
+        </div>
+
+        {connectionData.open && renderDataContent(prefix, connectionData)}
+      </>
+    );
+  }
+
+  return <div className={cn()}>{renderData([], redis.name, data, IconType.Database)}</div>;
 });

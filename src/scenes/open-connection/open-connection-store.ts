@@ -4,24 +4,21 @@ import { Redis } from 'lib/redis';
 
 import { ConnectionData } from './types';
 
+interface RedisData {
+  redis: Redis;
+  data: ConnectionData;
+}
+
 export class OpenConnectionStore {
   @observable
-  private _redis?: Redis;
-
-  @observable
-  private _data: ConnectionData = {
-    isLoading: false,
-    open: false,
-    keys: [],
-    prefixes: {},
-  };
+  private _redisData: Record<string, RedisData> = {};
 
   constructor() {
     makeObservable(this);
   }
 
-  private _getPrefixData(prefix: string[]): ConnectionData {
-    let data = this._data;
+  private _getPrefixData(redis: Redis, prefix: string[]): ConnectionData {
+    let data = this.getData(redis);
 
     for (let i = 0; i < prefix.length; i += 1) {
       if (!data.prefixes[prefix[i]]) {
@@ -39,25 +36,38 @@ export class OpenConnectionStore {
     return data;
   }
 
-  @computed
-  get data(): ConnectionData {
-    return this._data;
+  getData(redis: Redis): ConnectionData {
+    return (
+      this._redisData[redis.id]?.data || {
+        isLoading: false,
+        open: false,
+        keys: [],
+        prefixes: {},
+      }
+    );
   }
 
   @action
   setRedis(redis: Redis): void {
-    this._redis = redis;
+    this._redisData[redis.id] = {
+      redis,
+      data: {
+        isLoading: false,
+        open: false,
+        keys: [],
+        prefixes: {},
+      },
+    };
   }
 
   @action
-  async getPrefixesAndKeys(prefix: string[]): Promise<void> {
-    if (!this._redis) {
+  async getPrefixesAndKeys(redis: Redis, prefix: string[]): Promise<void> {
+    if (!this._redisData[redis.id].redis) {
       return;
     }
 
-    const { keys, prefixes } = await this._redis.getPrefixesAndKeys(prefix);
-    console.log(keys, prefixes);
-    const data = this._getPrefixData(prefix);
+    const { keys, prefixes } = await redis.getPrefixesAndKeys(prefix);
+    const data = this._getPrefixData(redis, prefix);
 
     runInAction(() => {
       data.isLoading = true;
@@ -78,8 +88,8 @@ export class OpenConnectionStore {
   }
 
   @action
-  toggleOpen(prefix: string[]): void {
-    const data = this._getPrefixData(prefix);
+  toggleOpen(redis: Redis, prefix: string[]): void {
+    const data = this._getPrefixData(redis, prefix);
 
     if (data.open) {
       data.open = false;
@@ -87,18 +97,12 @@ export class OpenConnectionStore {
       data.prefixes = {};
     } else {
       data.open = true;
-      this.getPrefixesAndKeys(prefix);
+      this.getPrefixesAndKeys(redis, prefix);
     }
   }
 
   @action
-  dispose(): void {
-    this._data = {
-      isLoading: false,
-      open: false,
-      keys: [],
-      prefixes: {},
-    };
-    this._redis = undefined;
+  dispose(redis: Redis): void {
+    delete this._redisData[redis.id];
   }
 }
