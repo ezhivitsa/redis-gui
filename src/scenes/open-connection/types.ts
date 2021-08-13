@@ -1,11 +1,9 @@
 import { Redis } from 'lib/redis';
 
-export interface ConnectionData {
+export interface ConnectionLoadingData {
   isLoading: boolean;
-  open: boolean;
-  keys: string[];
   prefixes: {
-    [prefix: string]: ConnectionData;
+    [prefix: string]: ConnectionLoadingData;
   };
 }
 

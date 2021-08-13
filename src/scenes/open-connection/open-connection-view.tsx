@@ -1,15 +1,18 @@
 import React, { ReactElement, ReactNode, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
+import { isEqual } from 'lodash';
 import { faChevronRight, faDatabase, faLayerGroup, faKey } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useStyles } from 'lib/theme';
 
+import { ConnectionData } from 'stores';
+
 import { ButtonIcon } from 'ui/button-icon';
 import { Spinner, SpinnerSize } from 'ui/spinner';
 
-import { Props, IconType, ConnectionData } from './types';
+import { Props, IconType, ConnectionLoadingData } from './types';
 
 import { useStore } from './index';
 
@@ -26,6 +29,8 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement => {
 
   const store = useStore();
   const data = store.getData(redis);
+  const loadingData = store.getLoadingData(redis);
+  const { currentKey } = store;
 
   useEffect(() => {
     store.setRedis(redis);
@@ -35,12 +40,20 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement => {
     };
   }, []);
 
-  function handleToggleOpenPrefix(prefix: string[]): void {
-    store.toggleOpen(redis, prefix);
+  function handleToggleOpenPrefix(prefix: string[], currentOpen?: boolean): void {
+    if (currentOpen) {
+      store.close(redis, prefix);
+    } else {
+      store.open(redis, prefix);
+    }
   }
 
-  function renderIcon(connectionData: ConnectionData, iconType?: IconType): ReactNode {
-    if (connectionData.isLoading) {
+  function handleKeySelect(prefix: string[], key: string): void {
+    store.setCurrentKey(redis, [...prefix, key]);
+  }
+
+  function renderIcon(connectionData?: ConnectionLoadingData, iconType?: IconType): ReactNode {
+    if (connectionData?.isLoading) {
       return <Spinner size={SpinnerSize.XS} />;
     }
 
@@ -57,57 +70,69 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement => {
     return null;
   }
 
-  function renderKey(key: string): ReactNode {
+  function renderKey(prefix: string[], key: string): ReactNode {
+    const selected = isEqual(currentKey, [...prefix, key]);
+
     return (
-      <div className={cn('key')}>
+      <div className={cn('key', { selected })} onDoubleClick={() => handleKeySelect(prefix, key)}>
         <FontAwesomeIcon icon={mapTypeToIcon[IconType.Key]} size="sm" />
 
-        <span className={cn('name')} title={key}>
+        <span className={cn('name', { selected })} title={key}>
           {key}
         </span>
       </div>
     );
   }
 
-  function renderDataContent(prefix: string[], connectionData: ConnectionData): ReactNode {
+  function renderDataContent(
+    prefix: string[],
+    connectionData?: ConnectionData,
+    loadingData?: ConnectionLoadingData,
+  ): ReactNode {
     return (
       <div className={cn('content')}>
-        {Object.keys(connectionData.prefixes).map((key) => (
+        {Object.keys(connectionData?.prefixes || {}).map((key) => (
           <div key={key} className={cn('data-item')}>
-            {renderData([...prefix, key], key, connectionData.prefixes[key])}
+            {renderData([...prefix, key], key, connectionData?.prefixes[key], loadingData?.prefixes[key])}
           </div>
         ))}
 
-        {connectionData.keys.map((key) => (
+        {connectionData?.keys.map((key) => (
           <div className={cn('data-item')} key={key}>
-            {renderKey(key)}
+            {renderKey(prefix, key)}
           </div>
         ))}
       </div>
     );
   }
 
-  function renderData(prefix: string[], name: string, connectionData: ConnectionData, iconType?: IconType): ReactNode {
+  function renderData(
+    prefix: string[],
+    name: string,
+    connectionData?: ConnectionData,
+    loadingData?: ConnectionLoadingData,
+    iconType?: IconType,
+  ): ReactNode {
     return (
       <>
         <div className={cn('connection')}>
           <ButtonIcon
             icon={faChevronRight}
-            className={cn('arrow-icon', { open: connectionData.open })}
-            onClick={() => handleToggleOpenPrefix(prefix)}
+            className={cn('arrow-icon', { open: connectionData?.open })}
+            onClick={() => handleToggleOpenPrefix(prefix, connectionData?.open)}
           />
 
-          {renderIcon(connectionData, iconType)}
+          {renderIcon(loadingData, iconType)}
 
           <span className={cn('name')} title={name}>
             {name}
           </span>
         </div>
 
-        {connectionData.open && renderDataContent(prefix, connectionData)}
+        {connectionData?.open && renderDataContent(prefix, connectionData, loadingData)}
       </>
     );
   }
 
-  return <div className={cn()}>{renderData([], redis.name, data, IconType.Database)}</div>;
+  return <div className={cn()}>{renderData([], redis.name, data, loadingData, IconType.Database)}</div>;
 });

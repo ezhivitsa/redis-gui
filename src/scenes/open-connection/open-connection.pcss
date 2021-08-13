@@ -25,6 +25,12 @@
     text-overflow: ellipsis;
     overflow: hidden;
     margin-left: var(--grid1);
+    font-size: var(--font-size-300);
+
+    &._selected {
+      font-style: italic;
+      font-weight: var(--font-weight-600);
+    }
   }
 
   &__content {
@@ -35,12 +41,17 @@
 
   &__data-item {
     &:not(:last-of-type) {
-      margin-bottom: var(--grid1);
+      margin-bottom: var(--grid1_5);
+    }
+
+    &:first-of-type {
+      margin-top: var(--grid0_5);
     }
   }
 
   &__key {
     cursor: pointer;
+    user-select: none;
   }
 }
 
@@ -48,6 +59,12 @@
   .open-connection {
     &__content {
       border-left-color: var(--color-grey-400);
+    }
+
+    &__key {
+      &._selected {
+        color: var(--color-grey-600);
+      }
     }
   }
 }
