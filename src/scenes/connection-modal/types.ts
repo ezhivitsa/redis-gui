@@ -28,6 +28,7 @@ export enum ConnectionAuthFormikField {
   Username = 'username',
   Password = 'password',
   SentinelPassword = 'sentinelPassword',
+  SentinelUsername = 'sentinelUsername',
 }
 
 export enum ConnectionAddressFormikField {
@@ -107,6 +108,7 @@ export interface ConnectionAuthFormikValues {
   [ConnectionAuthFormikField.Password]: string;
   [ConnectionAuthFormikField.Username]: string;
   [ConnectionAuthFormikField.SentinelPassword]: string;
+  [ConnectionAuthFormikField.SentinelUsername]: string;
 }
 
 export interface ConnectionAdvancedFormikValues {

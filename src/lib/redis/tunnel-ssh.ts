@@ -1,12 +1,8 @@
-import { promisify } from 'util';
 import { Server } from 'net';
 
 import tunnel, { Config as TunnelSshConfig } from 'tunnel-ssh';
 
 import { AskedSshAuthData } from './types';
-
-const tunnelAsync = promisify(tunnel);
-
 export class TunnelSsh {
   private _sshServer?: Server;
   private _config?: TunnelSshConfig;
@@ -26,15 +22,34 @@ export class TunnelSsh {
       passphrase: this._config.passphrase || data.passphrase,
     };
 
-    this._sshServer = await tunnelAsync(config);
+    return new Promise((resolve, reject) => {
+      tunnel(config, (err, server) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        this._sshServer = server;
+        resolve();
+      });
+    });
   }
 
   async disconnect(): Promise<void> {
-    if (!this._sshServer) {
-      return;
-    }
+    return new Promise((resolve, reject) => {
+      if (!this._sshServer) {
+        resolve();
+        return;
+      }
 
-    const closeAsync = promisify(this._sshServer.close);
-    await closeAsync();
+      this._sshServer.close((err) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        resolve();
+      });
+    });
   }
 }

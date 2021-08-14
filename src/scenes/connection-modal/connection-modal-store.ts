@@ -37,6 +37,7 @@ const defaultConnectionData: ConnectionFormikValues = {
     password: '',
     username: '',
     sentinelPassword: '',
+    sentinelUsername: '',
   },
   ssh: {
     enabled: false,

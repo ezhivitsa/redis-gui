@@ -129,7 +129,7 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement => {
           </span>
         </div>
 
-        {connectionData?.open && renderDataContent(prefix, connectionData, loadingData)}
+        {connectionData?.open && !loadingData?.isLoading && renderDataContent(prefix, connectionData, loadingData)}
       </>
     );
   }

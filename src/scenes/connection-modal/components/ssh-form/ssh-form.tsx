@@ -203,6 +203,18 @@ export function SshForm({ isSaving }: Props): ReactElement {
         }}
       />
 
+      <FormikField
+        name={getFieldName(ConnectionSShFormikField.Username)}
+        component={Input}
+        componentProps={{
+          label: 'Username',
+          size: InputSize.S,
+          width: InputWidth.Available,
+          className: cn('item'),
+          disabled,
+        }}
+      />
+
       {renderPrivateKeyFields()}
       {renderPasswordFields()}
     </div>

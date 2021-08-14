@@ -70,6 +70,7 @@ export interface ConnectionAuth {
   password: string;
   username: string;
   sentinelPassword: string;
+  sentinelUsername: string;
 }
 
 export interface ConnectionAdvanced {

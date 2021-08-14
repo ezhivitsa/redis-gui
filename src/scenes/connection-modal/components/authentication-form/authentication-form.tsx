@@ -46,25 +46,39 @@ export function AuthenticationForm({ isSaving }: Props): ReactElement {
 
   const disabled = !performAuthField.value || isSaving;
 
-  function renderSentinelPassword(): ReactNode {
+  function renderSentinelFields(): ReactNode {
     if (typeField.value !== ConnectionType.Sentinel) {
       return null;
     }
 
-    // ToDo: Check can we use password here instead of sentinel password
     return (
-      <FormikField
-        name={getFieldName(ConnectionAuthFormikField.SentinelPassword)}
-        component={PasswordInput}
-        componentProps={{
-          label: 'Sentinel Password',
-          size: InputSize.S,
-          width: InputWidth.Available,
-          hint: 'Password for Sentinel instances',
-          className: cn('item'),
-          disabled,
-        }}
-      />
+      <>
+        <FormikField
+          name={getFieldName(ConnectionAuthFormikField.SentinelPassword)}
+          component={PasswordInput}
+          componentProps={{
+            label: 'Sentinel Password',
+            size: InputSize.S,
+            width: InputWidth.Available,
+            hint: 'Password for Sentinel instances',
+            className: cn('item'),
+            disabled,
+          }}
+        />
+
+        <FormikField
+          name={getFieldName(ConnectionAuthFormikField.SentinelUsername)}
+          component={Input}
+          componentProps={{
+            label: 'Sentinel Username',
+            size: InputSize.S,
+            width: InputWidth.Available,
+            hint: 'Username for Sentinel instances',
+            className: cn('item'),
+            disabled,
+          }}
+        />
+      </>
     );
   }
 
@@ -106,7 +120,7 @@ export function AuthenticationForm({ isSaving }: Props): ReactElement {
         }}
       />
 
-      {renderSentinelPassword()}
+      {renderSentinelFields()}
     </div>
   );
 }

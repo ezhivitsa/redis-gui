@@ -9,6 +9,7 @@ import { Redis } from 'lib/redis';
 import { ButtonIcon } from 'ui/button-icon';
 
 import { ConnectionsListModal } from 'scenes/connections-list-modal';
+import { EditValueForm } from 'scenes/edit-value-form';
 
 import { useStore } from './index';
 
@@ -33,7 +34,7 @@ export const MainPageView = observer((): ReactElement => {
   const connectionsRef = useRef<HTMLDivElement>(null);
 
   const pageStore = useStore();
-  const { connectionsListOpened } = pageStore;
+  const { connectionsListOpened, openConnections } = pageStore;
 
   const handleMouseMoveThrottled = throttle(handleMouseMove, MOVE_THROTTLE);
 
@@ -114,7 +115,10 @@ export const MainPageView = observer((): ReactElement => {
             tabIndex={0}
           />
         </div>
-        <div className={cn('data')} />
+
+        <div className={cn('data')}>
+          {openConnections.length > 0 && <EditValueForm connections={openConnections} />}
+        </div>
       </div>
 
       <ConnectionsListModal

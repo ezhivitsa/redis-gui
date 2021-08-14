@@ -58,6 +58,11 @@ export function getSshConfig(ssh: ConnectionSsh): TunnelSshConfig {
     host: ssh.host,
     port: Number(ssh.port) || undefined,
     username: ssh.username,
+
+    dstHost: 'man-tb2k7sx9zid18bzp.db.yandex.net',
+    dstPort: 26379,
+
+    localPort: 8085,
   };
 
   if (ssh.authMethod === SshAuthMethod.Password) {
@@ -107,14 +112,16 @@ export function getRedisSentinelConfig({ main, auth, tls, advanced }: RedisConfi
       port: Number(address.port),
     }));
 
-  options.role = main.readOnly ? 'master' : 'slave';
+  options.role = main.readOnly ? 'slave' : 'master';
 
   options.name = main.sentinelName;
   options.sentinelTLS;
 
   if (auth.performAuth) {
-    options.sentinelPassword = auth.password;
-    options.sentinelUsername = auth.username;
+    options.sentinelPassword = auth.sentinelPassword;
+    options.sentinelUsername = auth.sentinelUsername;
+    options.password = auth.password;
+    options.username = auth.username;
   }
 
   if (tls.enabled) {
