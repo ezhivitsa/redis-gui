@@ -8,6 +8,8 @@ import { FormikField } from 'ui/formik-field';
 import { PasswordInput, InputSize, InputWidth } from 'ui/password-input';
 import { Button, ButtonSize, ButtonView } from 'ui/button';
 
+import { askDataTexts } from 'texts';
+
 import { AskDataField, AskDataValues } from './types';
 
 import styles from './ask-data-form.pcss';
@@ -22,9 +24,9 @@ interface Props {
 }
 
 const mapFieldToLabel: Record<AskDataField, string> = {
-  [AskDataField.SshPassword]: 'SSH Password',
-  [AskDataField.SshPassphrase]: 'SSH Passphrase',
-  [AskDataField.TlsPassphrase]: 'TLS Passphrase',
+  [AskDataField.SshPassword]: askDataTexts.sshPassword,
+  [AskDataField.SshPassphrase]: askDataTexts.sshPassphrase,
+  [AskDataField.TlsPassphrase]: askDataTexts.tlsPassphrase,
 };
 
 export function AskDataForm({
@@ -76,7 +78,7 @@ export function AskDataForm({
         {fields.map(renderItem)}
         <div className={cn('actions')}>
           <Button size={ButtonSize.S} view={ButtonView.Default} onClick={() => handleSubmit(formikProps)}>
-            Connect
+            {askDataTexts.connectBtn}
           </Button>
         </div>
       </>
@@ -84,7 +86,7 @@ export function AskDataForm({
   }
 
   return (
-    <Modal open={open} onClose={onClose} title="Data For Connection">
+    <Modal open={open} onClose={onClose} title={askDataTexts.title}>
       <Formik
         initialValues={{
           sshPassphrase: askSshPassphrase ? '' : undefined,

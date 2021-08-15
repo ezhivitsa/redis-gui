@@ -17,6 +17,8 @@ import {
   ConnectionTlsFormikValues,
 } from 'scenes/connection-modal/types';
 
+import { tlsFormTexts } from 'texts';
+
 import styles from './tls-form.pcss';
 
 interface Props {
@@ -80,7 +82,7 @@ export function TlsForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionTlsFormikField.CaCertificate)}
         component={UploadInput}
         componentProps={{
-          label: 'CA Certificate',
+          label: tlsFormTexts.caCertificateLabel,
           size: InputSize.S,
           className: cn('item'),
           disabled,
@@ -100,7 +102,7 @@ export function TlsForm({ isSaving }: Props): ReactElement {
           name={getFieldName(ConnectionTlsFormikField.Pem)}
           component={UploadInput}
           componentProps={{
-            label: 'PEM Certificate/Key',
+            label: tlsFormTexts.pemLabel,
             size: InputSize.S,
             className: cn('item'),
             disabled,
@@ -111,7 +113,7 @@ export function TlsForm({ isSaving }: Props): ReactElement {
           name={getFieldName(ConnectionTlsFormikField.Passphrase)}
           component={PasswordInput}
           componentProps={{
-            label: 'Passphrase',
+            label: tlsFormTexts.passphraseLabel,
             size: InputSize.S,
             width: InputWidth.Available,
             className: cn('item'),
@@ -123,7 +125,7 @@ export function TlsForm({ isSaving }: Props): ReactElement {
           name={`${ConnectionFormikField.Tls}.${ConnectionTlsFormikField.AskForPassphraseEachTime}`}
           component={Checkbox}
           componentProps={{
-            label: 'Ask for passphrase each time',
+            label: tlsFormTexts.askPassphraseLabel,
             size: CheckboxSize.S,
             width: CheckboxWidth.Available,
             className: cn('item'),
@@ -145,7 +147,7 @@ export function TlsForm({ isSaving }: Props): ReactElement {
           name={getFieldName(ConnectionTlsFormikField.Crl)}
           component={UploadInput}
           componentProps={{
-            label: 'CRL (Revocation List)',
+            label: tlsFormTexts.crlLabel,
             size: InputSize.S,
             className: cn('item'),
             disabled,
@@ -156,17 +158,17 @@ export function TlsForm({ isSaving }: Props): ReactElement {
           name={getFieldName(ConnectionTlsFormikField.InvalidHostnames)}
           component={Select}
           componentProps={{
-            label: 'Invalid Hostnames',
+            label: tlsFormTexts.hostnamesLabel,
             size: SelectSize.S,
             width: SelectWidth.Available,
             items: [
               {
                 value: InvalidHostnames.NotAllowed,
-                text: 'Not Allowed',
+                text: tlsFormTexts.notAllowed,
               },
               {
                 value: InvalidHostnames.Allowed,
-                text: 'Allowed',
+                text: tlsFormTexts.allowed,
               },
             ],
             className: cn('item'),
@@ -183,7 +185,7 @@ export function TlsForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionTlsFormikField.Enabled)}
         component={Checkbox}
         componentProps={{
-          label: 'Use TLS protocol',
+          label: tlsFormTexts.enabledLabel,
           size: CheckboxSize.S,
           width: CheckboxWidth.Available,
           className: cn('item'),
@@ -195,17 +197,17 @@ export function TlsForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionTlsFormikField.AuthenticationMethod)}
         component={Select}
         componentProps={{
-          label: 'Authentication Method',
+          label: tlsFormTexts.enabledLabel,
           size: SelectSize.S,
           width: SelectWidth.Available,
           items: [
             {
               value: AuthenticationMethod.SelfSigned,
-              text: 'Self-signed Certificate',
+              text: tlsFormTexts.selfSigned,
             },
             {
               value: AuthenticationMethod.CaCertificate,
-              text: 'CA Certificate',
+              text: tlsFormTexts.ca,
             },
           ],
           onChange: handleAuthenticationMethodChange,
@@ -220,7 +222,7 @@ export function TlsForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionTlsFormikField.UsePem)}
         component={Checkbox}
         componentProps={{
-          label: 'Use PEM Cert./Key',
+          label: tlsFormTexts.usePemLabel,
           size: CheckboxSize.S,
           width: CheckboxWidth.Available,
           onChange: handleUsePemChange,
@@ -235,7 +237,7 @@ export function TlsForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionTlsFormikField.AdvancedOptions)}
         component={Checkbox}
         componentProps={{
-          label: 'Advanced Options',
+          label: tlsFormTexts.advancedLabel,
           size: CheckboxSize.S,
           width: CheckboxWidth.Available,
           onChange: handleAdvancedOptionsChange,

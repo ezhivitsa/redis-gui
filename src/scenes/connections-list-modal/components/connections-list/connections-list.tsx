@@ -9,6 +9,8 @@ import { useStyles } from 'lib/theme';
 import { Spinner, SpinnerView } from 'ui/spinner';
 import { Paragraph, ParagraphSize } from 'ui/paragraph';
 
+import { connectionsListTexts } from 'texts';
+
 import { ComponentsListTable } from './components/components-list-table';
 
 import { useStore } from 'scenes/connections-list-modal';
@@ -50,7 +52,7 @@ export const ConnectionsList = observer(({ onDoubleClick, className }: Props): R
 
     return (
       <Paragraph size={ParagraphSize.S} className={cn('empty')}>
-        No connections yet
+        {connectionsListTexts.noConnections}
       </Paragraph>
     );
   }

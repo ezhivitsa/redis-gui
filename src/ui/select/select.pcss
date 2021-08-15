@@ -12,18 +12,26 @@
       line-height: var(--grid4);
       font-size: var(--font-size-200);
     }
+
+    &._size_m {
+      line-height: var(--grid5);
+      font-size: var(--font-size-400);
+    }
   }
 
   &__select {
-    border-radius: var(--border-radius-200);
-    border: 1px solid;
     outline: none;
     box-sizing: border-box;
+    border: 0;
 
     &._size_s {
-      padding: 0 var(--grid2);
       height: var(--grid6);
       font-size: var(--font-size-200);
+    }
+
+    &._size_m {
+      height: var(--grid7);
+      font-size: var(--font-size-400);
     }
 
     &._width_available {
@@ -33,7 +41,9 @@
   }
 
   &__select-wrap {
+    border-radius: var(--border-radius-200);
     position: relative;
+    border: 1px solid;
 
     &._disabled {
       pointer-events: none;
@@ -48,6 +58,14 @@
         z-index: 1;
         border-radius: var(--border-radius-200);
       }
+    }
+
+    &._size_s {
+      padding: 0 var(--grid2);
+    }
+
+    &._size_m {
+      padding: 0 var(--grid2);
     }
   }
 }

@@ -7,6 +7,8 @@ import { Input, InputSize, InputWidth } from 'ui/input';
 import { NumberInput } from 'ui/number-input';
 import { Checkbox, CheckboxSize, CheckboxWidth } from 'ui/checkbox';
 
+import { advancedFormTexts } from 'texts';
+
 import { ConnectionFormikField, ConnectionAdvancedFormikField } from 'scenes/connection-modal/types';
 
 import styles from './advanced-form.pcss';
@@ -28,7 +30,7 @@ export function AdvancedForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionAdvancedFormikField.Family)}
         component={NumberInput}
         componentProps={{
-          label: 'Version of IP stack',
+          label: advancedFormTexts.familyLabel,
           minValue: 0,
           size: InputSize.S,
           width: InputWidth.Available,
@@ -41,7 +43,7 @@ export function AdvancedForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionAdvancedFormikField.Db)}
         component={NumberInput}
         componentProps={{
-          label: 'Database Index',
+          label: advancedFormTexts.dbLabel,
           minValue: 0,
           size: InputSize.S,
           width: InputWidth.Available,
@@ -54,7 +56,7 @@ export function AdvancedForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionAdvancedFormikField.KeyPrefix)}
         component={Input}
         componentProps={{
-          label: 'The prefix to prepend to all keys in a command',
+          label: advancedFormTexts.keyPrefixLabel,
           size: InputSize.S,
           width: InputWidth.Available,
           className: cn('item'),
@@ -66,7 +68,7 @@ export function AdvancedForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionAdvancedFormikField.StringNumbers)}
         component={Checkbox}
         componentProps={{
-          label: 'Force numbers to be returned as strings',
+          label: advancedFormTexts.stringNumbersLabel,
           size: CheckboxSize.S,
           width: CheckboxWidth.Available,
           className: cn('item'),

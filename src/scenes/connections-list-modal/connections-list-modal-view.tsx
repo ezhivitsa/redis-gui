@@ -12,6 +12,8 @@ import { AskDataForm, AskDataValues } from 'components/ask-data-form';
 
 import { ConnectionModal } from 'scenes/connection-modal';
 
+import { connectionsListTexts } from 'texts';
+
 import { useStore } from './index';
 
 import { ConnectionsList } from './components/connections-list';
@@ -100,7 +102,7 @@ export const ConnectionsListModalView = observer(({ open, onClose, onConnect }: 
           onClick={handleDeleteClick}
           disabled={isDeleting || isCloning || !hasSelectedConnection}
         >
-          Delete
+          {connectionsListTexts.deleteBtn}
         </Button>
 
         <Button
@@ -110,7 +112,7 @@ export const ConnectionsListModalView = observer(({ open, onClose, onConnect }: 
           onClick={handleEditClick}
           disabled={isDeleting || isCloning || !hasSelectedConnection}
         >
-          Edit
+          {connectionsListTexts.editBtn}
         </Button>
 
         <Button
@@ -120,7 +122,7 @@ export const ConnectionsListModalView = observer(({ open, onClose, onConnect }: 
           onClick={handleCloneClick}
           disabled={isDeleting || isCloning || !hasSelectedConnection}
         >
-          Clone
+          {connectionsListTexts.cloneBtn}
         </Button>
 
         <Button
@@ -130,17 +132,17 @@ export const ConnectionsListModalView = observer(({ open, onClose, onConnect }: 
           onClick={handleConnectClick}
           disabled={isDeleting || isCloning || !hasSelectedConnection}
         >
-          Connect
+          {connectionsListTexts.connectBtn}
         </Button>
       </div>
     );
   }
 
   return (
-    <Modal open={open} onClose={onClose} title="Redis connections" className={cn()}>
+    <Modal open={open} onClose={onClose} title={connectionsListTexts.modalTitle} className={cn()}>
       <div>
         <Button size={ButtonSize.S} onClick={handleCreateConnection}>
-          Create
+          {connectionsListTexts.createBtn}
         </Button>
       </div>
 

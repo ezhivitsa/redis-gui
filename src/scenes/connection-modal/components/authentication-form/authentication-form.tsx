@@ -16,6 +16,8 @@ import {
   ConnectionMainFormikField,
 } from 'scenes/connection-modal/types';
 
+import { authenticationFormTexts } from 'texts';
+
 import { useMainField } from '../main-form';
 
 import styles from './authentication-form.pcss';
@@ -57,10 +59,10 @@ export function AuthenticationForm({ isSaving }: Props): ReactElement {
           name={getFieldName(ConnectionAuthFormikField.SentinelPassword)}
           component={PasswordInput}
           componentProps={{
-            label: 'Sentinel Password',
+            label: authenticationFormTexts.sentinelPasswordLabel,
             size: InputSize.S,
             width: InputWidth.Available,
-            hint: 'Password for Sentinel instances',
+            hint: authenticationFormTexts.sentinelPasswordHint,
             className: cn('item'),
             disabled,
           }}
@@ -70,10 +72,10 @@ export function AuthenticationForm({ isSaving }: Props): ReactElement {
           name={getFieldName(ConnectionAuthFormikField.SentinelUsername)}
           component={Input}
           componentProps={{
-            label: 'Sentinel Username',
+            label: authenticationFormTexts.sentinelUsernameHint,
             size: InputSize.S,
             width: InputWidth.Available,
-            hint: 'Username for Sentinel instances',
+            hint: authenticationFormTexts.sentinelUsernameLabel,
             className: cn('item'),
             disabled,
           }}
@@ -88,7 +90,7 @@ export function AuthenticationForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionAuthFormikField.PerformAuth)}
         component={Checkbox}
         componentProps={{
-          label: 'Perform authentication',
+          label: authenticationFormTexts.performAuthLabel,
           size: CheckboxSize.S,
           width: CheckboxWidth.Available,
           className: cn('item'),
@@ -100,7 +102,7 @@ export function AuthenticationForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionAuthFormikField.Username)}
         component={Input}
         componentProps={{
-          label: 'User Name',
+          label: authenticationFormTexts.usernameLabel,
           size: InputSize.S,
           width: InputWidth.Available,
           className: cn('item'),
@@ -112,7 +114,7 @@ export function AuthenticationForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionAuthFormikField.Password)}
         component={PasswordInput}
         componentProps={{
-          label: 'Password',
+          label: authenticationFormTexts.passwordLabel,
           size: InputSize.S,
           width: InputWidth.Available,
           className: cn('item'),

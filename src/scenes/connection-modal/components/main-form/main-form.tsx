@@ -20,6 +20,8 @@ import {
   ConnectionMainFormikValues,
 } from 'scenes/connection-modal/types';
 
+import { mainFormTexts } from 'texts';
+
 import styles from './main-form.pcss';
 
 interface Props {
@@ -46,10 +48,12 @@ export function MainForm({ isSaving }: Props): ReactElement {
   const [typeField] = useMainField(ConnectionMainFormikField.Type);
   const [addressesField, , addressesFieldHelpers] = useMainField(ConnectionMainFormikField.Addresses);
   const [, , sentinelNameFieldHelpers] = useMainField(ConnectionMainFormikField.SentinelName);
+  const [, , readOnlyFieldHelpers] = useMainField(ConnectionMainFormikField.ReadOnly);
 
   function handleTypeChange(type: string): void {
     if (type === ConnectionType.Direct) {
       addressesFieldHelpers.setValue(addressesField.value.slice(0, 1));
+      readOnlyFieldHelpers.setValue(false);
     }
 
     if (type !== ConnectionType.Sentinel) {
@@ -64,7 +68,7 @@ export function MainForm({ isSaving }: Props): ReactElement {
           name={`${getFieldName(ConnectionMainFormikField.Addresses)}.${index}.${ConnectionAddressFormikField.Host}`}
           component={Input}
           componentProps={{
-            label: 'Host',
+            label: mainFormTexts.hostLabel,
             size: InputSize.S,
             width: InputWidth.Available,
             className: cn('host'),
@@ -76,7 +80,7 @@ export function MainForm({ isSaving }: Props): ReactElement {
           name={`${getFieldName(ConnectionMainFormikField.Addresses)}.${index}.${ConnectionAddressFormikField.Port}`}
           component={Input}
           componentProps={{
-            label: 'Port',
+            label: mainFormTexts.portLabel,
             size: InputSize.S,
             width: InputWidth.Available,
             className: cn('port'),
@@ -105,7 +109,7 @@ export function MainForm({ isSaving }: Props): ReactElement {
     return (
       <div className={cn('add-btn-wrap')}>
         <Button size={ButtonSize.S} onClick={() => arrayHelpers.push({})} disabled={isSaving}>
-          Add
+          {mainFormTexts.addBtn}
         </Button>
       </div>
     );
@@ -118,7 +122,7 @@ export function MainForm({ isSaving }: Props): ReactElement {
 
     return (
       <Label size={LabelSize.S} className={cn('addresses-label')}>
-        Addresses:
+        {mainFormTexts.addresses}
       </Label>
     );
   }
@@ -133,9 +137,29 @@ export function MainForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionMainFormikField.SentinelName)}
         component={Input}
         componentProps={{
-          label: 'Sentinel Name',
+          label: mainFormTexts.sentinelNameLabel,
           size: InputSize.S,
           width: InputWidth.Available,
+          className: cn('item'),
+          disabled: isSaving,
+        }}
+      />
+    );
+  }
+
+  function renderReadOnlyField(): ReactNode {
+    if (typeField.value === ConnectionType.Direct) {
+      return null;
+    }
+
+    return (
+      <FormikField
+        name={getFieldName(ConnectionMainFormikField.ReadOnly)}
+        component={Checkbox}
+        componentProps={{
+          label: mainFormTexts.readOnlyLabel,
+          size: CheckboxSize.S,
+          width: CheckboxWidth.Available,
           className: cn('item'),
           disabled: isSaving,
         }}
@@ -149,12 +173,12 @@ export function MainForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionMainFormikField.Type)}
         component={Select}
         componentProps={{
-          label: 'Type',
+          label: mainFormTexts.typeLabel,
           size: SelectSize.S,
           items: [
-            { value: ConnectionType.Direct, text: 'Direct Connection' },
-            { value: ConnectionType.Cluster, text: 'Cluster Connection' },
-            { value: ConnectionType.Sentinel, text: 'Sentinel Connection' },
+            { value: ConnectionType.Direct, text: mainFormTexts.directConnection },
+            { value: ConnectionType.Cluster, text: mainFormTexts.clusterConnection },
+            { value: ConnectionType.Sentinel, text: mainFormTexts.sentinelConnection },
           ],
           width: SelectWidth.Available,
           className: cn('item'),
@@ -167,7 +191,7 @@ export function MainForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionMainFormikField.Name)}
         component={Input}
         componentProps={{
-          label: 'Name',
+          label: mainFormTexts.nameLabel,
           size: InputSize.S,
           width: InputWidth.Available,
           className: cn('item'),
@@ -188,18 +212,7 @@ export function MainForm({ isSaving }: Props): ReactElement {
         )}
       />
 
-      {/* ToDo: make this for cluster and maybe sentinel */}
-      <FormikField
-        name={getFieldName(ConnectionMainFormikField.ReadOnly)}
-        component={Checkbox}
-        componentProps={{
-          label: 'Read Only Connection',
-          size: CheckboxSize.S,
-          width: CheckboxWidth.Available,
-          className: cn('item'),
-          disabled: isSaving,
-        }}
-      />
+      {renderReadOnlyField()}
     </div>
   );
 }

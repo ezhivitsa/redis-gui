@@ -1,9 +1,10 @@
-import React, { ReactElement, ReactNode, useState, useEffect, useRef, ChangeEvent } from 'react';
+import React, { ReactElement, ReactNode, useRef, ChangeEvent } from 'react';
 import classnames from 'classnames';
-import { v4 as uuidv4 } from 'uuid';
 
 import { useStyles } from 'lib/theme';
 import { handleEnterEvent } from 'lib/keyboard';
+
+import { useIdHook } from 'hooks';
 
 import { InputSize } from 'ui/input';
 
@@ -37,14 +38,8 @@ export function UploadInput({
 }: Props): ReactElement {
   const cn = useStyles(styles, 'upload-input');
 
-  const [id, setId] = useState(props.id);
+  const id = useIdHook(props.id);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (!id) {
-      setId(uuidv4());
-    }
-  }, [id]);
 
   function handleUpload(event: ChangeEvent<HTMLInputElement>): void {
     const input = inputRef.current;

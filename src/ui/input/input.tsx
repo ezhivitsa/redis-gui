@@ -1,9 +1,10 @@
-import React, { ReactElement, ReactNode, useState, useEffect, ChangeEvent, FocusEvent } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import React, { ReactElement, ReactNode, useState, ChangeEvent, FocusEvent } from 'react';
 import classnames from 'classnames';
 
 import { useStyles } from 'lib/theme';
 import { handleEnterEvent } from 'lib/keyboard';
+
+import { useIdHook } from 'hooks';
 
 import styles from './input.pcss';
 
@@ -60,14 +61,8 @@ export function Input({
 }: InputProps): ReactElement {
   const cn = useStyles(styles, 'input');
 
-  const [id, setId] = useState(props.id);
+  const id = useIdHook(props.id);
   const [focused, setFocused] = useState(false);
-
-  useEffect(() => {
-    if (!id) {
-      setId(uuidv4());
-    }
-  }, [id]);
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>): void {
     if (!disabled) {

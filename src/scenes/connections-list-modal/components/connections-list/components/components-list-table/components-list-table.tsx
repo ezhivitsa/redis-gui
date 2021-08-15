@@ -40,6 +40,7 @@ export function ComponentsListTable({
 
       case Column.Address:
         return '';
+      // ToDo: set table data
       // return `${item.host || ''}${item.post || ''}`.trim();
 
       case Column.User:

@@ -11,6 +11,8 @@ import { Button, ButtonSize, ButtonView } from 'ui/button';
 
 import { AskDataForm, AskDataValues } from 'components/ask-data-form';
 
+import { connectionModalTexts } from 'texts';
+
 import { MainForm } from './components/main-form';
 import { AuthenticationForm } from './components/authentication-form';
 import { SshForm } from './components/ssh-form';
@@ -41,23 +43,23 @@ export interface Props {
 const tabs: TabItem<ConnectionTab>[] = [
   {
     value: ConnectionTab.Connection,
-    text: 'Connection',
+    text: connectionModalTexts.connectionTab,
   },
   {
     value: ConnectionTab.Authentication,
-    text: 'Authentication',
+    text: connectionModalTexts.authenticationTab,
   },
   {
     value: ConnectionTab.Ssh,
-    text: 'SSH',
+    text: connectionModalTexts.sshTab,
   },
   {
     value: ConnectionTab.Tls,
-    text: 'TLS',
+    text: connectionModalTexts.tlsTab,
   },
   {
     value: ConnectionTab.Advanced,
-    text: 'Advanced',
+    text: connectionModalTexts.advancedTab,
   },
 ];
 
@@ -127,7 +129,7 @@ export const ConnectionModalView = observer(({ open, id, onClose }: Props): Reac
           disabled={isSaving}
           onClick={() => handleTestClick(formikProps.values)}
         >
-          Test connection
+          {connectionModalTexts.testConnectionBtn}
         </Button>
 
         <Button
@@ -137,7 +139,7 @@ export const ConnectionModalView = observer(({ open, id, onClose }: Props): Reac
           onClick={onClose}
           disabled={isSaving}
         >
-          Cancel
+          {connectionModalTexts.cancelBtn}
         </Button>
 
         <Button
@@ -148,7 +150,7 @@ export const ConnectionModalView = observer(({ open, id, onClose }: Props): Reac
           disabled={isSaving}
           type="submit"
         >
-          Save
+          {connectionModalTexts.saveBtn}
         </Button>
       </div>
     );
@@ -176,7 +178,12 @@ export const ConnectionModalView = observer(({ open, id, onClose }: Props): Reac
   }
 
   return (
-    <Modal open={open} title={id ? 'Edit connection' : 'Create connection'} className={cn()} onClose={onClose}>
+    <Modal
+      open={open}
+      title={id ? connectionModalTexts.editConnectionTitle : connectionModalTexts.createConnectionTitle}
+      className={cn()}
+      onClose={onClose}
+    >
       <Tabs className={cn('tabs')} items={tabs} active={activeTab} onChange={setActiveTab} />
 
       {renderContent()}

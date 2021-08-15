@@ -7,22 +7,24 @@
     }
 
     &__select {
-      border-color: var(--color-grey-900);
       color: var(--color-grey-300);
       background: var(--color-grey-850);
-
-      &:focus {
-        border-color: var(--color-blue-700);
-        box-shadow: 0 0 0 1px var(--color-blue-shadow);
-      }
     }
 
     &__select-wrap {
+      border-color: var(--color-grey-900);
+      background: var(--color-grey-850);
+
       &._disabled {
         &::before {
           background: var(--color-white);
           opacity: var(--opacity-400);
         }
+      }
+
+      &._focused {
+        border-color: var(--color-blue-700);
+        box-shadow: 0 0 0 1px var(--color-blue-shadow);
       }
     }
   }

@@ -1,10 +1,11 @@
 /* eslint-disable jsx-a11y/no-onchange */
 
-import React, { ReactElement, ReactNode, ChangeEvent, FocusEvent, useState, useEffect } from 'react';
+import React, { ReactElement, ReactNode, ChangeEvent, FocusEvent, useState } from 'react';
 import classnames from 'classnames';
-import { v4 as uuidv4 } from 'uuid';
 
 import { useStyles } from 'lib/theme';
+
+import { useIdHook } from 'hooks';
 
 import styles from './select.pcss';
 
@@ -50,16 +51,20 @@ export function Select<V extends string>({
 }: Props<V>): ReactElement {
   const cn = useStyles(styles, 'select');
 
-  const [id, setId] = useState(props.id);
-
-  useEffect(() => {
-    if (!id) {
-      setId(uuidv4());
-    }
-  }, [id]);
+  const id = useIdHook(props.id);
+  const [focused, setFocused] = useState(false);
 
   function handleSelectChange(event: ChangeEvent<HTMLSelectElement>): void {
     onChange?.(event.target.value as V, event);
+  }
+
+  function handleFocus(): void {
+    setFocused(true);
+  }
+
+  function handleBlur(event: FocusEvent<HTMLSelectElement>): void {
+    setFocused(false);
+    onBlur?.(event);
   }
 
   function renderLabel(): ReactNode {
@@ -84,12 +89,13 @@ export function Select<V extends string>({
 
   function renderSelect(): ReactNode {
     return (
-      <div className={cn('select-wrap', { disabled })}>
+      <div className={cn('select-wrap', { disabled, focused, size })}>
         <select
           id={id}
           className={cn('select', { size, width })}
           onChange={handleSelectChange}
-          onBlur={onBlur}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
           value={value}
         >
           {items.map(renderOption)}

@@ -18,6 +18,8 @@ import {
   ConnectionSShFormikValues,
 } from 'scenes/connection-modal/types';
 
+import { sshFormTexts } from 'texts';
+
 import styles from './ssh-form.pcss';
 
 interface Props {
@@ -73,10 +75,10 @@ export function SshForm({ isSaving }: Props): ReactElement {
           name={getFieldName(ConnectionSShFormikField.PrivateKey)}
           component={UploadInput}
           componentProps={{
-            label: 'Private key',
+            label: sshFormTexts.privateKeyLabel,
             size: InputSize.S,
             className: cn('item'),
-            placeholder: 'DSA, RSA, and/or Windows/macOS ECDSA, Ed25519 keys',
+            placeholder: sshFormTexts.privateKeyPlaceholder,
             disabled,
           }}
         />
@@ -85,7 +87,7 @@ export function SshForm({ isSaving }: Props): ReactElement {
           name={getFieldName(ConnectionSShFormikField.Passphrase)}
           component={PasswordInput}
           componentProps={{
-            label: 'Passphrase',
+            label: sshFormTexts.passphraseLabel,
             size: InputSize.S,
             width: InputWidth.Available,
             className: cn('item'),
@@ -97,7 +99,7 @@ export function SshForm({ isSaving }: Props): ReactElement {
           name={getFieldName(ConnectionSShFormikField.AskForPassphraseEachTime)}
           component={Checkbox}
           componentProps={{
-            label: 'Ask for passphrase each time',
+            label: sshFormTexts.askPassphraseLabel,
             size: CheckboxSize.S,
             className: cn('item'),
             disabled,
@@ -115,10 +117,10 @@ export function SshForm({ isSaving }: Props): ReactElement {
     return (
       <>
         <FormikField
-          name={getFieldName(ConnectionSShFormikField.Passphrase)}
+          name={getFieldName(ConnectionSShFormikField.Password)}
           component={PasswordInput}
           componentProps={{
-            label: 'Password',
+            label: sshFormTexts.passwordLabel,
             size: InputSize.S,
             width: InputWidth.Available,
             className: cn('item'),
@@ -130,7 +132,7 @@ export function SshForm({ isSaving }: Props): ReactElement {
           name={getFieldName(ConnectionSShFormikField.AskForPasswordEachTime)}
           component={Checkbox}
           componentProps={{
-            label: 'Ask for password each time',
+            label: sshFormTexts.askPasswordLabel,
             size: CheckboxSize.S,
             className: cn('item'),
             disabled,
@@ -146,7 +148,7 @@ export function SshForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionSShFormikField.Enabled)}
         component={Checkbox}
         componentProps={{
-          label: 'Use SSH tunnel',
+          label: sshFormTexts.enabledLabel,
           size: CheckboxSize.S,
           width: CheckboxWidth.Available,
           className: cn('item'),
@@ -159,7 +161,7 @@ export function SshForm({ isSaving }: Props): ReactElement {
           name={getFieldName(ConnectionSShFormikField.Host)}
           component={Input}
           componentProps={{
-            label: 'Address Host',
+            label: sshFormTexts.hostLabel,
             size: InputSize.S,
             width: InputWidth.Available,
             className: cn('host'),
@@ -171,7 +173,7 @@ export function SshForm({ isSaving }: Props): ReactElement {
           name={getFieldName(ConnectionSShFormikField.Port)}
           component={Input}
           componentProps={{
-            label: 'Port',
+            label: sshFormTexts.portLabel,
             size: InputSize.S,
             width: InputWidth.Available,
             className: cn('port'),
@@ -184,15 +186,15 @@ export function SshForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionSShFormikField.AuthMethod)}
         component={Select}
         componentProps={{
-          label: 'SSH Auth Method',
+          label: sshFormTexts.authMethodLabel,
           items: [
             {
               value: SshAuthMethod.PrivateKey,
-              text: 'Private Key',
+              text: sshFormTexts.privateKey,
             },
             {
               value: SshAuthMethod.Password,
-              text: 'Password',
+              text: sshFormTexts.password,
             },
           ],
           size: SelectSize.S,
@@ -207,7 +209,7 @@ export function SshForm({ isSaving }: Props): ReactElement {
         name={getFieldName(ConnectionSShFormikField.Username)}
         component={Input}
         componentProps={{
-          label: 'Username',
+          label: sshFormTexts.usernameLabel,
           size: InputSize.S,
           width: InputWidth.Available,
           className: cn('item'),

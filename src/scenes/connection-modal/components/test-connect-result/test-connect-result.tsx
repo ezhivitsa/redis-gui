@@ -12,6 +12,8 @@ import { Paragraph, ParagraphSize } from 'ui/paragraph';
 
 import { useStore } from 'scenes/connection-modal';
 
+import { testConnectResultTexts } from 'texts';
+
 import styles from './test-connect-result.pcss';
 
 export const TestConnectResult = observer((): ReactElement => {
@@ -57,7 +59,12 @@ export const TestConnectResult = observer((): ReactElement => {
   }
 
   return (
-    <Modal title="Test Connection" open={showConnectionResult} onClose={handleConnectionResultClose} className={cn()}>
+    <Modal
+      title={testConnectResultTexts.title}
+      open={showConnectionResult}
+      onClose={handleConnectionResultClose}
+      className={cn()}
+    >
       {renderContent()}
     </Modal>
   );

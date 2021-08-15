@@ -1,11 +1,12 @@
-import React, { ReactElement, ReactNode, ChangeEvent, FocusEvent, useState, useEffect } from 'react';
+import React, { ReactElement, ReactNode, ChangeEvent, FocusEvent } from 'react';
 import classnames from 'classnames';
-import { v4 as uuidv4 } from 'uuid';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useStyles } from 'lib/theme';
+
+import { useIdHook } from 'hooks';
 
 import styles from './checkbox.pcss';
 
@@ -48,14 +49,7 @@ export function Checkbox({
   ...props
 }: Props): ReactElement {
   const cn = useStyles(styles, 'checkbox');
-
-  const [id, setId] = useState(props.id);
-
-  useEffect(() => {
-    if (!id) {
-      setId(uuidv4());
-    }
-  }, [id]);
+  const id = useIdHook(props.id);
 
   function handleChange(event: ChangeEvent<HTMLInputElement>): void {
     if (!disabled) {
