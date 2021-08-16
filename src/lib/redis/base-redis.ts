@@ -1,8 +1,12 @@
-import { AskedRedisAuthData, PrefixesAndKeys } from './types';
+import { Redis as IORedisOrig, Cluster } from 'ioredis';
+
+import { AskedRedisAuthData, PrefixesAndKeys, KeyData } from './types';
 
 export const KEY_SEPARATOR = ':';
 
-export abstract class BaseRedis {
+export abstract class BaseRedis<R extends IORedisOrig | Cluster> {
+  protected _redis?: R;
+
   abstract connect(data: AskedRedisAuthData): Promise<void>;
 
   abstract disconnect(): void;
@@ -31,5 +35,27 @@ export abstract class BaseRedis {
 
   protected _getMatchPrefix(prefix: string[]): string {
     return prefix.length ? `${prefix.join(KEY_SEPARATOR)}:*` : '*';
+  }
+
+  protected _getKey(prefix: string[]): string {
+    return prefix.join(KEY_SEPARATOR);
+  }
+
+  async getKeyData(prefix: string[]): Promise<KeyData | undefined> {
+    if (!this._redis) {
+      return;
+    }
+
+    const key = this._getKey(prefix);
+
+    const data = (await this._redis.multi().ttl(key).get(key).exec()) as [
+      [Error | null, number],
+      [Error | null, string],
+    ];
+    return {
+      key,
+      ttl: data[0][1] || undefined,
+      value: data[1][1],
+    };
   }
 }

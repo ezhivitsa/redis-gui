@@ -109,4 +109,5 @@ export const editValueFormTexts = {
   createBtn: 'Create',
   keyLabel: 'Key',
   ttlLabel: 'TTL',
+  valueLabel: 'Value',
 };

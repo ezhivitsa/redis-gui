@@ -1,1 +1,31 @@
-.textarea_theme_dark {}
+@import 'variables.pcss';
+
+.textarea_theme_dark {
+  .textarea {
+    &__label {
+      color: var(--color-grey-300);
+    }
+
+    &__textarea {
+      color: var(--color-grey-300);
+      background: var(--color-grey-850);
+    }
+
+    &__inner {
+      border-color: var(--color-grey-900);
+      background: var(--color-grey-850);
+
+      &._focused {
+        border-color: var(--color-blue-700);
+        box-shadow: 0 0 0 1px var(--color-blue-shadow);
+      }
+
+      &._disabled {
+        &::before {
+          background: var(--color-white);
+          opacity: var(--opacity-400);
+        }
+      }
+    }
+  }
+}

@@ -5,8 +5,7 @@ import { BaseRedis } from './base-redis';
 
 import { AskedRedisAuthData, PrefixesAndKeys } from './types';
 
-export class IoRedis extends BaseRedis {
-  private _redis?: IORedisOrig;
+export class IoRedis extends BaseRedis<IORedisOrig> {
   private _options: RedisOptions;
 
   constructor(options: RedisOptions) {
@@ -76,8 +75,7 @@ export class IoRedis extends BaseRedis {
   }
 }
 
-export class IoRedisCluster extends BaseRedis {
-  private _redis?: Cluster;
+export class IoRedisCluster extends BaseRedis<Cluster> {
   private _nodes: ClusterNode[];
   private _options?: ClusterOptions;
 

@@ -12,7 +12,7 @@ import { ButtonIcon } from 'ui/button-icon';
 import { Button, ButtonSize, ButtonView } from 'ui/button';
 import { Select, SelectSize } from 'ui/select';
 import { NumberInput } from 'ui/number-input';
-// import {} from 'ui/te'
+import { Textarea, TextareaSize, TextareaWidth } from 'ui/textarea';
 
 import { editValueFormTexts } from 'texts';
 
@@ -26,28 +26,29 @@ export const EditValueFormView = observer(({ connections }: Props): ReactElement
   const cn = useStyles(styles, 'edit-value-form');
 
   const store = useStore();
-  const { currentKey, currentRedis } = store;
+  const { currentKey, currentRedisId } = store;
+
+  // ToDo: load key value if has current key
+
+  const uniqConnections = uniqBy(connections, 'id');
 
   function handleSaveValue(values: EditDataValues): void {}
 
   function renderForm({ values, setFieldValue }: FormikProps<EditDataValues>): ReactNode {
     return (
-      <Form>
+      <Form className={cn('form')}>
         <div className={cn('create-wrap')}>
-          {connections.length === 1 ? (
-            connections[0].name
+          {uniqConnections.length === 1 ? (
+            uniqConnections[0].name
           ) : (
             <FormikField
               name={EditDataField.RedisId}
               component={Select}
               componentProps={{
-                items: uniqBy(
-                  connections.map((conn) => ({
-                    value: conn.id,
-                    text: conn.name,
-                  })),
-                  'value',
-                ),
+                items: uniqConnections.map((conn) => ({
+                  value: conn.id,
+                  text: conn.name,
+                })),
                 size: SelectSize.M,
               }}
             />
@@ -87,22 +88,36 @@ export const EditValueFormView = observer(({ connections }: Props): ReactElement
             label: editValueFormTexts.ttlLabel,
             size: InputSize.M,
             width: InputWidth.Available,
+            className: cn('ttl'),
           }}
         />
 
-        {/* <FormikField name={EditDataField.Value} component={} /> */}
+        <FormikField
+          name={EditDataField.Value}
+          component={Textarea}
+          componentProps={{
+            label: editValueFormTexts.valueLabel,
+            size: TextareaSize.M,
+            width: TextareaWidth.Available,
+            maxHeight: true,
+            className: cn('textarea'),
+          }}
+        />
       </Form>
     );
   }
 
   return (
-    <div>
-      <Formik<EditDataValues>
-        initialValues={{ redisId: connections[0].id, key: '', canEditKey: false, value: '' }}
-        onSubmit={handleSaveValue}
-      >
-        {renderForm}
-      </Formik>
-    </div>
+    <Formik<EditDataValues>
+      initialValues={{
+        redisId: currentRedisId || connections[0].id,
+        key: '',
+        canEditKey: !currentKey,
+        value: '',
+      }}
+      onSubmit={handleSaveValue}
+    >
+      {renderForm}
+    </Formik>
   );
 });

@@ -11,3 +11,9 @@ export interface PrefixesAndKeys {
   prefixes: string[];
   keys: string[];
 }
+
+export interface KeyData {
+  key: string;
+  ttl?: number;
+  value: string | string[];
+}

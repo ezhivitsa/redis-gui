@@ -9,7 +9,7 @@ import { TunnelSsh } from './tunnel-ssh';
 
 import { BaseRedis } from './base-redis';
 
-import { PrefixesAndKeys } from './types';
+import { PrefixesAndKeys, KeyData } from './types';
 
 export class Redis {
   private _id: string;
@@ -20,7 +20,7 @@ export class Redis {
   private _tlsPassphrase?: string;
 
   private _tunnelSsh: TunnelSsh;
-  private _ioRedis: BaseRedis;
+  private _ioRedis: BaseRedis<any>;
 
   constructor(connection: Omit<Connection, 'id'>) {
     this._id = uuidv4();
@@ -119,5 +119,13 @@ export class Redis {
     }
 
     return this._ioRedis.getPrefixesAndKeys(prefix);
+  }
+
+  async getKeyData(prefix: string[] = []): Promise<KeyData | undefined> {
+    if (!this._ioRedis) {
+      return;
+    }
+
+    return this._ioRedis.getKeyData(prefix);
   }
 }

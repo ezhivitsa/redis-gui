@@ -21,7 +21,7 @@ export class EditValueFormStore {
   }
 
   @computed
-  get currentRedis(): string | undefined {
+  get currentRedisId(): string | undefined {
     return this._connectionDataStore.currentKey?.redisId;
   }
 }
