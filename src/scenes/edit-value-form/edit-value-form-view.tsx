@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from 'react';
+import React, { ReactElement, ReactNode, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Formik, FormikProps, Form } from 'formik';
 import { faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
@@ -13,6 +13,7 @@ import { Button, ButtonSize, ButtonView } from 'ui/button';
 import { Select, SelectSize } from 'ui/select';
 import { NumberInput } from 'ui/number-input';
 import { Textarea, TextareaSize, TextareaWidth } from 'ui/textarea';
+import { Spinner, SpinnerView } from 'ui/spinner';
 
 import { editValueFormTexts } from 'texts';
 
@@ -26,9 +27,11 @@ export const EditValueFormView = observer(({ connections }: Props): ReactElement
   const cn = useStyles(styles, 'edit-value-form');
 
   const store = useStore();
-  const { currentKey, currentRedisId } = store;
+  const { currentKey, currentRedisId, keyData, isLoading } = store;
 
-  // ToDo: load key value if has current key
+  useEffect(() => {
+    store.getKeyData();
+  }, [currentKey?.join('-') || '']);
 
   const uniqConnections = uniqBy(connections, 'id');
 
@@ -105,6 +108,10 @@ export const EditValueFormView = observer(({ connections }: Props): ReactElement
         />
       </Form>
     );
+  }
+
+  if (isLoading) {
+    return <Spinner view={SpinnerView.Block} />;
   }
 
   return (

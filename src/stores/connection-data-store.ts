@@ -59,6 +59,15 @@ export class ConnectionDataStore {
     );
   }
 
+  getCurrentRedis(): Redis | undefined {
+    const redisId = this._currentKey?.redisId;
+    if (redisId === undefined) {
+      return;
+    }
+
+    return this._redisData[redisId].redis;
+  }
+
   @computed
   get currentKey(): KeyData | undefined {
     return this._currentKey;
