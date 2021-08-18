@@ -13,7 +13,7 @@ export interface EditDataValues {
   [EditDataField.Key]: string;
   [EditDataField.CanEditKey]: boolean;
   [EditDataField.Ttl]?: number;
-  [EditDataField.Value]: string | string[];
+  [EditDataField.Value]: string;
 }
 
 export interface Props {

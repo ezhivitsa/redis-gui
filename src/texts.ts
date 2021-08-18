@@ -109,5 +109,6 @@ export const editValueFormTexts = {
   createBtn: 'Create',
   keyLabel: 'Key',
   ttlLabel: 'TTL',
+  ttlHint: 'Units: seconds',
   valueLabel: 'Value',
 };

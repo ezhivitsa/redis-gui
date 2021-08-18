@@ -58,4 +58,24 @@ export abstract class BaseRedis<R extends IORedisOrig | Cluster> {
       value: data[1][1],
     };
   }
+
+  async setKeyData(data: KeyData): Promise<void> {
+    if (!this._redis) {
+      return;
+    }
+
+    if (data.ttl !== undefined) {
+      await this._redis.setex(data.key, data.ttl, data.value);
+    } else {
+      await this._redis.set(data.key, data.value);
+    }
+  }
+
+  async deleteKey(key: string): Promise<void> {
+    if (!this._redis) {
+      return;
+    }
+
+    await this._redis.del(key);
+  }
 }

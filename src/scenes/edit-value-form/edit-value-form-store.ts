@@ -4,6 +4,8 @@ import { ConnectionDataStore } from 'stores';
 
 import { KeyData } from 'lib/redis';
 
+import { EditDataValues } from './types';
+
 interface Deps {
   connectionDataStore: ConnectionDataStore;
 }
@@ -59,5 +61,31 @@ export class EditValueFormStore {
       this._isLoading = false;
       this._data = data;
     });
+  }
+
+  @action
+  async saveValue(values: EditDataValues): Promise<void> {
+    const prefix = this.currentKey;
+    const keyData = this._data;
+    const redis = this._connectionDataStore.getRedis(values.redisId);
+
+    if (!redis) {
+      return;
+    }
+
+    if (!prefix) {
+      // create new key
+    }
+
+    if (keyData?.key !== values.key) {
+      // delete current key and create new
+    } else {
+      // update key value
+      await redis.setKeyData({
+        key: values.key,
+        ttl: values.ttl,
+        value: values.value,
+      });
+    }
   }
 }

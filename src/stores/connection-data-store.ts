@@ -68,6 +68,10 @@ export class ConnectionDataStore {
     return this._redisData[redisId].redis;
   }
 
+  getRedis(redisId: string): Redis | undefined {
+    return this._redisData[redisId].redis;
+  }
+
   @computed
   get currentKey(): KeyData | undefined {
     return this._currentKey;

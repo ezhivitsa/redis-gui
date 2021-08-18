@@ -15,5 +15,5 @@ export interface PrefixesAndKeys {
 export interface KeyData {
   key: string;
   ttl?: number;
-  value: string | string[];
+  value: string;
 }

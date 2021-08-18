@@ -17,9 +17,10 @@ import { Spinner, SpinnerView } from 'ui/spinner';
 
 import { editValueFormTexts } from 'texts';
 
-import { EditDataField, EditDataValues, Props } from './types';
-
 import { useStore } from '.';
+
+import { EditDataField, EditDataValues, Props } from './types';
+import { validationSchema } from './validation';
 
 import styles from './edit-value-form.pcss';
 
@@ -35,9 +36,11 @@ export const EditValueFormView = observer(({ connections }: Props): ReactElement
 
   const uniqConnections = uniqBy(connections, 'id');
 
-  function handleSaveValue(values: EditDataValues): void {}
+  function handleSaveValue(values: EditDataValues): void {
+    store.saveValue(values);
+  }
 
-  function renderForm({ values, setFieldValue }: FormikProps<EditDataValues>): ReactNode {
+  function renderForm({ values, setFieldValue, dirty, isValid }: FormikProps<EditDataValues>): ReactNode {
     return (
       <Form className={cn('form')}>
         <div className={cn('create-wrap')}>
@@ -57,7 +60,7 @@ export const EditValueFormView = observer(({ connections }: Props): ReactElement
             />
           )}
 
-          <Button icon={faSave} size={ButtonSize.M} view={ButtonView.Success}>
+          <Button icon={faSave} size={ButtonSize.M} view={ButtonView.Success} disabled={!dirty || !isValid}>
             {currentKey ? editValueFormTexts.saveBtn : editValueFormTexts.createBtn}
           </Button>
         </div>
@@ -89,6 +92,7 @@ export const EditValueFormView = observer(({ connections }: Props): ReactElement
           component={NumberInput}
           componentProps={{
             label: editValueFormTexts.ttlLabel,
+            hint: editValueFormTexts.ttlHint,
             size: InputSize.M,
             width: InputWidth.Available,
             className: cn('ttl'),
@@ -118,10 +122,13 @@ export const EditValueFormView = observer(({ connections }: Props): ReactElement
     <Formik<EditDataValues>
       initialValues={{
         redisId: currentRedisId || connections[0].id,
-        key: '',
+        key: keyData?.key || '',
         canEditKey: !currentKey,
-        value: '',
+        ttl: keyData?.ttl,
+        value: keyData?.value || '',
       }}
+      enableReinitialize
+      validationSchema={validationSchema}
       onSubmit={handleSaveValue}
     >
       {renderForm}

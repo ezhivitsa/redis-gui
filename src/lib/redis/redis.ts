@@ -128,4 +128,12 @@ export class Redis {
 
     return this._ioRedis.getKeyData(prefix);
   }
+
+  async setKeyData(data: KeyData): Promise<void> {
+    if (!this._ioRedis) {
+      return;
+    }
+
+    return this._ioRedis.setKeyData(data);
+  }
 }
