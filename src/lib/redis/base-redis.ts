@@ -3,6 +3,7 @@ import { Redis as IORedisOrig, Cluster } from 'ioredis';
 import { AskedRedisAuthData, PrefixesAndKeys, KeyData } from './types';
 
 export const KEY_SEPARATOR = ':';
+export const NO_VALUE = -1;
 
 export abstract class BaseRedis<R extends IORedisOrig | Cluster> {
   protected _redis?: R;
@@ -52,9 +53,10 @@ export abstract class BaseRedis<R extends IORedisOrig | Cluster> {
       [Error | null, number],
       [Error | null, string],
     ];
+
     return {
       key,
-      ttl: data[0][1] || undefined,
+      ttl: data[0][1] !== NO_VALUE ? data[0][1] : undefined,
       value: data[1][1],
     };
   }

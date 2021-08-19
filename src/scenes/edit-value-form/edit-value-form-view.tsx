@@ -28,11 +28,17 @@ export const EditValueFormView = observer(({ connections }: Props): ReactElement
   const cn = useStyles(styles, 'edit-value-form');
 
   const store = useStore();
-  const { currentKey, currentRedisId, keyData, isLoading } = store;
+  const { currentKey, currentRedisId, keyData, isLoading, isSaving } = store;
 
   useEffect(() => {
     store.getKeyData();
   }, [currentKey?.join('-') || '']);
+
+  useEffect(() => {
+    return () => {
+      store.dispose();
+    };
+  }, []);
 
   const uniqConnections = uniqBy(connections, 'id');
 
@@ -56,11 +62,18 @@ export const EditValueFormView = observer(({ connections }: Props): ReactElement
                   text: conn.name,
                 })),
                 size: SelectSize.M,
+                disabled: isSaving,
               }}
             />
           )}
 
-          <Button icon={faSave} size={ButtonSize.M} view={ButtonView.Success} disabled={!dirty || !isValid}>
+          <Button
+            icon={faSave}
+            size={ButtonSize.M}
+            view={ButtonView.Success}
+            disabled={!dirty || !isValid}
+            isLoading={isSaving}
+          >
             {currentKey ? editValueFormTexts.saveBtn : editValueFormTexts.createBtn}
           </Button>
         </div>
@@ -73,7 +86,7 @@ export const EditValueFormView = observer(({ connections }: Props): ReactElement
               label: editValueFormTexts.keyLabel,
               size: InputSize.M,
               width: InputWidth.Available,
-              disabled: !values.canEditKey,
+              disabled: !values.canEditKey || isSaving,
               className: cn('key'),
             }}
           />
@@ -82,6 +95,7 @@ export const EditValueFormView = observer(({ connections }: Props): ReactElement
             <ButtonIcon
               icon={faEdit}
               className={cn('edit-btn')}
+              disabled={isSaving}
               onClick={() => setFieldValue(EditDataField.CanEditKey, true)}
             />
           )}
@@ -95,6 +109,7 @@ export const EditValueFormView = observer(({ connections }: Props): ReactElement
             hint: editValueFormTexts.ttlHint,
             size: InputSize.M,
             width: InputWidth.Available,
+            disabled: isSaving,
             className: cn('ttl'),
           }}
         />
@@ -107,6 +122,7 @@ export const EditValueFormView = observer(({ connections }: Props): ReactElement
             size: TextareaSize.M,
             width: TextareaWidth.Available,
             maxHeight: true,
+            disabled: isSaving,
             className: cn('textarea'),
           }}
         />

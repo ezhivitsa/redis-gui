@@ -121,6 +121,9 @@ export class ConnectionDataStore {
   }
 
   @action
+  deleteKey(redis: Redis, prefix: string[], key: string): void {}
+
+  @action
   open(redis: Redis, prefix: string[]): void {
     const data = this._getPrefixData(redis, prefix);
     data.open = true;

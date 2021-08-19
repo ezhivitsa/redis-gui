@@ -22,6 +22,11 @@
       height: var(--grid4);
     }
 
+    &._size_s {
+      width: var(--grid5);
+      height: var(--grid6);
+    }
+
     &._size_m {
       width: var(--grid10);
       height: var(--grid20);
@@ -42,6 +47,20 @@
 
       &:nth-child(3) {
         left: var(--grid2);
+      }
+    }
+
+    &._size_s {
+      width: var(--grid1);
+      animation: lds-s 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+      left: 0;
+
+      &:nth-child(2) {
+        left: var(--grid2);
+      }
+
+      &:nth-child(3) {
+        left: var(--grid4);
       }
     }
     
@@ -80,6 +99,17 @@
   50%, 100% {
     top: var(--grid1);
     height: var(--grid2);
+  }
+}
+
+@keyframes lds-s {
+  0% {
+    top: 0;
+    height: var(--grid6);
+  }
+  50%, 100% {
+    top: var(--grid1);
+    height: var(--grid4);
   }
 }
 

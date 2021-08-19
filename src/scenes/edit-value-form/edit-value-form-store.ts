@@ -19,6 +19,9 @@ export class EditValueFormStore {
   @observable
   private _isLoading = false;
 
+  @observable
+  private _isSaving = false;
+
   constructor({ connectionDataStore }: Deps) {
     this._connectionDataStore = connectionDataStore;
 
@@ -38,6 +41,11 @@ export class EditValueFormStore {
   @computed
   get isLoading(): boolean {
     return this._isLoading;
+  }
+
+  @computed
+  get isSaving(): boolean {
+    return this._isSaving;
   }
 
   @computed
@@ -65,7 +73,6 @@ export class EditValueFormStore {
 
   @action
   async saveValue(values: EditDataValues): Promise<void> {
-    const prefix = this.currentKey;
     const keyData = this._data;
     const redis = this._connectionDataStore.getRedis(values.redisId);
 
@@ -73,19 +80,31 @@ export class EditValueFormStore {
       return;
     }
 
-    if (!prefix) {
-      // create new key
+    this._isSaving = true;
+
+    if (keyData && keyData?.key !== values.key) {
+      await redis.deleteKey(keyData?.key);
     }
 
-    if (keyData?.key !== values.key) {
-      // delete current key and create new
-    } else {
-      // update key value
-      await redis.setKeyData({
-        key: values.key,
-        ttl: values.ttl,
-        value: values.value,
-      });
-    }
+    const newKeyData = {
+      key: values.key,
+      ttl: values.ttl,
+      value: values.value,
+    };
+    await redis.setKeyData(newKeyData);
+
+    // ToDo: if change key or create new key then open key in left tree
+
+    runInAction(() => {
+      this._isSaving = false;
+      this._data = newKeyData;
+    });
+  }
+
+  @action
+  dispose(): void {
+    this._data = undefined;
+    this._isLoading = false;
+    this._isSaving = false;
   }
 }

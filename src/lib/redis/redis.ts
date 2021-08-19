@@ -136,4 +136,12 @@ export class Redis {
 
     return this._ioRedis.setKeyData(data);
   }
+
+  async deleteKey(key: string): Promise<void> {
+    if (!this._ioRedis) {
+      return;
+    }
+
+    await this._ioRedis.deleteKey(key);
+  }
 }

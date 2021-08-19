@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { isEqual } from 'lodash';
-import { faChevronRight, faDatabase, faLayerGroup, faKey } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight, faDatabase, faLayerGroup, faKey, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -9,7 +9,7 @@ import { useStyles } from 'lib/theme';
 
 import { ConnectionData } from 'stores';
 
-import { ButtonIcon } from 'ui/button-icon';
+import { ButtonIcon, ButtonIconView } from 'ui/button-icon';
 import { Spinner, SpinnerSize } from 'ui/spinner';
 
 import { Props, IconType, ConnectionLoadingData } from './types';
@@ -30,7 +30,7 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement => {
   const store = useStore();
   const data = store.getData(redis);
   const loadingData = store.getLoadingData(redis);
-  const { currentKey } = store;
+  const { currentKey, isDeletingKey } = store;
 
   useEffect(() => {
     store.setRedis(redis);
@@ -52,6 +52,10 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement => {
     store.setCurrentKey(redis, [...prefix, key]);
   }
 
+  function handleDeleteKeyClick(prefix: string[], key: string): void {
+    store.deleteKey(redis, prefix, key);
+  }
+
   function renderIcon(connectionData?: ConnectionLoadingData, iconType?: IconType): ReactNode {
     if (connectionData?.isLoading) {
       return <Spinner size={SpinnerSize.XS} />;
@@ -70,6 +74,19 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement => {
     return null;
   }
 
+  function renderKeyActions(prefix: string[], key: string): ReactNode {
+    return (
+      <ButtonIcon
+        view={ButtonIconView.Danger}
+        icon={faTrash}
+        size="sm"
+        onClick={() => handleDeleteKeyClick(prefix, key)}
+        disabled={isDeletingKey}
+        className={cn('delete-btn')}
+      />
+    );
+  }
+
   function renderKey(prefix: string[], key: string): ReactNode {
     const selected = isEqual(currentKey, [...prefix, key]);
 
@@ -80,6 +97,8 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement => {
         <span className={cn('name', { selected })} title={key}>
           {key}
         </span>
+
+        {selected && renderKeyActions(prefix, key)}
       </div>
     );
   }

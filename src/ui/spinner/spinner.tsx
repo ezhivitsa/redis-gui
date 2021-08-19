@@ -18,10 +18,11 @@ export enum SpinnerSize {
 interface Props {
   view: SpinnerView;
   size: SpinnerSize;
+  className?: string;
 }
 
-export function Spinner({ view, size }: Props): ReactElement {
-  const cn = useStyles(styles, 'spinner');
+export function Spinner({ view, size, className }: Props): ReactElement {
+  const cn = useStyles(styles, 'spinner', className);
 
   return (
     <div className={cn({ view })}>

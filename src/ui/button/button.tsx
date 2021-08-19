@@ -5,6 +5,8 @@ import { IconProp, SizeProp } from '@fortawesome/fontawesome-svg-core';
 
 import { useStyles } from 'lib/theme';
 
+import { Spinner, SpinnerSize } from 'ui/spinner';
+
 import styles from './button.pcss';
 
 export enum ButtonSize {
@@ -28,6 +30,7 @@ interface Props {
   onClick?: () => void;
   icon?: IconProp;
   disabled?: boolean;
+  isLoading?: boolean;
   type?: ButtonType;
 }
 
@@ -36,7 +39,22 @@ const mapSizeToIconSize: Record<ButtonSize, SizeProp> = {
   [ButtonSize.M]: '1x',
 };
 
-export function Button({ children, className, size, view, onClick, icon, disabled, type }: Props): ReactElement {
+const mapSizeToSpinnerSize: Record<ButtonSize, SpinnerSize> = {
+  [ButtonSize.S]: SpinnerSize.XS,
+  [ButtonSize.M]: SpinnerSize.S,
+};
+
+export function Button({
+  children,
+  className,
+  size,
+  view,
+  onClick,
+  icon,
+  disabled,
+  isLoading,
+  type,
+}: Props): ReactElement {
   const cn = useStyles(styles, 'button');
 
   function handleClick(): void {
@@ -59,10 +77,21 @@ export function Button({ children, className, size, view, onClick, icon, disable
     );
   }
 
+  function renderLoading(): ReactNode {
+    if (!isLoading) {
+      return null;
+    }
+
+    return <Spinner size={mapSizeToSpinnerSize[size]} className={cn('spinner')} />;
+  }
+
   return (
     <button className={classnames(cn({ size, view, disabled }), className)} onClick={handleClick} type={type}>
-      {renderIcon()}
-      <span>{children}</span>
+      <div className={cn('content', { loading: isLoading, view })}>
+        {renderIcon()}
+        <span>{children}</span>
+        {renderLoading()}
+      </div>
     </button>
   );
 }

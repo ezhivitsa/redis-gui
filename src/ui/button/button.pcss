@@ -7,11 +7,10 @@
   border-radius: var(--border-radius-200);
   border: 1px solid;
   cursor: pointer;
-  padding: 0 var(--grid2);
   line-height: var(--grid6);
   outline: 0;
-  display: flex;
-  align-items: center;
+  padding: 0;
+  overflow: hidden;
 
   &._size_s {
     font-size: var(--font-size-200);
@@ -28,5 +27,33 @@
 
   &__icon {
     margin-right: var(--grid2);
+  }
+
+  &__content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 var(--grid2);
+
+    &._loading {
+      pointer-events: none;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+    }
+  }
+
+  &__spinner {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }

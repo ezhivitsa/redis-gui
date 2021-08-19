@@ -4,6 +4,8 @@ import { Redis } from 'lib/redis';
 
 import { ConnectionDataStore, ConnectionData } from 'stores';
 
+import { REDIS_PREFIX_SEPARATOR } from 'constants/app-constants';
+
 import { ConnectionLoadingData } from './types';
 
 interface RedisData {
@@ -21,6 +23,9 @@ export class OpenConnectionStore {
 
   @observable
   private _connectionDataStore: ConnectionDataStore;
+
+  @observable
+  private _isDeletingKey = false;
 
   constructor({ connectionDataStore }: Deps) {
     this._connectionDataStore = connectionDataStore;
@@ -61,6 +66,11 @@ export class OpenConnectionStore {
   @computed
   get currentKey(): string[] | undefined {
     return this._connectionDataStore.currentKey?.prefix;
+  }
+
+  @computed
+  get isDeletingKey(): boolean {
+    return this._isDeletingKey;
   }
 
   @action
@@ -109,6 +119,19 @@ export class OpenConnectionStore {
   @action
   setCurrentKey(redis: Redis, prefix: string[]): void {
     this._connectionDataStore.setCurrentKey(redis, prefix);
+  }
+
+  @action
+  async deleteKey(redis: Redis, prefix: string[], key: string): Promise<void> {
+    this._isDeletingKey = true;
+
+    await redis.deleteKey([...prefix, key].join(REDIS_PREFIX_SEPARATOR));
+
+    this._connectionDataStore.deleteKey(prefix, key);
+
+    runInAction(() => {
+      this._isDeletingKey = false;
+    });
   }
 
   @action
