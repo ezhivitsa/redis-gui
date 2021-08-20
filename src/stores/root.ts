@@ -1,9 +1,13 @@
 import { ConnectionsStore } from './connections-store';
 import { ConnectionStore } from './connection-store';
-import { ConnectionDataStore } from './connection-data-store';
+import { ConnectionsDataStore } from './connections-data-store';
+import { ValueTabsStore } from './value-tabs-store';
+
+const valueTabsStore = new ValueTabsStore();
 
 export const RootStore = {
   connectionsStore: new ConnectionsStore(),
   connectionStore: new ConnectionStore(),
-  connectionDataStore: new ConnectionDataStore(),
+  valueTabsStore,
+  connectionsDataStore: new ConnectionsDataStore({ valueTabsStore }),
 };

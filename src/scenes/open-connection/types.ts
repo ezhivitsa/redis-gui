@@ -1,12 +1,5 @@
 import { Redis } from 'lib/redis';
 
-export interface ConnectionLoadingData {
-  isLoading: boolean;
-  prefixes: {
-    [prefix: string]: ConnectionLoadingData;
-  };
-}
-
 export interface Props {
   redis: Redis;
 }

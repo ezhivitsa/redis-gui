@@ -1,71 +1,27 @@
 import { action, observable, runInAction, makeObservable, computed } from 'mobx';
 
 import { Redis } from 'lib/redis';
+import { listToKey } from 'lib/key';
 
-import { ConnectionDataStore, ConnectionData } from 'stores';
-
-import { REDIS_PREFIX_SEPARATOR } from 'constants/app-constants';
-
-import { ConnectionLoadingData } from './types';
-
-interface RedisData {
-  redis: Redis;
-  data: ConnectionLoadingData;
-}
+import { ConnectionsDataStore, ConnectionDataStore, ValueTabsStore } from 'stores';
 
 interface Deps {
-  connectionDataStore: ConnectionDataStore;
+  connectionsDataStore: ConnectionsDataStore;
+  valueTabsStore: ValueTabsStore;
 }
 
-export class OpenConnectionStore {
-  @observable
-  private _redisData: Record<string, RedisData> = {};
-
-  @observable
+class OpenConnectionStore {
+  private _valueTabsStore: ValueTabsStore;
   private _connectionDataStore: ConnectionDataStore;
+
+  private _loadingKeys = new Set<string>();
 
   @observable
   private _isDeletingKey = false;
 
-  constructor({ connectionDataStore }: Deps) {
+  constructor(valueTabsStore: ValueTabsStore, connectionDataStore: ConnectionDataStore) {
+    this._valueTabsStore = valueTabsStore;
     this._connectionDataStore = connectionDataStore;
-
-    makeObservable(this);
-  }
-
-  private _getPrefixData(redis: Redis, prefix: string[]): ConnectionLoadingData {
-    let data = this.getLoadingData(redis);
-
-    for (let i = 0; i < prefix.length; i += 1) {
-      if (!data.prefixes[prefix[i]]) {
-        data.prefixes[prefix[i]] = {
-          isLoading: false,
-          prefixes: {},
-        };
-      }
-
-      data = data.prefixes[prefix[i]];
-    }
-
-    return data;
-  }
-
-  getLoadingData(redis: Redis): ConnectionLoadingData {
-    return (
-      this._redisData[redis.id]?.data || {
-        isLoading: false,
-        prefixes: {},
-      }
-    );
-  }
-
-  getData(redis: Redis): ConnectionData {
-    return this._connectionDataStore.getData(redis);
-  }
-
-  @computed
-  get currentKey(): string[] | undefined {
-    return this._connectionDataStore.currentKey?.prefix;
   }
 
   @computed
@@ -73,72 +29,115 @@ export class OpenConnectionStore {
     return this._isDeletingKey;
   }
 
-  @action
-  setRedis(redis: Redis): void {
-    this._connectionDataStore.setRedis(redis);
+  isLoadingKey(prefix: string[]): boolean {
+    return this._loadingKeys.has(listToKey(prefix));
+  }
 
-    this._redisData[redis.id] = {
-      redis,
-      data: {
-        isLoading: false,
-        prefixes: {},
-      },
-    };
+  isActiveKey(prefix: string[]): boolean {
+    const activeTab = this._valueTabsStore.activeTab;
+    return activeTab !== undefined && listToKey(prefix) === listToKey(activeTab.prefix);
   }
 
   @action
-  async getPrefixesAndKeys(redis: Redis, prefix: string[]): Promise<void> {
-    const data = this._getPrefixData(redis, prefix);
-    data.isLoading = true;
+  open(prefix: string[]): void {
+    this._connectionDataStore.open(prefix);
+    this.getPrefixesAndKeys(prefix);
+  }
 
-    const prefixes = await this._connectionDataStore.getPrefixesAndKeys(redis, prefix);
+  @action
+  async getPrefixesAndKeys(prefix: string[]): Promise<void> {
+    const key = listToKey(prefix);
+    this._loadingKeys.add(key);
+
+    await this._connectionDataStore.getPrefixesAndKeys(prefix);
 
     runInAction(() => {
-      data.isLoading = false;
-
-      for (let i = 0; i < prefixes.length; i += 1) {
-        data.prefixes[prefixes[i]] = {
-          isLoading: false,
-          prefixes: {},
-        };
-      }
+      this._loadingKeys.delete(key);
     });
   }
 
   @action
-  open(redis: Redis, prefix: string[]): void {
-    this._connectionDataStore.open(redis, prefix);
-    this.getPrefixesAndKeys(redis, prefix);
+  close(prefix: string[]): void {
+    this._connectionDataStore.close(prefix);
   }
 
   @action
-  close(redis: Redis, prefix: string[]): void {
-    this._connectionDataStore.close(redis, prefix);
+  setCurrentKey(prefix: string[]): void {
+    this._connectionDataStore.selectKey(prefix);
   }
 
   @action
-  setCurrentKey(redis: Redis, prefix: string[]): void {
-    this._connectionDataStore.setCurrentKey(redis, prefix);
-  }
-
-  @action
-  async deleteKey(redis: Redis, prefix: string[], key: string): Promise<void> {
+  async deleteKey(prefix: string[], key: string): Promise<void> {
     this._isDeletingKey = true;
 
-    await redis.deleteKey([...prefix, key].join(REDIS_PREFIX_SEPARATOR));
-
-    this._connectionDataStore.deleteKey(prefix, key);
+    await this._connectionDataStore.deleteKey(prefix, key);
 
     runInAction(() => {
       this._isDeletingKey = false;
     });
+  }
+}
+
+export class OpenConnectionsStore {
+  @observable
+  private _redisData: Record<string, OpenConnectionStore> = {};
+
+  private _connectionsDataStore: ConnectionsDataStore;
+  private _valueTabsStore: ValueTabsStore;
+
+  constructor({ connectionsDataStore, valueTabsStore }: Deps) {
+    this._connectionsDataStore = connectionsDataStore;
+    this._valueTabsStore = valueTabsStore;
+
+    makeObservable(this);
+  }
+
+  // private _getPrefixData(redis: Redis, prefix: string[]): ConnectionLoadingData {
+  //   let data = this.getLoadingData(redis);
+
+  //   for (let i = 0; i < prefix.length; i += 1) {
+  //     if (!data.prefixes[prefix[i]]) {
+  //       data.prefixes[prefix[i]] = {
+  //         isLoading: false,
+  //         prefixes: {},
+  //       };
+  //     }
+
+  //     data = data.prefixes[prefix[i]];
+  //   }
+
+  //   return data;
+  // }
+
+  // getLoadingData(redis: Redis): ConnectionLoadingData {
+  //   return (
+  //     this._redisData[redis.id]?.data || {
+  //       isLoading: false,
+  //       prefixes: {},
+  //     }
+  //   );
+  // }
+
+  // getData(redis: Redis): ConnectionData {
+  //   return this._connectionDataStore.getData(redis);
+  // }
+
+  // @computed
+  // get currentKey(): string[] | undefined {
+  //   return this._connectionDataStore.currentKey?.prefix;
+  // }
+
+  @action
+  setRedis(redis: Redis): void {
+    const connectionDataStore = this._connectionsDataStore.setRedis(redis);
+    this._redisData[redis.id] = new OpenConnectionStore(this._valueTabsStore, connectionDataStore);
   }
 
   @action
   dispose(redis: Redis): void {
     delete this._redisData[redis.id];
 
-    this._connectionDataStore.disposeRedis(redis);
-    this._connectionDataStore.dispose();
+    this._connectionsDataStore.disposeRedis(redis);
+    this._valueTabsStore.dispose();
   }
 }
