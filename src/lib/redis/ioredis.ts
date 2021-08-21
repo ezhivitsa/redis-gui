@@ -1,9 +1,8 @@
 import Redis, { RedisOptions, Redis as IORedisOrig, ClusterNode, ClusterOptions, Cluster } from 'ioredis';
-import { sortedUniq } from 'lodash';
 
 import { BaseRedis } from './base-redis';
 
-import { AskedRedisAuthData, PrefixesAndKeys } from './types';
+import { AskedRedisAuthData } from './types';
 
 export class IoRedis extends BaseRedis<IORedisOrig> {
   private _options: RedisOptions;
@@ -33,35 +32,6 @@ export class IoRedis extends BaseRedis<IORedisOrig> {
 
       this._redis.on('error', (error) => {
         reject(error);
-      });
-    });
-  }
-
-  async getPrefixesAndKeys(prefix: string[] = []): Promise<PrefixesAndKeys> {
-    const result: PrefixesAndKeys = { keys: [], prefixes: [] };
-
-    return new Promise((resolve) => {
-      if (!this._redis) {
-        resolve(result);
-        return;
-      }
-
-      const stream = this._redis.scanStream({
-        match: this._getMatchPrefix(prefix),
-      });
-
-      stream.on('data', (resultKeys) => {
-        const res = this._getPrefixesAndKeysFromKeys(resultKeys, prefix);
-
-        result.prefixes.push(...res.prefixes);
-        result.keys.push(...res.keys);
-      });
-
-      stream.on('end', () => {
-        resolve({
-          prefixes: sortedUniq(result.prefixes),
-          keys: sortedUniq(result.keys),
-        });
       });
     });
   }
@@ -111,35 +81,6 @@ export class IoRedisCluster extends BaseRedis<Cluster> {
 
       this._redis.on('error', (error) => {
         reject(error);
-      });
-    });
-  }
-
-  getPrefixesAndKeys(prefix: string[] = []): Promise<PrefixesAndKeys> {
-    const result: PrefixesAndKeys = { keys: [], prefixes: [] };
-
-    return new Promise((resolve) => {
-      if (!this._redis) {
-        resolve(result);
-        return;
-      }
-
-      const stream = this._redis.scanStream({
-        match: this._getMatchPrefix(prefix),
-      });
-
-      stream.on('data', (resultKeys) => {
-        const res = this._getPrefixesAndKeysFromKeys(resultKeys, prefix);
-
-        result.prefixes.push(...res.prefixes);
-        result.keys.push(...res.keys);
-      });
-
-      stream.on('end', () => {
-        resolve({
-          prefixes: sortedUniq(result.prefixes),
-          keys: sortedUniq(result.keys),
-        });
       });
     });
   }

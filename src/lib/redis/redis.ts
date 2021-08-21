@@ -114,7 +114,7 @@ export class Redis {
     if (!this._ioRedis) {
       return {
         keys: [],
-        prefixes: [],
+        prefixes: {},
       };
     }
 

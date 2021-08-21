@@ -98,6 +98,8 @@ export const MainPageView = observer((): ReactElement => {
     <div className={cn()}>
       <div className={cn('actions')}>
         <ButtonIcon icon={faServer} size="lg" onClick={handleOpenConnections} />
+
+        {/* ToDo: when has active key show delete and cancel icons */}
       </div>
 
       <div className={cn('data-wrap')}>

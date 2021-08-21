@@ -1,8 +1,12 @@
 import { Redis as IORedisOrig, Cluster } from 'ioredis';
+import { sortedUniq } from 'lodash';
+
+import { listToKey, keyToList } from 'lib/key';
+
+import { REDIS_PREFIX_SEPARATOR } from 'constants/app-constants';
 
 import { AskedRedisAuthData, PrefixesAndKeys, KeyData } from './types';
 
-export const KEY_SEPARATOR = ':';
 export const NO_VALUE = -1;
 
 export abstract class BaseRedis<R extends IORedisOrig | Cluster> {
@@ -12,22 +16,25 @@ export abstract class BaseRedis<R extends IORedisOrig | Cluster> {
 
   abstract disconnect(): void;
 
-  abstract getPrefixesAndKeys(prefix?: string[]): Promise<PrefixesAndKeys>;
-
   protected _getPrefixesAndKeysFromKeys(keys: string[], prefix: string[] = []): PrefixesAndKeys {
-    const result: PrefixesAndKeys = { keys: [], prefixes: [] };
-    const matchPrefix = prefix.join(KEY_SEPARATOR);
+    const result: PrefixesAndKeys = { keys: [], prefixes: {} };
+    const matchPrefix = listToKey(prefix);
 
     for (let i = 0; i < keys.length; i++) {
       const key: string = keys[i];
       const keyEnd = matchPrefix && key.startsWith(matchPrefix) ? key.substring(matchPrefix.length + 1) : key;
-      const isKey = !keyEnd.includes(KEY_SEPARATOR);
+      const isKey = !keyEnd.includes(REDIS_PREFIX_SEPARATOR);
 
       if (isKey) {
         result.keys.push(keyEnd);
       } else {
-        const resultPrefix = keyEnd.substring(0, keyEnd.indexOf(KEY_SEPARATOR));
-        result.prefixes.push(resultPrefix);
+        const parts = keyToList(keyEnd);
+        const resultPrefix = parts.slice(0, parts.length - 1);
+        const resultKey = parts[parts.length - 1];
+        const resultPrefixStr = listToKey(resultPrefix);
+
+        result.prefixes[resultPrefixStr] = result.prefixes[resultPrefixStr] || [];
+        result.prefixes[resultPrefixStr].push(resultKey);
       }
     }
 
@@ -35,11 +42,11 @@ export abstract class BaseRedis<R extends IORedisOrig | Cluster> {
   }
 
   protected _getMatchPrefix(prefix: string[]): string {
-    return prefix.length ? `${prefix.join(KEY_SEPARATOR)}:*` : '*';
+    return prefix.length ? `${listToKey(prefix)}:*` : '*';
   }
 
   protected _getKey(prefix: string[]): string {
-    return prefix.join(KEY_SEPARATOR);
+    return listToKey(prefix);
   }
 
   async getKeyData(prefix: string[]): Promise<KeyData | undefined> {
@@ -79,5 +86,41 @@ export abstract class BaseRedis<R extends IORedisOrig | Cluster> {
     }
 
     await this._redis.del(key);
+  }
+
+  getPrefixesAndKeys(prefix: string[] = []): Promise<PrefixesAndKeys> {
+    const result: PrefixesAndKeys = { keys: [], prefixes: {} };
+
+    return new Promise((resolve) => {
+      if (!this._redis) {
+        resolve(result);
+        return;
+      }
+
+      const stream = this._redis.scanStream({
+        match: this._getMatchPrefix(prefix),
+      });
+
+      stream.on('data', (resultKeys) => {
+        const res = this._getPrefixesAndKeysFromKeys(resultKeys, prefix);
+
+        Object.keys(res.prefixes).forEach((prefixKey) => {
+          if (result.prefixes[prefixKey]) {
+            result.prefixes[prefixKey] = sortedUniq([...result.prefixes[prefixKey], ...res.prefixes[prefixKey]]);
+          } else {
+            result.prefixes[prefixKey] = res.prefixes[prefixKey];
+          }
+        });
+
+        result.keys.push(...res.keys);
+      });
+
+      stream.on('end', () => {
+        resolve({
+          prefixes: result.prefixes,
+          keys: sortedUniq(result.keys),
+        });
+      });
+    });
   }
 }

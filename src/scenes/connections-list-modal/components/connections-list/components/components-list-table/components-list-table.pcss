@@ -1,0 +1,13 @@
+@import 'variables.pcss';
+
+.components-list-table {
+  &__address {
+    word-break: break-word;
+  }
+
+  &__address-item {
+    &:not(:first-of-type) {
+      margin-top: var(--grid1);
+    }
+  }
+}

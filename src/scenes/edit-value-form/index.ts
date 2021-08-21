@@ -5,7 +5,12 @@ import { RootStore } from 'stores/root';
 import { EditValueFormStore } from './edit-value-form-store';
 import { EditValueFormView } from './edit-value-form-view';
 
-const [useStore, hoc] = glueStore(new EditValueFormStore({ connectionDataStore: RootStore.connectionDataStore }));
+const [useStore, hoc] = glueStore(
+  new EditValueFormStore({
+    valueTabsStore: RootStore.valueTabsStore,
+    connectionsDataStore: RootStore.connectionsDataStore,
+  }),
+);
 
 export const EditValueForm = hoc(EditValueFormView);
 export { useStore };

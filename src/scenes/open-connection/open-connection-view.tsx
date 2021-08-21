@@ -1,6 +1,5 @@
 import React, { ReactElement, ReactNode, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { isEqual } from 'lodash';
 import { faChevronRight, faDatabase, faLayerGroup, faKey, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,7 +11,7 @@ import { ConnectionData } from 'stores';
 import { ButtonIcon, ButtonIconView } from 'ui/button-icon';
 import { Spinner, SpinnerSize } from 'ui/spinner';
 
-import { Props, IconType, ConnectionLoadingData } from './types';
+import { Props, IconType } from './types';
 
 import { useStore } from './index';
 
@@ -24,17 +23,15 @@ const mapTypeToIcon: Record<IconType, IconProp> = {
   [IconType.Key]: faKey,
 };
 
-export const OpenConnectionView = observer(({ redis }: Props): ReactElement => {
+export const OpenConnectionView = observer(({ redis }: Props): ReactElement | null => {
   const cn = useStyles(styles, 'open-connection');
 
   const store = useStore();
-  const data = store.getData(redis);
-  const loadingData = store.getLoadingData(redis);
-  const { currentKey, isDeletingKey } = store;
+  const dataStore = store.getDataStore(redis);
+
+  const { isDeletingKey, data } = dataStore;
 
   useEffect(() => {
-    store.setRedis(redis);
-
     return () => {
       store.dispose(redis);
     };
@@ -42,22 +39,27 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement => {
 
   function handleToggleOpenPrefix(prefix: string[], currentOpen?: boolean): void {
     if (currentOpen) {
-      store.close(redis, prefix);
+      dataStore.close(prefix);
     } else {
-      store.open(redis, prefix);
+      dataStore.open(prefix);
     }
   }
 
   function handleKeySelect(prefix: string[], key: string): void {
-    store.setCurrentKey(redis, [...prefix, key]);
+    const items = [...prefix, key];
+    if (dataStore.isActiveKey(items)) {
+      dataStore.resetCurrentKey();
+    } else {
+      dataStore.setCurrentKey(items);
+    }
   }
 
   function handleDeleteKeyClick(prefix: string[], key: string): void {
-    store.deleteKey(redis, prefix, key);
+    dataStore.deleteKey(prefix, key);
   }
 
-  function renderIcon(connectionData?: ConnectionLoadingData, iconType?: IconType): ReactNode {
-    if (connectionData?.isLoading) {
+  function renderIcon(prefix: string[], iconType?: IconType): ReactNode {
+    if (dataStore.isLoadingKey(prefix)) {
       return <Spinner size={SpinnerSize.XS} />;
     }
 
@@ -88,7 +90,7 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement => {
   }
 
   function renderKey(prefix: string[], key: string): ReactNode {
-    const selected = isEqual(currentKey, [...prefix, key]);
+    const selected = dataStore.isActiveKey([...prefix, key]);
 
     return (
       <div className={cn('key', { selected })} onDoubleClick={() => handleKeySelect(prefix, key)}>
@@ -103,16 +105,12 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement => {
     );
   }
 
-  function renderDataContent(
-    prefix: string[],
-    connectionData?: ConnectionData,
-    loadingData?: ConnectionLoadingData,
-  ): ReactNode {
+  function renderDataContent(prefix: string[], connectionData?: ConnectionData): ReactNode {
     return (
       <div className={cn('content')}>
         {Object.keys(connectionData?.prefixes || {}).map((key) => (
           <div key={key} className={cn('data-item')}>
-            {renderData([...prefix, key], key, connectionData?.prefixes[key], loadingData?.prefixes[key])}
+            {renderData([...prefix, key], key, connectionData?.prefixes[key])}
           </div>
         ))}
 
@@ -125,13 +123,7 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement => {
     );
   }
 
-  function renderData(
-    prefix: string[],
-    name: string,
-    connectionData?: ConnectionData,
-    loadingData?: ConnectionLoadingData,
-    iconType?: IconType,
-  ): ReactNode {
+  function renderData(prefix: string[], name: string, connectionData?: ConnectionData, iconType?: IconType): ReactNode {
     return (
       <>
         <div className={cn('connection')}>
@@ -141,17 +133,17 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement => {
             onClick={() => handleToggleOpenPrefix(prefix, connectionData?.open)}
           />
 
-          {renderIcon(loadingData, iconType)}
+          {renderIcon(prefix, iconType)}
 
           <span className={cn('name')} title={name}>
             {name}
           </span>
         </div>
 
-        {connectionData?.open && !loadingData?.isLoading && renderDataContent(prefix, connectionData, loadingData)}
+        {connectionData?.open && !dataStore.isLoadingKey(prefix) && renderDataContent(prefix, connectionData)}
       </>
     );
   }
 
-  return <div className={cn()}>{renderData([], redis.name, data, loadingData, IconType.Database)}</div>;
+  return <div className={cn()}>{renderData([], redis.name, data, IconType.Database)}</div>;
 });

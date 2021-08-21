@@ -18,7 +18,8 @@ interface Props<C extends string, D extends Record<string, any>> {
   onRowDoubleClick?: (item: D) => void;
   onClickOutside?: () => void;
   heading: Record<C, string>;
-  style?: Partial<Record<C, CSSProperties>>;
+  columnStyle?: Partial<Record<C, CSSProperties>>;
+  gridTemplateColumns?: string;
   size: TableSize;
   className?: string;
   activeItem?: D;
@@ -32,7 +33,8 @@ export function Table<C extends string, D extends Record<string, any>>({
   onRowClick,
   onRowDoubleClick,
   onClickOutside,
-  style,
+  columnStyle,
+  gridTemplateColumns,
   size,
   className,
   activeItem,
@@ -100,7 +102,7 @@ export function Table<C extends string, D extends Record<string, any>>({
 
   function renderHeadings(): ReactNode[] {
     return columns.map((column) => (
-      <div key={`heading-${column}`} className={cn('heading', { size })} style={style?.[column]}>
+      <div key={`heading-${column}`} className={cn('heading', { size })} style={columnStyle?.[column]}>
         {heading[column]}
       </div>
     ));
@@ -111,7 +113,7 @@ export function Table<C extends string, D extends Record<string, any>>({
       <div
         key={`column-${column}-${item.id || index}`}
         className={cn('column', { size, selectable, hovered: item === hoverItem, active: item === activeItem })}
-        style={style?.[column]}
+        style={columnStyle?.[column]}
         role="button"
         tabIndex={0}
         onClick={handleRowClick(item)}
@@ -134,20 +136,13 @@ export function Table<C extends string, D extends Record<string, any>>({
   return (
     <div className={cn()}>
       <div
-        className={cn('headings')}
-        style={{
-          gridTemplateColumns: `repeat(${columns.length}, 1fr)`,
-        }}
-      >
-        {renderHeadings()}
-      </div>
-      <div
         className={cn('rows')}
         ref={rowsRef}
         style={{
-          gridTemplateColumns: `repeat(${columns.length}, 1fr)`,
+          gridTemplateColumns: gridTemplateColumns || `repeat(${columns.length}, 1fr)`,
         }}
       >
+        {renderHeadings()}
         {renderRows()}
       </div>
     </div>

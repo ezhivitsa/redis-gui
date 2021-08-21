@@ -7,3 +7,7 @@ export function listToKey(items: string[]): string {
 export function keyToList(key: string): string[] {
   return key ? key.split(REDIS_PREFIX_SEPARATOR) : [];
 }
+
+export function hasPrefix(key: string): boolean {
+  return key.includes(REDIS_PREFIX_SEPARATOR);
+}

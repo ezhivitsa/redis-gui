@@ -8,7 +8,7 @@ export interface AskedRedisAuthData {
 }
 
 export interface PrefixesAndKeys {
-  prefixes: string[];
+  prefixes: Record<string, string[]>;
   keys: string[];
 }
 

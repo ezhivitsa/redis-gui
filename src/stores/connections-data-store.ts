@@ -1,6 +1,8 @@
 import { action, observable, runInAction, makeObservable, computed } from 'mobx';
+import { sortedUniq } from 'lodash';
 
-import { Redis } from 'lib/redis';
+import { Redis, KeyData } from 'lib/redis';
+import { listToKey, keyToList, hasPrefix } from 'lib/key';
 
 import { ValueTabsStore } from './value-tabs-store';
 
@@ -11,12 +13,6 @@ export interface ConnectionData {
     [prefix: string]: ConnectionData;
   };
 }
-
-interface KeyData {
-  redisId: string;
-  prefix: string[];
-}
-
 interface Deps {
   valueTabsStore: ValueTabsStore;
 }
@@ -35,6 +31,8 @@ export class ConnectionDataStore {
   constructor(valueTabsStore: ValueTabsStore, redis: Redis) {
     this._valueTabsStore = valueTabsStore;
     this._redis = redis;
+
+    makeObservable(this);
   }
 
   @computed
@@ -60,8 +58,55 @@ export class ConnectionDataStore {
     return data;
   }
 
+  private _cleanData(prefix: string[]): void {
+    const data = this._getPrefixData(prefix);
+
+    Object.keys(data.prefixes).map((prefixKey) => {
+      const d = data.prefixes[prefixKey];
+
+      if (d.keys.length === 0 && Object.keys(d.prefixes).length === 0) {
+        delete data.prefixes[prefixKey];
+      }
+    });
+  }
+
   selectKey(prefix: string[]): void {
     this._valueTabsStore.setActiveTab(this._redis.id, prefix);
+  }
+
+  resetKey(): void {
+    this._valueTabsStore.removeActiveTab();
+    this._valueTabsStore.setActiveData();
+  }
+
+  getKeyData(prefix: string[]): Promise<KeyData | undefined> {
+    return this._redis.getKeyData(prefix);
+  }
+
+  async setKeyData(keyData: KeyData): Promise<void> {
+    await this._redis.setKeyData(keyData);
+
+    if (hasPrefix(keyData.key)) {
+      const prefix = keyToList(keyData.key);
+      await this.getPrefixesAndKeys([prefix[0]]);
+
+      runInAction(() => {
+        for (let i = 1; i < prefix.length; i += 1) {
+          const p = prefix.slice(0, prefix.length - i);
+          const d = this._getPrefixData(p);
+
+          d.open = true;
+        }
+      });
+    } else {
+      const data = this._getPrefixData([]);
+
+      runInAction(() => {
+        data.keys = sortedUniq([...data.keys, keyData.key]);
+      });
+    }
+
+    this._valueTabsStore.setActiveTab(this._redis.id, keyToList(keyData.key));
   }
 
   @action
@@ -79,31 +124,36 @@ export class ConnectionDataStore {
   }
 
   @action
-  async getPrefixesAndKeys(prefix: string[]): Promise<string[]> {
+  async getPrefixesAndKeys(prefix: string[]): Promise<void> {
     const { keys, prefixes } = await this._redis.getPrefixesAndKeys(prefix);
     const data = this._getPrefixData(prefix);
 
     runInAction(() => {
-      // ToDo: check where it's required here
-      data.open = true;
-
-      for (let i = 0; i < prefixes.length; i += 1) {
-        data.prefixes[prefixes[i]] = {
-          open: false,
-          keys: [],
-          prefixes: {},
-        };
-      }
+      Object.keys(prefixes).forEach((prefixKey) => {
+        const prefixData = this._getPrefixData([...prefix, ...keyToList(prefixKey)]);
+        prefixData.keys = prefixes[prefixKey];
+      });
 
       data.keys = keys;
     });
-
-    return prefixes;
   }
 
   @action
   async deleteKey(prefix: string[], key: string): Promise<void> {
-    // await redis.deleteKey([...prefix, key].join(REDIS_PREFIX_SEPARATOR));
+    await this._redis.deleteKey(listToKey([...prefix, key]));
+
+    this._valueTabsStore.removeActiveTab();
+    this._valueTabsStore.setActiveData();
+
+    runInAction(() => {
+      const data = this._getPrefixData(prefix);
+      data.keys = data.keys.filter((k) => k !== key);
+
+      for (let i = 0; i <= prefix.length; i += 1) {
+        const p = prefix.slice(0, prefix.length - i);
+        this._cleanData(p);
+      }
+    });
   }
 }
 
@@ -113,32 +163,15 @@ export class ConnectionsDataStore {
   @observable
   private _redisData: Record<string, ConnectionDataStore> = {};
 
-  @observable
-  private _currentKey?: KeyData;
-
   constructor({ valueTabsStore }: Deps) {
     this._valueTabsStore = valueTabsStore;
 
     makeObservable(this);
   }
 
-  // getCurrentRedis(): Redis | undefined {
-  //   const redisId = this._currentKey?.redisId;
-  //   if (redisId === undefined) {
-  //     return;
-  //   }
-
-  //   return this._redisData[redisId].redis;
-  // }
-
-  // getRedis(redisId: string): Redis | undefined {
-  //   return this._redisData[redisId].redis;
-  // }
-
-  // @computed
-  // get currentKey(): KeyData | undefined {
-  //   return this._currentKey;
-  // }
+  getConnectionDataStore(redisId?: string): ConnectionDataStore | undefined {
+    return redisId ? this._redisData[redisId] : undefined;
+  }
 
   @action
   setRedis(redis: Redis): ConnectionDataStore {
@@ -148,18 +181,8 @@ export class ConnectionsDataStore {
     return connectionDataStore;
   }
 
-  // @action
-  // setCurrentKey(redis: Redis, prefix: string[]): void {
-  //   this._currentKey = { redisId: redis.id, prefix };
-  // }
-
   @action
   disposeRedis(redis: Redis): void {
     delete this._redisData[redis.id];
-  }
-
-  @action
-  dispose(): void {
-    this._currentKey = undefined;
   }
 }

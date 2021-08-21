@@ -1,8 +1,11 @@
 import React, { ReactElement, ReactNode } from 'react';
 
 import { Connection } from 'lib/db';
+import { useStyles } from 'lib/theme';
 
 import { Table, TableSize } from 'ui/table';
+
+import styles from './components-list-table.pcss';
 
 enum Column {
   Name = 'name',
@@ -33,15 +36,21 @@ export function ComponentsListTable({
   onConnectionDoubleClick,
   onResetConnection,
 }: Props): ReactElement {
+  const cn = useStyles(styles, 'components-list-table');
+
   function renderColumn(column: Column, item: Connection): ReactNode {
     switch (column) {
       case Column.Name:
         return item.main.name;
 
       case Column.Address:
-        return '';
-      // ToDo: set table data
-      // return `${item.host || ''}${item.post || ''}`.trim();
+        return (
+          <div className={cn('address')}>
+            {item.main.addresses.map(({ host, port }, index) => (
+              <div key={index} className={cn('address-item')}>{`${host}:${port}`}</div>
+            ))}
+          </div>
+        );
 
       case Column.User:
         return item.auth.username;
@@ -60,6 +69,7 @@ export function ComponentsListTable({
       onRowDoubleClick={onConnectionDoubleClick}
       onClickOutside={onResetConnection}
       size={TableSize.S}
+      gridTemplateColumns="1.2fr 1.6fr 1fr"
     />
   );
 }

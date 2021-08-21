@@ -1,20 +1,19 @@
 import { observable, makeObservable, computed, action, runInAction } from 'mobx';
 
-import { ConnectionDataStore } from 'stores';
+import { ValueTabsStore, ConnectionsDataStore, ConnectionDataStore } from 'stores';
 
 import { KeyData } from 'lib/redis';
+import { keyToList } from 'lib/key';
 
 import { EditDataValues } from './types';
 
 interface Deps {
-  connectionDataStore: ConnectionDataStore;
+  valueTabsStore: ValueTabsStore;
+  connectionsDataStore: ConnectionsDataStore;
 }
 export class EditValueFormStore {
-  @observable
-  private _connectionDataStore: ConnectionDataStore;
-
-  @observable
-  private _data?: KeyData;
+  private _valueTabsStore: ValueTabsStore;
+  private _connectionsDataStore: ConnectionsDataStore;
 
   @observable
   private _isLoading = false;
@@ -22,20 +21,21 @@ export class EditValueFormStore {
   @observable
   private _isSaving = false;
 
-  constructor({ connectionDataStore }: Deps) {
-    this._connectionDataStore = connectionDataStore;
+  constructor({ valueTabsStore, connectionsDataStore }: Deps) {
+    this._valueTabsStore = valueTabsStore;
+    this._connectionsDataStore = connectionsDataStore;
 
     makeObservable(this);
   }
 
   @computed
   get currentKey(): string[] | undefined {
-    return this._connectionDataStore.currentKey?.prefix;
+    return this._valueTabsStore.activeTab?.prefix;
   }
 
   @computed
   get currentRedisId(): string | undefined {
-    return this._connectionDataStore.currentKey?.redisId;
+    return this._valueTabsStore.activeTab?.redisId;
   }
 
   @computed
@@ -50,40 +50,45 @@ export class EditValueFormStore {
 
   @computed
   get keyData(): KeyData | undefined {
-    return this._data;
+    return this._valueTabsStore.activeKeyData;
+  }
+
+  private get _dataStore(): ConnectionDataStore | undefined {
+    return this._connectionsDataStore.getConnectionDataStore(this.currentRedisId);
   }
 
   @action
   async getKeyData(): Promise<void> {
     const prefix = this.currentKey;
-    const redis = this._connectionDataStore.getCurrentRedis();
-    if (!redis) {
+    const dataStore = this._dataStore;
+    if (!dataStore || !prefix) {
       return;
     }
 
     this._isLoading = true;
 
-    const data = await redis.getKeyData(prefix);
+    const data = await dataStore.getKeyData(prefix);
+    this._valueTabsStore.setActiveData(data);
 
     runInAction(() => {
       this._isLoading = false;
-      this._data = data;
     });
   }
 
   @action
   async saveValue(values: EditDataValues): Promise<void> {
-    const keyData = this._data;
-    const redis = this._connectionDataStore.getRedis(values.redisId);
+    const keyData = this.keyData;
+    const dataStore = this._connectionsDataStore.getConnectionDataStore(values.redisId);
 
-    if (!redis) {
+    if (!dataStore) {
       return;
     }
 
     this._isSaving = true;
 
     if (keyData && keyData?.key !== values.key) {
-      await redis.deleteKey(keyData?.key);
+      const prefix = keyToList(keyData.key);
+      await dataStore.deleteKey(prefix.slice(0, prefix.length - 1), prefix[prefix.length - 1]);
     }
 
     const newKeyData = {
@@ -91,19 +96,16 @@ export class EditValueFormStore {
       ttl: values.ttl,
       value: values.value,
     };
-    await redis.setKeyData(newKeyData);
-
-    // ToDo: if change key or create new key then open key in left tree
+    await dataStore.setKeyData(newKeyData);
 
     runInAction(() => {
       this._isSaving = false;
-      this._data = newKeyData;
+      this._valueTabsStore.setActiveData(newKeyData);
     });
   }
 
   @action
   dispose(): void {
-    this._data = undefined;
     this._isLoading = false;
     this._isSaving = false;
   }
