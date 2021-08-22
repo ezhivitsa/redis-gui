@@ -40,7 +40,7 @@ lint-eslint:
 
 .PHONY: lint-ts
 lint-ts:
-	npx cross-env NODE_ENV=development npx tsc --noEmit
+	npx cross-env NODE_ENV=development npx tsc --noEmit --project tsconfig.json
 
 .PHONY: lint-stylelint
 lint-stylelint:

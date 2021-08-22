@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { remote } from 'electron';
 
@@ -9,10 +9,23 @@ import { MainPage } from 'scenes/main-page';
 import 'styles/reset.pcss';
 
 function AppComponent(): ReactElement {
-  const { shouldUseDarkColors } = remote.nativeTheme;
+  const nativeTheme = remote.nativeTheme;
+  const [shouldUseDarkColors, setShouldUseDarkColors] = useState(nativeTheme.shouldUseDarkColors);
+
+  useEffect(() => {
+    nativeTheme.addListener('updated', handleThemeChange);
+
+    return () => {
+      nativeTheme.removeListener('updated', handleThemeChange);
+    };
+  }, []);
+
+  function handleThemeChange(): void {
+    setShouldUseDarkColors(nativeTheme.shouldUseDarkColors);
+  }
 
   return (
-    <ThemeContextProvider storageTheme={shouldUseDarkColors ? Theme.Dark : Theme.Light}>
+    <ThemeContextProvider systemTheme={shouldUseDarkColors ? Theme.Dark : Theme.Light} useSystemTheme>
       <MainPage />
     </ThemeContextProvider>
   );

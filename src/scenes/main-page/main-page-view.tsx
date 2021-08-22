@@ -1,7 +1,8 @@
-import React, { ReactElement, useState, useEffect, useRef } from 'react';
+import React, { ReactElement, ReactNode, useState, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { throttle } from 'lodash';
-import { faServer } from '@fortawesome/free-solid-svg-icons';
+import { faServer, faBan, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 import { useStyles } from 'lib/theme';
 import { Redis } from 'lib/redis';
@@ -21,6 +22,12 @@ const RESIZER_POS = 'main-page-resizer';
 const DEFAULT_RESIZER_POS = 200;
 const MOVE_THROTTLE = 100;
 
+interface Action {
+  icon: IconProp;
+  onClick: () => void;
+  disabled?: boolean;
+}
+
 export const MainPageView = observer((): ReactElement => {
   const cn = useStyles(styles, 'main-page');
 
@@ -34,7 +41,7 @@ export const MainPageView = observer((): ReactElement => {
   const connectionsRef = useRef<HTMLDivElement>(null);
 
   const pageStore = useStore();
-  const { connectionsListOpened, openConnections } = pageStore;
+  const { connectionsListOpened, openConnections, hasActiveTab, isDeleting } = pageStore;
 
   const handleMouseMoveThrottled = throttle(handleMouseMove, MOVE_THROTTLE);
 
@@ -94,12 +101,46 @@ export const MainPageView = observer((): ReactElement => {
     pageStore.addOpenConnection(redis);
   }
 
+  function handleDeleteKey(): void {
+    pageStore.deleteActiveKey();
+  }
+
+  function handleCancelSelect(): void {
+    pageStore.cancelActiveKey();
+  }
+
+  function renderKeyActions(actions: Action[]): ReactNode {
+    return (
+      <div className={cn('actions-group')}>
+        {actions.map(({ icon, onClick }, index) => (
+          <ButtonIcon key={index} className={cn('action')} icon={icon} size="lg" onClick={onClick} />
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className={cn()}>
       <div className={cn('actions')}>
-        <ButtonIcon icon={faServer} size="lg" onClick={handleOpenConnections} />
-
-        {/* ToDo: when has active key show delete and cancel icons */}
+        {renderKeyActions([
+          {
+            icon: faServer,
+            onClick: handleOpenConnections,
+          },
+        ])}
+        {hasActiveTab &&
+          renderKeyActions([
+            {
+              icon: faBan,
+              onClick: handleCancelSelect,
+              disabled: isDeleting,
+            },
+            {
+              icon: faTrash,
+              onClick: handleDeleteKey,
+              disabled: isDeleting,
+            },
+          ])}
       </div>
 
       <div className={cn('data-wrap')}>

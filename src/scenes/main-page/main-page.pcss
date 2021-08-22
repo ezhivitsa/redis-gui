@@ -1,5 +1,8 @@
 @import 'variables.pcss';
 
+@import './main-page_theme_dark.pcss';
+@import './main-page_theme_light.pcss';
+
 .main-page {
   min-height: 100vh;
   display: flex;
@@ -8,6 +11,21 @@
   &__actions {
     padding: var(--grid2) var(--grid3);
     border-bottom: 1px solid;
+    display: flex;
+  }
+
+  &__actions-group {
+    &:not(:first-of-type) {
+      border-left: 2px solid;
+      padding-left: var(--grid3);
+      margin-left: var(--grid3);
+    }
+  }
+
+  &__action {
+    &:not(:first-of-type) {
+      margin-left: var(--grid3);
+    }
   }
 
   &__data-wrap {
@@ -41,34 +59,3 @@
   }
 }
 
-.main-page_theme_light {
-  color: var(--color-grey-900);
-}
-
-.main-page_theme_dark {
-  color: var(--color-grey-400);
-  background-color: var(--color-grey-800);
-
-  .main-page {
-    &__actions {
-      background: var(--color-grey-850);
-      border-bottom-color: var(--color-grey-900);
-    }
-
-    &__connections {
-      border-right-color: var(--color-grey-900);
-    }
-
-    &__resizer {
-      background: var(--color-blue-700);
-
-      &:hover {
-        opacity: 1;
-      }
-
-      &._active {
-        opacity: 1;
-      }
-    }
-  }
-}

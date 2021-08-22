@@ -5,5 +5,37 @@
     &__label {
       color: var(--color-grey-800);
     }
+
+    &__name {
+      color: var(--color-grey-800);
+      border-color: var(--color-grey-150);
+      background: var(--color-white);
+
+      &._placeholder {
+        color: var(--color-grey-500);
+      }
+    }
+
+    &__name-wrap {
+      &._disabled {
+        &::before {
+          background: var(--color-grey-300);
+          opacity: var(--opacity-400);
+        }
+      }
+    }
+
+    &__btn {
+      color: var(--color-grey-800);
+      border-color: var(--color-grey-150);
+      background: var(--color-white);
+
+      &._disabled {
+        &::before {
+          background: var(--color-grey-300);
+          opacity: var(--opacity-400);
+        }
+      }
+    }
   }
 }

@@ -1,5 +1,8 @@
 @import 'variables.pcss';
 
+@import './open-connection_theme_dark.pcss';
+@import './open-connection_theme_light.pcss';
+
 .open-connection {
   &:not(:last-of-type) {
     margin-bottom: var(--grid2);
@@ -57,19 +60,5 @@
 
   &__delete-btn {
     margin-left: auto;
-  }
-}
-
-.open-connection_theme_dark {
-  .open-connection {
-    &__content {
-      border-left-color: var(--color-grey-400);
-    }
-
-    &__key {
-      &._selected {
-        color: var(--color-grey-600);
-      }
-    }
   }
 }

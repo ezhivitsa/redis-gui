@@ -5,5 +5,27 @@
     &__label {
       color: var(--color-grey-800);
     }
+
+    &__select {
+      color: var(--color-grey-800);
+      background: var(--color-white);
+    }
+
+    &__select-wrap {
+      border-color: var(--color-grey-150);
+      background: var(--color-white);
+
+      &._disabled {
+        &::before {
+          background: var(--color-grey-300);
+          opacity: var(--opacity-400);
+        }
+      }
+
+      &._focused {
+        border-color: var(--color-blue-700);
+        box-shadow: 0 0 0 1px var(--color-blue-shadow);
+      }
+    }
   }
 }

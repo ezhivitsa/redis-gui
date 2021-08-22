@@ -139,8 +139,8 @@ export class ConnectionDataStore {
   }
 
   @action
-  async deleteKey(prefix: string[], key: string): Promise<void> {
-    await this._redis.deleteKey(listToKey([...prefix, key]));
+  async deleteKey(prefix: string[], key?: string): Promise<void> {
+    await this._redis.deleteKey(listToKey(key ? [...prefix, key] : prefix));
 
     this._valueTabsStore.removeActiveTab();
     this._valueTabsStore.setActiveData();

@@ -4,6 +4,15 @@
   .tabs {
     &__item {
       color: var(--color-grey-800);
+
+      &:hover {
+        background: var(--color-blue-50);
+      }
+
+      &._active {
+        background: var(--color-blue-700);
+        color: var(--color-white);
+      }
     }
   }
 }

@@ -5,11 +5,20 @@
     opacity: var(--opacity-50);
 
     &:hover {
-      opacity: var(--opacity-100);
+      opacity: var(--opacity-150);
     }
 
     &._view_default {
-      color: var(--color-grey-900);
+      color: var(--color-grey-600);
+    }
+
+    &._view_danger {
+      color: var(--color-red-700);
+      opacity: var(--opacity-100);
+
+      &:hover {
+        opacity: var(--opacity-50);
+      }
     }
   }
 }

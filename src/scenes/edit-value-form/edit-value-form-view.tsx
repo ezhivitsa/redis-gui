@@ -46,26 +46,37 @@ export const EditValueFormView = observer(({ connections }: Props): ReactElement
     store.saveValue(values);
   }
 
+  function renderRedisSelect(): ReactNode {
+    if (currentKey) {
+      const conn = uniqConnections.find(({ id }) => id === currentRedisId);
+      return conn?.name;
+    }
+
+    if (uniqConnections.length === 1) {
+      return uniqConnections[0].name;
+    }
+
+    return (
+      <FormikField
+        name={EditDataField.RedisId}
+        component={Select}
+        componentProps={{
+          items: uniqConnections.map((conn) => ({
+            value: conn.id,
+            text: conn.name,
+          })),
+          size: SelectSize.M,
+          disabled: isSaving,
+        }}
+      />
+    );
+  }
+
   function renderForm({ values, setFieldValue, dirty, isValid }: FormikProps<EditDataValues>): ReactNode {
     return (
       <Form className={cn('form')}>
         <div className={cn('create-wrap')}>
-          {uniqConnections.length === 1 ? (
-            uniqConnections[0].name
-          ) : (
-            <FormikField
-              name={EditDataField.RedisId}
-              component={Select}
-              componentProps={{
-                items: uniqConnections.map((conn) => ({
-                  value: conn.id,
-                  text: conn.name,
-                })),
-                size: SelectSize.M,
-                disabled: isSaving,
-              }}
-            />
-          )}
+          {renderRedisSelect()}
 
           <Button
             icon={faSave}

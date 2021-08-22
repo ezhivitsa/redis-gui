@@ -147,6 +147,7 @@
     "stylelint-config-prettier": "8.0.2",
     "stylelint-config-standard": "22.0.0",
     "typescript": "4.3.2",
+    "tsc-files": "1.1.2",
     "url-loader": "4.1.1",
     "webpack": "5.39.0",
     "webpack-bundle-analyzer": "4.4.2",

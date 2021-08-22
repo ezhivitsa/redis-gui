@@ -1,7 +1,7 @@
 {
   "src/**/*.{ts,tsx}": [
     "npx eslint \"src/**/*.{ts,tsx}\"",
-    "npx tsc --noEmit"
+    "tsc-files --noEmit"
   ],
   "src/**/*.pcss": [
     "npx stylelint \"src/**/*.pcss\""

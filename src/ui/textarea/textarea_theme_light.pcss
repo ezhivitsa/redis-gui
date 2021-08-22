@@ -5,5 +5,27 @@
     &__label {
       color: var(--color-grey-800);
     }
+
+    &__textarea {
+      color: var(--color-grey-800);
+      background: var(--color-white);
+    }
+
+    &__inner {
+      border-color: var(--color-grey-150);
+      background: var(--color-white);
+
+      &._focused {
+        border-color: var(--color-blue-700);
+        box-shadow: 0 0 0 1px var(--color-blue-shadow);
+      }
+
+      &._disabled {
+        &::before {
+          background: var(--color-grey-300);
+          opacity: var(--opacity-400);
+        }
+      }
+    }
   }
 }

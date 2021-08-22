@@ -70,7 +70,7 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement | nu
     }
 
     if (type) {
-      return <FontAwesomeIcon icon={mapTypeToIcon[type]} size="sm" />;
+      return <FontAwesomeIcon className={cn('icon')} icon={mapTypeToIcon[type]} size="sm" />;
     }
 
     return null;
@@ -94,7 +94,7 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement | nu
 
     return (
       <div className={cn('key', { selected })} onDoubleClick={() => handleKeySelect(prefix, key)}>
-        <FontAwesomeIcon icon={mapTypeToIcon[IconType.Key]} size="sm" />
+        <FontAwesomeIcon icon={mapTypeToIcon[IconType.Key]} size="sm" className={cn('icon')} />
 
         <span className={cn('name', { selected })} title={key}>
           {key}
