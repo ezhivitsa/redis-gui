@@ -1,5 +1,5 @@
 import { action, observable, runInAction, makeObservable, computed } from 'mobx';
-import { sortedUniq } from 'lodash';
+import { uniq } from 'lodash';
 
 import { Redis, KeyData } from 'lib/redis';
 import { listToKey, keyToList, hasPrefix } from 'lib/key';
@@ -102,7 +102,7 @@ export class ConnectionDataStore {
       const data = this._getPrefixData([]);
 
       runInAction(() => {
-        data.keys = sortedUniq([...data.keys, keyData.key]);
+        data.keys = uniq([...data.keys, keyData.key]).sort();
       });
     }
 

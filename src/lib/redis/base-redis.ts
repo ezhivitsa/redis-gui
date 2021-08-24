@@ -1,18 +1,18 @@
 import { Redis as IORedisOrig, Cluster } from 'ioredis';
-import { sortedUniq } from 'lodash';
+import { uniq } from 'lodash';
 
 import { listToKey, keyToList } from 'lib/key';
 
 import { REDIS_PREFIX_SEPARATOR } from 'constants/app-constants';
 
-import { AskedRedisAuthData, PrefixesAndKeys, KeyData } from './types';
+import { AskedRedisAuthData, PrefixesAndKeys, KeyData, SshRedisAddress } from './types';
 
 export const NO_VALUE = -1;
 
 export abstract class BaseRedis<R extends IORedisOrig | Cluster> {
   protected _redis?: R;
 
-  abstract connect(data: AskedRedisAuthData): Promise<void>;
+  abstract connect(sshData: Record<string, SshRedisAddress>, data: AskedRedisAuthData): Promise<void>;
 
   abstract disconnect(): void;
 
@@ -106,7 +106,7 @@ export abstract class BaseRedis<R extends IORedisOrig | Cluster> {
 
         Object.keys(res.prefixes).forEach((prefixKey) => {
           if (result.prefixes[prefixKey]) {
-            result.prefixes[prefixKey] = sortedUniq([...result.prefixes[prefixKey], ...res.prefixes[prefixKey]]);
+            result.prefixes[prefixKey] = uniq([...result.prefixes[prefixKey], ...res.prefixes[prefixKey]]).sort();
           } else {
             result.prefixes[prefixKey] = res.prefixes[prefixKey];
           }
@@ -118,7 +118,7 @@ export abstract class BaseRedis<R extends IORedisOrig | Cluster> {
       stream.on('end', () => {
         resolve({
           prefixes: result.prefixes,
-          keys: sortedUniq(result.keys),
+          keys: uniq(result.keys.sort()),
         });
       });
     });

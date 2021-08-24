@@ -4,7 +4,7 @@
 @import './main-page_theme_light.pcss';
 
 .main-page {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
 
@@ -31,10 +31,13 @@
   &__data-wrap {
     display: flex;
     flex: 1;
+    overflow: hidden;
   }
 
   &__connections {
     min-width: 200px;
+    max-height: 100%;
+    overflow: auto;
     position: relative;
     border-right: 1px solid;
   }

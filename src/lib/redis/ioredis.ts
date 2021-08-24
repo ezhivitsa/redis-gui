@@ -1,8 +1,8 @@
-import Redis, { RedisOptions, Redis as IORedisOrig, ClusterNode, ClusterOptions, Cluster } from 'ioredis';
+import Redis, { RedisOptions, Redis as IORedisOrig, ClusterOptions, Cluster, NodeConfiguration } from 'ioredis';
 
 import { BaseRedis } from './base-redis';
 
-import { AskedRedisAuthData } from './types';
+import { AskedRedisAuthData, SshRedisAddress } from './types';
 
 export class IoRedis extends BaseRedis<IORedisOrig> {
   private _options: RedisOptions;
@@ -12,10 +12,26 @@ export class IoRedis extends BaseRedis<IORedisOrig> {
     this._options = options;
   }
 
-  async connect(data: AskedRedisAuthData): Promise<void> {
+  async connect(sshData: Record<string, SshRedisAddress>, data: AskedRedisAuthData): Promise<void> {
     return new Promise((resolve, reject) => {
       const options: RedisOptions = {
         ...this._options,
+
+        sentinels: this._options.sentinels?.map(({ host, port }) => {
+          const sshAddress = sshData[`${host}:${port}`];
+          if (sshAddress) {
+            return {
+              host: sshAddress.host,
+              port: sshAddress.port,
+            };
+          }
+
+          return {
+            host,
+            port,
+          };
+        }),
+
         tls: this._options.tls
           ? {
               ...this._options.tls,
@@ -23,6 +39,12 @@ export class IoRedis extends BaseRedis<IORedisOrig> {
             }
           : undefined,
       };
+
+      const sshAddress = sshData[`${options.host}:${options.port}`];
+      if (sshAddress) {
+        options.host = sshAddress.host;
+        options.port = sshAddress.port;
+      }
 
       this._redis = new Redis(options);
 
@@ -46,17 +68,17 @@ export class IoRedis extends BaseRedis<IORedisOrig> {
 }
 
 export class IoRedisCluster extends BaseRedis<Cluster> {
-  private _nodes: ClusterNode[];
+  private _nodes: NodeConfiguration[];
   private _options?: ClusterOptions;
 
-  constructor(nodes: ClusterNode[], options?: ClusterOptions) {
+  constructor(nodes: NodeConfiguration[], options?: ClusterOptions) {
     super();
 
     this._nodes = nodes;
     this._options = options;
   }
 
-  connect(data: AskedRedisAuthData): Promise<void> {
+  connect(sshData: Record<string, SshRedisAddress>, data: AskedRedisAuthData): Promise<void> {
     return new Promise((resolve, reject) => {
       const redisOptions: RedisOptions | undefined = this._options?.redisOptions
         ? {
@@ -70,7 +92,22 @@ export class IoRedisCluster extends BaseRedis<Cluster> {
           }
         : undefined;
 
-      this._redis = new Redis.Cluster(this._nodes, {
+      const nodes = this._nodes.map(({ host, port }) => {
+        const sshAddress = sshData[`${host}:${port}`];
+        if (sshAddress) {
+          return {
+            host: sshAddress.host,
+            port: sshAddress.port,
+          };
+        }
+
+        return {
+          host,
+          port,
+        };
+      });
+
+      this._redis = new Redis.Cluster(nodes, {
         ...this._options,
         redisOptions,
       });

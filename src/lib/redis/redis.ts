@@ -1,4 +1,4 @@
-import { Config as TunnelSshConfig } from 'tunnel-ssh';
+import { ConnectConfig as SshConfig } from 'ssh2';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Connection, ConnectionType } from 'lib/db';
@@ -9,7 +9,7 @@ import { TunnelSsh } from './tunnel-ssh';
 
 import { BaseRedis } from './base-redis';
 
-import { PrefixesAndKeys, KeyData } from './types';
+import { PrefixesAndKeys, KeyData, SshRedisAddress } from './types';
 
 export class Redis {
   private _id: string;
@@ -37,7 +37,7 @@ export class Redis {
     }
   }
 
-  private get _sshConfig(): TunnelSshConfig | undefined {
+  private get _sshConfig(): SshConfig | undefined {
     const { ssh } = this._connection;
     if (!ssh.enabled) {
       return undefined;
@@ -90,19 +90,19 @@ export class Redis {
   }
 
   async connect(): Promise<void> {
-    await this.connectSsh();
-    await this.connectRedis();
+    const sshResultData = await this.connectSsh();
+    await this.connectRedis(sshResultData);
   }
 
-  async connectSsh(): Promise<void> {
-    await this._tunnelSsh.connect({
+  connectSsh(): Promise<Record<string, SshRedisAddress>> {
+    return this._tunnelSsh.connect(this._connection.main, {
       passphrase: this._sshPassphrase,
       password: this._sshPassword,
     });
   }
 
-  async connectRedis(): Promise<void> {
-    await this._ioRedis.connect({ tlsPassphrase: this._tlsPassphrase });
+  async connectRedis(sshResultData: Record<string, SshRedisAddress>): Promise<void> {
+    await this._ioRedis.connect(sshResultData, { tlsPassphrase: this._tlsPassphrase });
   }
 
   async disconnect(): Promise<void> {

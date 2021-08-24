@@ -1,7 +1,7 @@
 import { makeObservable, action, observable, computed, runInAction } from 'mobx';
 
 import { Connection, ConnectionType, SshAuthMethod, AuthenticationMethod, InvalidHostnames } from 'lib/db';
-import { Redis } from 'lib/redis';
+import { Redis, SshRedisAddress } from 'lib/redis';
 
 import { ConnectionsStore, ConnectionStore } from 'stores';
 
@@ -229,8 +229,9 @@ export class ConnectionModalStore {
     this._connectError = undefined;
     this._sshError = undefined;
 
+    let sshData: Record<string, SshRedisAddress>;
     try {
-      await this._redis.connectSsh();
+      sshData = await this._redis.connectSsh();
     } catch (error) {
       runInAction(() => {
         this._sshError = error;
@@ -240,7 +241,7 @@ export class ConnectionModalStore {
     }
 
     try {
-      await this._redis.connectRedis();
+      await this._redis.connectRedis(sshData);
     } catch (error) {
       runInAction(() => {
         this._connectError = error;

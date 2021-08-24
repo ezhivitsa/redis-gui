@@ -17,3 +17,10 @@ export interface KeyData {
   ttl?: number;
   value: string;
 }
+
+export interface SshRedisAddress {
+  originalHost: string;
+  originalPort: number;
+  host: string;
+  port: number;
+}

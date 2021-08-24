@@ -1,5 +1,5 @@
-import { Config as TunnelSshConfig } from 'tunnel-ssh';
-import { RedisOptions, ClusterNode, ClusterOptions } from 'ioredis';
+import { ConnectConfig as SshConfig } from 'ssh2';
+import { RedisOptions, NodeConfiguration, ClusterOptions } from 'ioredis';
 
 import {
   ConnectionSsh,
@@ -53,16 +53,11 @@ function getRedisCommonConfig({ main, auth, tls, advanced }: RedisConfigData): R
   };
 }
 
-export function getSshConfig(ssh: ConnectionSsh): TunnelSshConfig {
-  const config: TunnelSshConfig = {
+export function getSshConfig(ssh: ConnectionSsh): SshConfig {
+  const config: SshConfig = {
     host: ssh.host,
     port: Number(ssh.port) || undefined,
     username: ssh.username,
-
-    dstHost: 'man-tb2k7sx9zid18bzp.db.yandex.net',
-    dstPort: 26379,
-
-    localPort: 8085,
   };
 
   if (ssh.authMethod === SshAuthMethod.Password) {
@@ -87,9 +82,14 @@ export function getRedisDirectConfig({ main, auth, tls, advanced }: RedisConfigD
   };
 }
 
-export function getRedisClusterConfig({ main, auth, tls, advanced }: RedisConfigData): [ClusterNode[], ClusterOptions] {
+export function getRedisClusterConfig({
+  main,
+  auth,
+  tls,
+  advanced,
+}: RedisConfigData): [NodeConfiguration[], ClusterOptions] {
   const nodes = main.addresses.map(
-    (address): ClusterNode => ({
+    (address): NodeConfiguration => ({
       host: address.host,
       port: Number(address.port) || undefined,
     }),

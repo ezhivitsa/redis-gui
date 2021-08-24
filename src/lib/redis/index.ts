@@ -1,2 +1,2 @@
 export { Redis } from './redis';
-export type { KeyData } from './types';
+export type { KeyData, SshRedisAddress } from './types';
