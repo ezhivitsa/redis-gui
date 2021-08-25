@@ -46,6 +46,8 @@ class OpenConnectionStore {
     return activeTab !== undefined && listToKey(prefix) === listToKey(activeTab.prefix);
   }
 
+  isSelectedPrefix(prefix: string[]);
+
   @action
   open(prefix: string[]): void {
     this._connectionDataStore.open(prefix);
@@ -87,6 +89,10 @@ class OpenConnectionStore {
     runInAction(() => {
       this._isDeletingKey = false;
     });
+  }
+
+  selectPrefix(prefix: string[]): void {
+    this._connectionDataStore.selectPrefix(prefix);
   }
 }
 

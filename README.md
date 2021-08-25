@@ -9,4 +9,3 @@
 ### ToDo
 
 - close connections (?)
-- don't show saved password

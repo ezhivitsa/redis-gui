@@ -5,6 +5,7 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useStyles } from 'lib/theme';
+import { handleEnterEvent } from 'lib/keyboard';
 
 import { ConnectionData } from 'stores';
 
@@ -58,6 +59,10 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement | nu
     dataStore.deleteKey(prefix, key);
   }
 
+  function handleSelectPrefix(prefix: string[]): void {
+    dataStore.selectPrefix(prefix);
+  }
+
   function renderIcon(prefix: string[], iconType?: IconType): ReactNode {
     if (dataStore.isLoadingKey(prefix)) {
       return <Spinner size={SpinnerSize.XS} />;
@@ -108,17 +113,39 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement | nu
   function renderDataContent(prefix: string[], connectionData?: ConnectionData): ReactNode {
     return (
       <div className={cn('content')}>
-        {Object.keys(connectionData?.prefixes || {}).map((key) => (
-          <div key={key} className={cn('data-item')}>
-            {renderData([...prefix, key], key, connectionData?.prefixes[key])}
-          </div>
-        ))}
+        {Object.keys(connectionData?.prefixes || {}).map((key) => {
+          const clickHandler = (): void => handleSelectPrefix([...prefix, key]);
 
-        {connectionData?.keys.map((key) => (
-          <div className={cn('data-item')} key={key}>
-            {renderKey(prefix, key)}
-          </div>
-        ))}
+          return (
+            <div
+              key={key}
+              className={cn('data-item')}
+              role="button"
+              tabIndex={0}
+              onClick={clickHandler}
+              onKeyDown={handleEnterEvent(clickHandler)}
+            >
+              {renderData([...prefix, key], key, connectionData?.prefixes[key])}
+            </div>
+          );
+        })}
+
+        {connectionData?.keys.map((key) => {
+          const clickHandler = (): void => handleSelectPrefix([...prefix, key]);
+
+          return (
+            <div
+              key={key}
+              className={cn('data-item')}
+              role="button"
+              tabIndex={0}
+              onClick={clickHandler}
+              onKeyDown={handleEnterEvent(clickHandler)}
+            >
+              {renderKey(prefix, key)}
+            </div>
+          );
+        })}
       </div>
     );
   }

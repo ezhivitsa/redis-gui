@@ -36,6 +36,7 @@ export interface InputProps {
   disabled?: boolean;
   onChange?: (value: string, event: ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
+  onFocus?: (event: FocusEvent<HTMLInputElement>) => void;
   rightAddon?: ReactNode;
   onRightAddonClick?: () => void;
 }
@@ -55,6 +56,7 @@ export function Input({
   max,
   onChange,
   onBlur,
+  onFocus,
   rightAddon,
   onRightAddonClick,
   ...props
@@ -70,8 +72,9 @@ export function Input({
     }
   }
 
-  function handleFocus(): void {
+  function handleFocus(event: FocusEvent<HTMLInputElement>): void {
     setFocused(true);
+    onFocus?.(event);
   }
 
   function handleBlur(event: FocusEvent<HTMLInputElement>): void {

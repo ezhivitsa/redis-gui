@@ -142,7 +142,7 @@ export class ConnectionDataStore {
   async deleteKey(prefix: string[], key?: string): Promise<void> {
     await this._redis.deleteKey(listToKey(key ? [...prefix, key] : prefix));
 
-    this._valueTabsStore.removeActiveTab();
+    this._valueTabsStore.removeActiveTab(true);
     this._valueTabsStore.setActiveData();
 
     runInAction(() => {
@@ -154,6 +154,10 @@ export class ConnectionDataStore {
         this._cleanData(p);
       }
     });
+  }
+
+  selectPrefix(prefix: string[]): void {
+    this._valueTabsStore.setSelectedPrefix(this._redis.id, prefix);
   }
 }
 
