@@ -95,17 +95,28 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement | nu
   }
 
   function renderKey(prefix: string[], key: string): ReactNode {
-    const selected = dataStore.isActiveKey([...prefix, key]);
+    const itemPrefix = [...prefix, key];
+    const active = dataStore.isActiveKey(itemPrefix);
+    const selected = dataStore.isSelectedPrefix(itemPrefix);
+
+    const clickHandler = (): void => handleSelectPrefix(itemPrefix);
 
     return (
-      <div className={cn('key', { selected })} onDoubleClick={() => handleKeySelect(prefix, key)}>
+      <div
+        className={cn('key', { active, selected })}
+        onDoubleClick={() => handleKeySelect(prefix, key)}
+        onClick={clickHandler}
+        role="button"
+        tabIndex={0}
+        onKeyDown={handleEnterEvent(clickHandler)}
+      >
         <FontAwesomeIcon icon={mapTypeToIcon[IconType.Key]} size="sm" className={cn('icon')} />
 
-        <span className={cn('name', { selected })} title={key}>
+        <span className={cn('name', { active })} title={key}>
           {key}
         </span>
 
-        {selected && renderKeyActions(prefix, key)}
+        {active && renderKeyActions(prefix, key)}
       </div>
     );
   }
@@ -113,47 +124,33 @@ export const OpenConnectionView = observer(({ redis }: Props): ReactElement | nu
   function renderDataContent(prefix: string[], connectionData?: ConnectionData): ReactNode {
     return (
       <div className={cn('content')}>
-        {Object.keys(connectionData?.prefixes || {}).map((key) => {
-          const clickHandler = (): void => handleSelectPrefix([...prefix, key]);
+        {Object.keys(connectionData?.prefixes || {}).map((key) => (
+          <div key={key} className={cn('data-item')}>
+            {renderData([...prefix, key], key, connectionData?.prefixes[key])}
+          </div>
+        ))}
 
-          return (
-            <div
-              key={key}
-              className={cn('data-item')}
-              role="button"
-              tabIndex={0}
-              onClick={clickHandler}
-              onKeyDown={handleEnterEvent(clickHandler)}
-            >
-              {renderData([...prefix, key], key, connectionData?.prefixes[key])}
-            </div>
-          );
-        })}
-
-        {connectionData?.keys.map((key) => {
-          const clickHandler = (): void => handleSelectPrefix([...prefix, key]);
-
-          return (
-            <div
-              key={key}
-              className={cn('data-item')}
-              role="button"
-              tabIndex={0}
-              onClick={clickHandler}
-              onKeyDown={handleEnterEvent(clickHandler)}
-            >
-              {renderKey(prefix, key)}
-            </div>
-          );
-        })}
+        {connectionData?.keys.map((key) => (
+          <div key={key} className={cn('data-item')}>
+            {renderKey(prefix, key)}
+          </div>
+        ))}
       </div>
     );
   }
 
   function renderData(prefix: string[], name: string, connectionData?: ConnectionData, iconType?: IconType): ReactNode {
+    const clickHandler = (): void => handleSelectPrefix(prefix);
+
     return (
       <>
-        <div className={cn('connection')}>
+        <div
+          className={cn('connection', { selected: dataStore.isSelectedPrefix(prefix) })}
+          role="button"
+          tabIndex={0}
+          onClick={clickHandler}
+          onKeyDown={handleEnterEvent(clickHandler)}
+        >
           <ButtonIcon
             icon={faChevronRight}
             className={cn('arrow-icon', { open: connectionData?.open })}

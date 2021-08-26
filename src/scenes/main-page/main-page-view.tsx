@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode, useState, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { throttle } from 'lodash';
-import { faServer, faBan, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faServer, faBan, faTrash, faEject } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 import { useStyles } from 'lib/theme';
@@ -41,7 +41,8 @@ export const MainPageView = observer((): ReactElement => {
   const connectionsRef = useRef<HTMLDivElement>(null);
 
   const pageStore = useStore();
-  const { connectionsListOpened, openConnections, hasActiveTab, isDeleting } = pageStore;
+  const { connectionsListOpened, openConnections, hasActiveTab, hasSelectedItem, isDeleting, isDisconnecting } =
+    pageStore;
 
   const handleMouseMoveThrottled = throttle(handleMouseMove, MOVE_THROTTLE);
 
@@ -109,6 +110,10 @@ export const MainPageView = observer((): ReactElement => {
     pageStore.cancelActiveKey();
   }
 
+  function handleDisconnectClick(): void {
+    pageStore.disconnectConnection();
+  }
+
   function renderKeyActions(actions: Action[]): ReactNode {
     return (
       <div className={cn('actions-group')}>
@@ -128,17 +133,25 @@ export const MainPageView = observer((): ReactElement => {
             onClick: handleOpenConnections,
           },
         ])}
+        {hasSelectedItem &&
+          renderKeyActions([
+            {
+              icon: faEject,
+              onClick: handleDisconnectClick,
+              disabled: isDisconnecting,
+            },
+          ])}
         {hasActiveTab &&
           renderKeyActions([
             {
               icon: faBan,
               onClick: handleCancelSelect,
-              disabled: isDeleting,
+              disabled: isDeleting || isDisconnecting,
             },
             {
               icon: faTrash,
               onClick: handleDeleteKey,
-              disabled: isDeleting,
+              disabled: isDeleting || isDisconnecting,
             },
           ])}
       </div>

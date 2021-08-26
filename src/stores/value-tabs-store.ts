@@ -28,6 +28,11 @@ export class ValueTabsStore {
   }
 
   @computed
+  get selectedPrefix(): TabData | undefined {
+    return this._selectedPrefix;
+  }
+
+  @computed
   get activeKeyData(): KeyData | undefined {
     return this._data;
   }
@@ -64,6 +69,18 @@ export class ValueTabsStore {
     }
 
     this._activeTab = undefined;
+  }
+
+  @action
+  removeSelectedPrefix(): void {
+    if (
+      this._activeTab?.redisId === this._selectedPrefix?.redisId &&
+      listToKey(this._activeTab?.prefix) === listToKey(this._selectedPrefix?.prefix)
+    ) {
+      this._activeTab = undefined;
+    }
+
+    this._selectedPrefix = undefined;
   }
 
   @action

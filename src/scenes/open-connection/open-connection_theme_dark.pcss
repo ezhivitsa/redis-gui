@@ -7,8 +7,18 @@
     }
 
     &__key {
-      &._selected {
+      &._active {
         color: var(--color-grey-600);
+      }
+    }
+
+    &__key,
+    &__connection {
+      &._selected {
+        &::before {
+          background: var(--color-grey-900);
+          opacity: var(--opacity-200);
+        }
       }
     }
   }

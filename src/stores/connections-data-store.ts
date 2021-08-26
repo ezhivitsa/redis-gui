@@ -156,6 +156,10 @@ export class ConnectionDataStore {
     });
   }
 
+  disconnect(): Promise<void> {
+    return this._redis.disconnect();
+  }
+
   selectPrefix(prefix: string[]): void {
     this._valueTabsStore.setSelectedPrefix(this._redis.id, prefix);
   }

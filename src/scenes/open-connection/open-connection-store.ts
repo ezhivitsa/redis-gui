@@ -13,6 +13,7 @@ interface Deps {
 class OpenConnectionStore {
   private _valueTabsStore: ValueTabsStore;
   private _connectionDataStore: ConnectionDataStore;
+  private _redisId: string;
 
   @observable
   private _loadingKeys = new Set<string>();
@@ -20,9 +21,10 @@ class OpenConnectionStore {
   @observable
   private _isDeletingKey = false;
 
-  constructor(valueTabsStore: ValueTabsStore, connectionDataStore: ConnectionDataStore) {
+  constructor(redisId: string, valueTabsStore: ValueTabsStore, connectionDataStore: ConnectionDataStore) {
     this._valueTabsStore = valueTabsStore;
     this._connectionDataStore = connectionDataStore;
+    this._redisId = redisId;
 
     makeObservable(this);
   }
@@ -43,10 +45,23 @@ class OpenConnectionStore {
 
   isActiveKey(prefix: string[]): boolean {
     const activeTab = this._valueTabsStore.activeTab;
-    return activeTab !== undefined && listToKey(prefix) === listToKey(activeTab.prefix);
+
+    return (
+      activeTab !== undefined &&
+      activeTab.redisId === this._redisId &&
+      listToKey(prefix) === listToKey(activeTab.prefix)
+    );
   }
 
-  isSelectedPrefix(prefix: string[]);
+  isSelectedPrefix(prefix: string[]): boolean {
+    const selectedPrefix = this._valueTabsStore.selectedPrefix;
+
+    return (
+      selectedPrefix !== undefined &&
+      selectedPrefix.redisId === this._redisId &&
+      listToKey(prefix) === listToKey(selectedPrefix.prefix)
+    );
+  }
 
   @action
   open(prefix: string[]): void {
@@ -116,7 +131,7 @@ export class OpenConnectionsStore {
 
     if (!store) {
       const connectionDataStore = this._connectionsDataStore.setRedis(redis);
-      store = this._redisData[redis.id] = new OpenConnectionStore(this._valueTabsStore, connectionDataStore);
+      store = this._redisData[redis.id] = new OpenConnectionStore(redis.id, this._valueTabsStore, connectionDataStore);
     }
 
     return store;

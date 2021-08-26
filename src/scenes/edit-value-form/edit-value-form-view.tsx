@@ -28,7 +28,7 @@ export const EditValueFormView = observer(({ connections }: Props): ReactElement
   const cn = useStyles(styles, 'edit-value-form');
 
   const store = useStore();
-  const { currentKey, currentRedisId, keyData, isLoading, isSaving } = store;
+  const { currentKey, currentRedisId, keyData, isLoading, isSaving, selectedRedisId } = store;
 
   useEffect(() => {
     store.getKeyData();
@@ -148,7 +148,7 @@ export const EditValueFormView = observer(({ connections }: Props): ReactElement
   return (
     <Formik<EditDataValues>
       initialValues={{
-        redisId: currentRedisId || connections[0].id,
+        redisId: currentRedisId || selectedRedisId || connections[0].id,
         key: keyData?.key || '',
         canEditKey: !currentKey,
         ttl: keyData?.ttl,

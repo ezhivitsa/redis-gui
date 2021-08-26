@@ -12,6 +12,26 @@
   &__key {
     display: flex;
     align-items: center;
+    position: relative;
+    z-index: 2;
+    outline: none;
+    cursor: pointer;
+
+    & > * {
+      z-index: 2;
+    }
+
+    &._selected {
+      &::before {
+        content: '';
+        position: absolute;
+        top: var(--grid0_5-neg);
+        bottom: var(--grid0_5-neg);
+        left: -1000px;
+        right: -1000px;
+        z-index: 1;
+      }
+    }
   }
 
   &__arrow-icon {
@@ -31,7 +51,7 @@
     font-size: var(--font-size-300);
     line-height: var(--font-size-500);
 
-    &._selected {
+    &._active {
       font-style: italic;
       font-weight: var(--font-weight-600);
     }

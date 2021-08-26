@@ -38,6 +38,10 @@ export class EditValueFormStore {
     return this._valueTabsStore.activeTab?.redisId;
   }
 
+  get selectedRedisId(): string | undefined {
+    return this._valueTabsStore.selectedPrefix?.redisId;
+  }
+
   @computed
   get isLoading(): boolean {
     return this._isLoading;

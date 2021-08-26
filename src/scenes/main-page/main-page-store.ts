@@ -12,7 +12,6 @@ interface Deps {
 export class MainPageStore {
   private _valueTabsStore: ValueTabsStore;
   private _connectionsDataStore: ConnectionsDataStore;
-
   @observable
   private _connectionsListOpened = false;
 
@@ -21,6 +20,9 @@ export class MainPageStore {
 
   @observable
   private _isDeleting = false;
+
+  @observable
+  private _isDisconnecting = false;
 
   constructor({ valueTabsStore, connectionsDataStore }: Deps) {
     this._valueTabsStore = valueTabsStore;
@@ -32,6 +34,11 @@ export class MainPageStore {
   @computed
   get hasActiveTab(): boolean {
     return Boolean(this._valueTabsStore.activeTab);
+  }
+
+  @computed
+  get hasSelectedItem(): boolean {
+    return Boolean(this._valueTabsStore.selectedPrefix);
   }
 
   @computed
@@ -52,6 +59,11 @@ export class MainPageStore {
   @computed
   get isDeleting(): boolean {
     return this._isDeleting;
+  }
+
+  @computed
+  get isDisconnecting(): boolean {
+    return this._isDisconnecting;
   }
 
   @action
@@ -78,6 +90,28 @@ export class MainPageStore {
 
     runInAction(() => {
       this._isDeleting = false;
+    });
+  }
+
+  @action
+  async disconnectConnection(): Promise<void> {
+    const selectedPrefix = this._valueTabsStore.selectedPrefix;
+    const redisId = selectedPrefix?.redisId;
+    const dataStore = this._connectionsDataStore.getConnectionDataStore(redisId);
+
+    if (!dataStore || !redisId) {
+      return;
+    }
+
+    this._isDisconnecting = true;
+
+    await dataStore.disconnect();
+
+    this._valueTabsStore.removeSelectedPrefix();
+
+    runInAction(() => {
+      this._isDisconnecting = false;
+      this._openConnections = this._openConnections.filter((redis) => redis.id !== redisId);
     });
   }
 
