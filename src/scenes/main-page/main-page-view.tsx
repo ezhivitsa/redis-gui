@@ -1,13 +1,11 @@
-import React, { ReactElement, ReactNode, useState, useEffect, useRef } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { throttle } from 'lodash';
-import { faServer, faBan, faTrash, faEject } from '@fortawesome/free-solid-svg-icons';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { ipcRenderer } from 'electron';
 
 import { useStyles } from 'lib/theme';
 import { Redis } from 'lib/redis';
 
-import { ButtonIcon } from 'ui/button-icon';
+import { MenuEvent } from 'menu';
 
 import { ConnectionsListModal } from 'scenes/connections-list-modal';
 import { EditValueForm } from 'scenes/edit-value-form';
@@ -15,48 +13,25 @@ import { EditValueForm } from 'scenes/edit-value-form';
 import { useStore } from './index';
 
 import { OpenConnectionsList } from './components/open-connections-list';
+import { TopActions } from './components/top-actions';
+import { ResizableLayout } from './components/resizable-layout';
 
 import styles from './main-page.pcss';
 
-const RESIZER_POS = 'main-page-resizer';
-const DEFAULT_RESIZER_POS = 200;
-const MOVE_THROTTLE = 100;
-
-interface Action {
-  icon: IconProp;
-  onClick: () => void;
-  disabled?: boolean;
-}
-
 export const MainPageView = observer((): ReactElement => {
   const cn = useStyles(styles, 'main-page');
-
-  const pos = localStorage.getItem(RESIZER_POS);
-  const [connectionsWidth, setConnectionsWidth] = useState(pos !== null ? parseInt(pos, 10) : DEFAULT_RESIZER_POS);
-  const [resizerActive, setResizerActive] = useState(false);
-
-  const [startResizerX, setStartResizerX] = useState(0);
-  const [currentResizerX, setCurrentResizerX] = useState(0);
-
-  const connectionsRef = useRef<HTMLDivElement>(null);
 
   const pageStore = useStore();
   const { connectionsListOpened, openConnections, hasActiveTab, hasSelectedItem, isDeleting, isDisconnecting } =
     pageStore;
 
-  const handleMouseMoveThrottled = throttle(handleMouseMove, MOVE_THROTTLE);
-
   useEffect(() => {
-    document.addEventListener('mousemove', handleMouseMoveThrottled);
-    document.addEventListener('mouseup', handleMouseUp);
-    document.body.addEventListener('mouseleave', handleMouseUp);
+    ipcRenderer.on(MenuEvent.OpenConnectionsList, handleOpenConnections);
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMoveThrottled);
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.body.removeEventListener('mouseleave', handleMouseUp);
+      ipcRenderer.off(MenuEvent.OpenConnectionsList, handleOpenConnections);
     };
-  });
+  }, []);
 
   function handleOpenConnections(): void {
     pageStore.setConnectionsListOpened(true);
@@ -64,38 +39,6 @@ export const MainPageView = observer((): ReactElement => {
 
   function handleConnectionsModalClose(): void {
     pageStore.setConnectionsListOpened(false);
-  }
-
-  function handleMouseMove(event: MouseEvent): void {
-    if (!resizerActive) {
-      return;
-    }
-
-    setCurrentResizerX(event.clientX);
-  }
-
-  function handleMouseUp(): void {
-    if (!resizerActive) {
-      return;
-    }
-
-    setResizerActive(false);
-
-    if (connectionsRef.current) {
-      const width = connectionsRef.current.scrollWidth;
-      setConnectionsWidth(width);
-      localStorage.setItem(RESIZER_POS, width.toString());
-    }
-
-    setStartResizerX(0);
-    setCurrentResizerX(0);
-  }
-
-  function handleResizeStart(event: React.MouseEvent): void {
-    setResizerActive(true);
-
-    setStartResizerX(event.clientX);
-    setCurrentResizerX(event.clientX);
   }
 
   function handleConnect(redis: Redis): void {
@@ -114,68 +57,23 @@ export const MainPageView = observer((): ReactElement => {
     pageStore.disconnectConnection();
   }
 
-  function renderKeyActions(actions: Action[]): ReactNode {
-    return (
-      <div className={cn('actions-group')}>
-        {actions.map(({ icon, onClick }, index) => (
-          <ButtonIcon key={index} className={cn('action')} icon={icon} size="lg" onClick={onClick} />
-        ))}
-      </div>
-    );
-  }
-
   return (
     <div className={cn()}>
-      <div className={cn('actions')}>
-        {renderKeyActions([
-          {
-            icon: faServer,
-            onClick: handleOpenConnections,
-          },
-        ])}
-        {hasSelectedItem &&
-          renderKeyActions([
-            {
-              icon: faEject,
-              onClick: handleDisconnectClick,
-              disabled: isDisconnecting,
-            },
-          ])}
-        {hasActiveTab &&
-          renderKeyActions([
-            {
-              icon: faBan,
-              onClick: handleCancelSelect,
-              disabled: isDeleting || isDisconnecting,
-            },
-            {
-              icon: faTrash,
-              onClick: handleDeleteKey,
-              disabled: isDeleting || isDisconnecting,
-            },
-          ])}
-      </div>
+      <TopActions
+        hasSelectedItem={hasSelectedItem}
+        hasActiveTab={hasActiveTab}
+        isDeleting={isDeleting}
+        isDisconnecting={isDisconnecting}
+        onOpenConnections={handleOpenConnections}
+        onDisconnect={handleDisconnectClick}
+        onCancelSelect={handleCancelSelect}
+        onDeleteKey={handleDeleteKey}
+      />
 
-      <div className={cn('data-wrap')}>
-        <div
-          className={cn('connections')}
-          style={{ width: Math.max(connectionsWidth + currentResizerX - startResizerX, 0) }}
-          ref={connectionsRef}
-        >
-          <OpenConnectionsList />
-
-          <div
-            className={cn('resizer', { active: resizerActive })}
-            onMouseDown={handleResizeStart}
-            role="button"
-            tabIndex={0}
-          />
-        </div>
-
-        <div className={cn('data')}>
-          {openConnections.length > 0 && <EditValueForm connections={openConnections} />}
-        </div>
-      </div>
+      <ResizableLayout
+        left={<OpenConnectionsList />}
+        right={openConnections.length > 0 && <EditValueForm connections={openConnections} />}
+      />
 
       <ConnectionsListModal
         open={connectionsListOpened}

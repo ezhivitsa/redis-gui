@@ -1,0 +1,21 @@
+@import 'variables.pcss';
+
+.resizable-layout_theme_dark {
+  .resizable-layout {
+    &__left {
+      border-right-color: var(--color-grey-900);
+    }
+
+    &__resizer {
+      background: var(--color-blue-700);
+
+      &:hover {
+        opacity: 1;
+      }
+
+      &._active {
+        opacity: 1;
+      }
+    }
+  }
+}

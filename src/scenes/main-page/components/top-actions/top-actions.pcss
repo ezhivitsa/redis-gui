@@ -1,0 +1,25 @@
+@import 'variables.pcss';
+
+@import './top-actions_theme_dark.pcss';
+@import './top-actions_theme_light.pcss';
+
+.top-actions {
+  padding: var(--grid2) var(--grid3);
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  display: flex;
+
+  &__actions-group {
+    &:not(:first-of-type) {
+      border-left: 2px solid;
+      padding-left: var(--grid3);
+      margin-left: var(--grid3);
+    }
+  }
+
+  &__action {
+    &:not(:first-of-type) {
+      margin-left: var(--grid3);
+    }
+  }
+}

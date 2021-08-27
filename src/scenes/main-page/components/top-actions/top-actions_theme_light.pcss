@@ -1,0 +1,14 @@
+@import 'variables.pcss';
+
+.top-actions_theme_light {
+  background: var(--color-grey-200);
+  border-bottom-color: var(--color-grey-400);
+
+  .top-actions {
+    &__actions-group {
+      &:not(:first-of-type) {
+        border-left-color: var(--color-grey-700);
+      }
+    }
+  }
+}

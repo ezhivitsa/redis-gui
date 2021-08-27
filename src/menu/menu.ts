@@ -1,6 +1,5 @@
 import { app, Menu, shell, BrowserWindow, MenuItemConstructorOptions, MenuItem } from 'electron';
 
-import { menuObserver } from './menu-observer';
 import { MenuEvent } from './types';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
@@ -56,9 +55,9 @@ export class MenuBuilder {
           label: 'Connections',
           submenu: [
             {
-              label: 'Connect',
+              label: 'List',
               accelerator: 'Command+N',
-              click: () => menuObserver.dispatchEvent(MenuEvent.OpenConnectionsList),
+              click: () => this.mainWindow.webContents.send(MenuEvent.OpenConnectionsList),
             },
           ],
         },

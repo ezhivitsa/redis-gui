@@ -1,0 +1,37 @@
+@import 'variables.pcss';
+
+@import './resizable-layout_theme_dark.pcss';
+@import './resizable-layout_theme_light.pcss';
+
+.resizable-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+
+  &__left {
+    min-width: 200px;
+    max-height: 100%;
+    overflow: auto;
+    position: relative;
+    border-right: 1px solid;
+  }
+
+  &__right {
+    min-width: 200px;
+    flex: 1;
+    padding: var(--grid2);
+  }
+
+  &__resizer {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    bottom: 0;
+    right: var(--grid0_5-neg);
+    width: var(--grid1);
+    cursor: ew-resize;
+    opacity: 0;
+    transition: 0.5s opacity;
+    outline: 0;
+  }
+}

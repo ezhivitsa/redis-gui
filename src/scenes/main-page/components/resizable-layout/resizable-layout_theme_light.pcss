@@ -1,0 +1,24 @@
+@import 'variables.pcss';
+
+.resizable-layout_theme_light {
+  color: var(--color-grey-800);
+  background-color: var(--color-white);
+
+  .resizable-layout {
+    &__left {
+      border-right-color: var(--color-grey-150);
+    }
+
+    &__resizer {
+      background: var(--color-blue-500);
+
+      &:hover {
+        opacity: 1;
+      }
+
+      &._active {
+        opacity: 1;
+      }
+    }
+  }
+}

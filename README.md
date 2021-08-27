@@ -8,4 +8,4 @@
 
 ### ToDo
 
-- close connections (?)
+- handle events from menu

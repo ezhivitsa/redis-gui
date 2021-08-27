@@ -7,58 +7,5 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-
-  &__actions {
-    padding: var(--grid2) var(--grid3);
-    border-bottom: 1px solid;
-    display: flex;
-  }
-
-  &__actions-group {
-    &:not(:first-of-type) {
-      border-left: 2px solid;
-      padding-left: var(--grid3);
-      margin-left: var(--grid3);
-    }
-  }
-
-  &__action {
-    &:not(:first-of-type) {
-      margin-left: var(--grid3);
-    }
-  }
-
-  &__data-wrap {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-  }
-
-  &__connections {
-    min-width: 200px;
-    max-height: 100%;
-    overflow: auto;
-    position: relative;
-    border-right: 1px solid;
-  }
-
-  &__data {
-    min-width: 200px;
-    flex: 1;
-    padding: var(--grid2);
-  }
-
-  &__resizer {
-    position: absolute;
-    z-index: 2;
-    top: 0;
-    bottom: 0;
-    right: var(--grid0_5-neg);
-    width: var(--grid1);
-    cursor: ew-resize;
-    opacity: 0;
-    transition: 0.5s opacity;
-    outline: 0;
-  }
 }
 
