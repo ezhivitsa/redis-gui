@@ -1,4 +1,7 @@
 {
+  "author": "Evgeny Zhivitsa <evgeny.zhivitsa@gmail.com>",
+  "name": "redis-gui",
+  "version": "0.1.0",
   "main": "./main.prod.js",
   "scripts": {
     "electron-rebuild": "node -r ../scripts/BabelRegister.js ../scripts/ElectronRebuild.js",

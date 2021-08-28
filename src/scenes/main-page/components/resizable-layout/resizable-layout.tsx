@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useState, useRef, useEffect } from 'react';
+import React, { ReactElement, ReactNode, useState, useRef, useEffect, useCallback } from 'react';
 import { throttle } from 'lodash';
 
 import { useStyles } from 'lib/theme';
@@ -12,7 +12,8 @@ interface Props {
 
 const RESIZER_POS = 'main-page-resizer';
 const DEFAULT_RESIZER_POS = 200;
-const MOVE_THROTTLE = 80;
+const MOVE_THROTTLE = 50;
+const NO_VALUE = -1;
 
 export function ResizableLayout({ left, right }: Props): ReactElement {
   const cn = useStyles(styles, 'resizable-layout');
@@ -21,34 +22,23 @@ export function ResizableLayout({ left, right }: Props): ReactElement {
   const [connectionsWidth, setConnectionsWidth] = useState(pos !== null ? parseInt(pos, 10) : DEFAULT_RESIZER_POS);
   const [resizerActive, setResizerActive] = useState(false);
 
-  const [startResizerX, setStartResizerX] = useState(0);
-  const [currentResizerX, setCurrentResizerX] = useState(0);
+  const [startResizerX, setStartResizerX] = useState(NO_VALUE);
+  const [currentResizerX, setCurrentResizerX] = useState(NO_VALUE);
 
   const connectionsRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseMoveThrottled = throttle(handleMouseMove, MOVE_THROTTLE);
+  const handleMouseMove = useCallback(
+    (event: MouseEvent): void => {
+      if (!resizerActive) {
+        return;
+      }
 
-  useEffect(() => {
-    document.addEventListener('mousemove', handleMouseMoveThrottled);
-    document.addEventListener('mouseup', handleMouseUp);
-    document.body.addEventListener('mouseleave', handleMouseUp);
+      setCurrentResizerX(event.clientX);
+    },
+    [resizerActive],
+  );
 
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMoveThrottled);
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.body.removeEventListener('mouseleave', handleMouseUp);
-    };
-  });
-
-  function handleMouseMove(event: MouseEvent): void {
-    if (!resizerActive) {
-      return;
-    }
-
-    setCurrentResizerX(event.clientX);
-  }
-
-  function handleMouseUp(): void {
+  const handleMouseUp = useCallback((): void => {
     if (!resizerActive) {
       return;
     }
@@ -61,9 +51,24 @@ export function ResizableLayout({ left, right }: Props): ReactElement {
       localStorage.setItem(RESIZER_POS, width.toString());
     }
 
-    setStartResizerX(0);
-    setCurrentResizerX(0);
-  }
+    setStartResizerX(NO_VALUE);
+    setCurrentResizerX(NO_VALUE);
+  }, [resizerActive]);
+
+  const handleMouseMoveThrottled = useCallback(throttle(handleMouseMove, MOVE_THROTTLE), [resizerActive]);
+
+  useEffect(() => {
+    console.log('useEffect');
+    document.addEventListener('mousemove', handleMouseMoveThrottled);
+    document.addEventListener('mouseup', handleMouseUp);
+    document.body.addEventListener('mouseleave', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMoveThrottled);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.removeEventListener('mouseleave', handleMouseUp);
+    };
+  }, [handleMouseMoveThrottled, handleMouseMove, handleMouseUp]);
 
   function handleResizeStart(event: React.MouseEvent): void {
     setResizerActive(true);
@@ -73,10 +78,15 @@ export function ResizableLayout({ left, right }: Props): ReactElement {
   }
 
   return (
-    <div className={cn()}>
+    <div className={cn({ active: resizerActive })}>
       <div
         className={cn('left')}
-        style={{ width: Math.max(connectionsWidth + currentResizerX - startResizerX, 0) }}
+        style={{
+          width:
+            startResizerX === NO_VALUE
+              ? connectionsWidth
+              : Math.max(connectionsWidth + currentResizerX - startResizerX, 0),
+        }}
         ref={connectionsRef}
       >
         {left}

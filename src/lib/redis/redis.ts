@@ -20,7 +20,7 @@ export class Redis {
   private _tlsPassphrase?: string;
 
   private _tunnelSsh: TunnelSsh;
-  private _ioRedis: BaseRedis<any>;
+  private _ioRedis: BaseRedis<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
   constructor(connection: Omit<Connection, 'id'>) {
     this._id = uuidv4();

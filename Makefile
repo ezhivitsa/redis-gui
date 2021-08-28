@@ -28,7 +28,7 @@ build-dev-dll-renderer:
 
 .PHONY: electron-build
 electron-build:
-	electron-builder build --publish never
+	npx electron-builder build --publish never
 
 .PHONY: electron-rebuild
 electron-rebuild:

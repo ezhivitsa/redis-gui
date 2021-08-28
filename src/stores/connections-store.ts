@@ -54,6 +54,7 @@ export class ConnectionsStore {
       return;
     }
 
+    // eslint-disable-next-line
     const { id: connectionId, ...clonedConnection } = connection;
     const connectionData = await connectionsClient.create(JSON.parse(JSON.stringify(clonedConnection)));
     this._connections?.push(connectionData);

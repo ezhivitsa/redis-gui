@@ -3,7 +3,7 @@ import { PageState, AnyError } from 'types';
 interface StateData {
   loadingKeys: boolean[];
   errorKeys?: (AnyError | null)[];
-  readyData?: any[];
+  readyData?: any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 export function calculatePageState({ loadingKeys, errorKeys, readyData }: StateData): PageState {

@@ -10,6 +10,7 @@ export enum TableSize {
   M = 'm',
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface Props<C extends string, D extends Record<string, any>> {
   columns: C[];
   data: D[];
@@ -25,6 +26,7 @@ interface Props<C extends string, D extends Record<string, any>> {
   activeItem?: D;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function Table<C extends string, D extends Record<string, any>>({
   columns,
   data,

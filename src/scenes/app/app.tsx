@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
-import { remote } from 'electron';
+import { nativeTheme } from '@electron/remote';
 
 import { ThemeContextProvider, Theme } from 'lib/theme';
 
@@ -9,7 +9,6 @@ import { MainPage } from 'scenes/main-page';
 import 'styles/reset.pcss';
 
 function AppComponent(): ReactElement {
-  const nativeTheme = remote.nativeTheme;
   const [shouldUseDarkColors, setShouldUseDarkColors] = useState(nativeTheme.shouldUseDarkColors);
 
   useEffect(() => {

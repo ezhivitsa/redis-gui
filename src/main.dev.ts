@@ -14,10 +14,13 @@ import 'regenerator-runtime/runtime';
 import path from 'path';
 
 import { app, BrowserWindow } from 'electron';
+import { initialize as remoteInitialize } from '@electron/remote/main';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 
 import { MenuBuilder } from './menu';
+
+remoteInitialize();
 
 export default class AppUpdater {
   constructor() {

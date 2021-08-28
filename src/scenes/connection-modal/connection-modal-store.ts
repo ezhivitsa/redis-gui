@@ -139,6 +139,7 @@ export class ConnectionModalStore {
   get initialValues(): ConnectionFormikValues {
     const connectionData = this.connection || defaultConnectionData;
 
+    // eslint-disable-next-line
     const { id, ...rest } = connectionData as Connection;
     return JSON.parse(JSON.stringify(rest));
   }
