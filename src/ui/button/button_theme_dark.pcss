@@ -1,36 +1,38 @@
 @import 'variables.pcss';
 
 .button_theme_dark {
-  &_view_default {
-    background: var(--color-grey-750);
-    border-color: var(--color-grey-900);
-    color: var(--color-grey-300);
+  &.button {
+    &_view_default {
+      background: var(--color-grey-750);
+      border-color: var(--color-grey-900);
+      color: var(--color-grey-300);
 
-    &:hover,
-    &:focus {
-      border-color: var(--color-grey-300);
+      &:hover,
+      &:focus {
+        border-color: var(--color-grey-300);
+      }
     }
-  }
 
-  &_view_success {
-    background: var(--color-blue-700);
-    border-color: var(--color-blue-700);
-    color: var(--color-white);
+    &_view_success {
+      background: var(--color-blue-700);
+      border-color: var(--color-blue-700);
+      color: var(--color-white);
 
-    &:hover,
-    &:focus {
-      background: var(--color-blue-600);
+      &:hover,
+      &:focus {
+        background: var(--color-blue-600);
+      }
     }
-  }
 
-  &_view_danger {
-    background: var(--color-red-700);
-    border-color: var(--color-red-700);
-    color: var(--color-white);
+    &_view_danger {
+      background: var(--color-red-700);
+      border-color: var(--color-red-700);
+      color: var(--color-white);
 
-    &:hover,
-    &:focus {
-      background: var(--color-red-600);
+      &:hover,
+      &:focus {
+        background: var(--color-red-600);
+      }
     }
   }
 

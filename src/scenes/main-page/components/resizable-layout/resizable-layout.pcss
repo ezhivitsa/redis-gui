@@ -26,6 +26,13 @@
     padding: var(--grid2);
   }
 
+  &__left,
+  &__right {
+    &_active {
+      pointer-events: none;
+    }
+  }
+
   &__resizer {
     position: absolute;
     z-index: 2;

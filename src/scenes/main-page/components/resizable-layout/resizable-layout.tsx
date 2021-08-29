@@ -46,7 +46,7 @@ export function ResizableLayout({ left, right }: Props): ReactElement {
     setResizerActive(false);
 
     if (connectionsRef.current) {
-      const width = connectionsRef.current.scrollWidth;
+      const width = connectionsRef.current.getBoundingClientRect().width;
       setConnectionsWidth(width);
       localStorage.setItem(RESIZER_POS, width.toString());
     }
@@ -79,7 +79,7 @@ export function ResizableLayout({ left, right }: Props): ReactElement {
   return (
     <div className={cn({ active: resizerActive })}>
       <div
-        className={cn('left')}
+        className={cn('left', { active: resizerActive })}
         style={{
           width:
             startResizerX === NO_VALUE
@@ -98,7 +98,7 @@ export function ResizableLayout({ left, right }: Props): ReactElement {
         />
       </div>
 
-      <div className={cn('right')}>{right}</div>
+      <div className={cn('right', { active: resizerActive })}>{right}</div>
     </div>
   );
 }
