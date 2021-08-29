@@ -58,7 +58,6 @@ export function ResizableLayout({ left, right }: Props): ReactElement {
   const handleMouseMoveThrottled = useCallback(throttle(handleMouseMove, MOVE_THROTTLE), [resizerActive]);
 
   useEffect(() => {
-    console.log('useEffect');
     document.addEventListener('mousemove', handleMouseMoveThrottled);
     document.addEventListener('mouseup', handleMouseUp);
     document.body.addEventListener('mouseleave', handleMouseUp);

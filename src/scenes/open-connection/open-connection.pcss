@@ -21,7 +21,7 @@
       z-index: 2;
     }
 
-    &._selected {
+    &_selected {
       &::before {
         content: '';
         position: absolute;
@@ -38,7 +38,7 @@
     margin-right: var(--grid2);
     transition: all 0.2s;
 
-    &._open {
+    &_open {
       transform: rotate(90deg);
     }
   }
@@ -51,7 +51,7 @@
     font-size: var(--font-size-300);
     line-height: var(--font-size-500);
 
-    &._active {
+    &_active {
       font-style: italic;
       font-weight: var(--font-weight-600);
     }

@@ -1,7 +1,7 @@
 @import 'variables.pcss';
 
 .button_theme_dark {
-  &._view_default {
+  &_view_default {
     background: var(--color-grey-750);
     border-color: var(--color-grey-900);
     color: var(--color-grey-300);
@@ -12,7 +12,7 @@
     }
   }
 
-  &._view_success {
+  &_view_success {
     background: var(--color-blue-700);
     border-color: var(--color-blue-700);
     color: var(--color-white);
@@ -23,7 +23,7 @@
     }
   }
 
-  &._view_danger {
+  &_view_danger {
     background: var(--color-red-700);
     border-color: var(--color-red-700);
     color: var(--color-white);
@@ -36,19 +36,19 @@
 
   .button {
     &__content {
-      &._view_default {
+      &_view_default {
         &::before {
           background: var(--color-grey-750);
         }
       }
 
-      &._view_success {
+      &_view_success {
         &::before {
           background: var(--color-blue-700);
         }
       }
 
-      &._view_danger {
+      &_view_danger {
         &::before {
           background: var(--color-red-700);
         }

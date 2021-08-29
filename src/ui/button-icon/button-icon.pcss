@@ -1,10 +1,12 @@
+@import 'variables.pcss';
+
 @import "./button-icon_theme_dark.pcss";
 @import "./button-icon_theme_light.pcss";
 
 .button-icon {
   cursor: pointer;
 
-  &._disabled {
+  &_disabled {
     pointer-events: none;
     opacity: var(--opacity-200);
   }

@@ -10,11 +10,11 @@
     align-items: center;
     display: flex;
 
-    &._disabled {
+    &_disabled {
       pointer-events: none;
     }
 
-    &._width_default {
+    &_width_default {
       display: inline-flex;
     }
   }
@@ -38,12 +38,12 @@
     flex-shrink: 0;
     font-size: initial;
 
-    &._size_s {
+    &_size_s {
       width: var(--grid4);
       height: var(--grid4);
     }
 
-    &._disabled {
+    &_disabled {
       &::before {
         content: '';;
         position: absolute;
@@ -59,12 +59,12 @@
   &__label {
     cursor: pointer;
 
-    &._size_s {
+    &_size_s {
       margin-left: var(--grid2);
       font-size: var(--font-size-200);
     }
 
-    &._width_available {
+    &_width_available {
       flex: 1;
     }
   }

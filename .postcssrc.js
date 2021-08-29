@@ -1,7 +1,7 @@
 const postcssImport = require('postcss-import');
 const postcssPresetEnv = require('postcss-preset-env');
 const postcssNested = require('postcss-nested');
-const cssVariables = require('postcss-css-variables');
+const postcssCustomProperties = require('postcss-custom-properties');
 
 const cssnano = require('cssnano');
 
@@ -15,7 +15,7 @@ module.exports = {
       ]
     }),
     postcssNested,
-    cssVariables({preserve: 'computed'}),
+    postcssCustomProperties({preserve: false}),
     postcssPresetEnv({
       stage: 2,
       features: {

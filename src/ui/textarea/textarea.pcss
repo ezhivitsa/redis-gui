@@ -2,7 +2,7 @@
 @import './textarea_theme_light.pcss';
 
 .textarea {
-  &._max-height {
+  &_max-height {
     display: flex;
     flex-direction: column;
   }
@@ -11,12 +11,12 @@
     display: block;
     padding-bottom: var(--grid1);
 
-    &._size_s {
+    &_size_s {
       line-height: var(--grid4);
       font-size: var(--font-size-200);
     }
 
-    &._size_m {
+    &_size_m {
       line-height: var(--grid5);
       font-size: var(--font-size-400);
     }
@@ -27,24 +27,24 @@
     border: 0;
     outline: none;
 
-    &._size_s {
+    &_size_s {
       font-size: var(--font-size-200);
     }
 
-    &._size_m {
+    &_size_m {
       font-size: var(--font-size-400);
     }
 
-    &._width_available {
+    &_width_available {
       display: block;
       width: 100%;
     }
 
-    &._resizable {
+    &_resizable {
       resize: both;
     }
 
-    &._max-height {
+    &_max-height {
       height: 100%;
     }
   }
@@ -55,15 +55,15 @@
     border: 1px solid;
     overflow: hidden;
 
-    &._size_s {
+    &_size_s {
       padding: 0 var(--grid2);
     }
 
-    &._size_m {
+    &_size_m {
       padding: 0 var(--grid2);
     }
 
-    &._disabled {
+    &_disabled {
       pointer-events: none;
       position: relative;
 
@@ -78,7 +78,7 @@
       }
     }
 
-    &._max-height {
+    &_max-height {
       flex: 1;
     }
   }
