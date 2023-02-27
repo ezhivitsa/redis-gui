@@ -1,14 +1,8 @@
 .PHONY: deps
 deps:
-	yarn
+	npm ci
 
-.PHONY: app-deps
-app-deps:
-	npx electron-builder install-app-deps
-
-.PHONY: yarn-deduplicate
-yarn-deduplicate:
-	npx yarn-deduplicate yarn.lock
+# Build rules
 
 .PHONY: build
 build:
@@ -16,15 +10,15 @@ build:
 
 .PHONY: build-main
 build-main:
-	npx cross-env NODE_ENV=production webpack --config ./configs/webpack.config.main.prod.babel.js
+	npx cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts
 
 .PHONY: build-renderer
 build-renderer:
-	npx cross-env NODE_ENV=production webpack --config ./configs/webpack.config.renderer.prod.babel.js
+	npx cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts
 
 .PHONY: build-dev-dll-renderer
 build-dev-dll-renderer:
-	npx cross-env NODE_ENV=development webpack --config ./configs/webpack.config.renderer.dev.dll.babel.js
+	npx cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts
 
 .PHONY: electron-build
 electron-build:
@@ -32,7 +26,13 @@ electron-build:
 
 .PHONY: electron-rebuild
 electron-rebuild:
-	npx electron-rebuild --parallel --types prod,dev,optional --module-dir src
+	npx electron-builder build --publish never
+
+.PHONY: rebuild
+rebuild:
+	npx electron-rebuild --parallel --types prod,dev,optional --module-dir release/app
+
+# Lint rules
 
 .PHONY: lint-eslint
 lint-eslint:
@@ -49,31 +49,45 @@ lint-stylelint:
 .PHONY: lint
 lint: lint-eslint lint-ts lint-stylelint
 
+# Package rules
+
 .PHONY: clear-dist
 clear-dist:
-	rm -rf src/dist
+	rm -rf dist
 
 .PHONE: package
 package: clear-dist build electron-rebuild
 
-.PHONY: start-dev-renderer
+# Start rules
+
+.PHONY: start-renderer
 start-dev-renderer:
-	npx cross-env NODE_ENV=development webpack serve --config ./configs/webpack.config.renderer.dev.babel.js
+	npx cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts
 
 .PHONY: start-main
 start-main:
-	npx cross-env NODE_ENV=development electron -r ./scripts/BabelRegister ./src/main.dev.ts
+	npx cross-env NODE_ENV=development electronmon -r ts-node/register/transpile-only .
+
+.PHONY: start-preload
+start-preload:
+	npx cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.preload.dev.ts
 
 .PHONY: check-port
 check-port:
-	node -r @babel/register ./scripts/CheckPortInUse.js
+	npx ts-node ./.erb/scripts/check-port-in-use.js
+
+.PHONY: dev
+dev: check-port start-renderer
+
+# Postinstall rules
 
 .PHONY: check-native-deps
 check-native-deps:
-	node -r @babel/register scripts/CheckNativeDep.js
+	npx ts-node .erb/scripts/check-native-dep.js
 
-.PHONY: dev
-dev: check-port start-dev-renderer
+.PHONY: app-deps
+app-deps:
+	npx electron-builder install-app-deps
 
 .PHONY: postinstall
-postinstall: check-native-deps app-deps build-dev-dll-renderer yarn-deduplicate
+postinstall: check-native-deps app-deps build-dev-dll-renderer
