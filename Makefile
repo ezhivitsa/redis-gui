@@ -10,15 +10,15 @@ build:
 
 .PHONY: build-main
 build-main:
-	npx cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts
+	npx cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./configs/webpack/webpack.config.main.prod.ts
 
 .PHONY: build-renderer
 build-renderer:
-	npx cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts
+	npx cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./configs/webpack/webpack.config.renderer.prod.ts
 
 .PHONY: build-dev-dll-renderer
 build-dev-dll-renderer:
-	npx cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts
+	npx cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./configs/webpack/webpack.config.renderer.dev.dll.ts
 
 .PHONY: electron-build
 electron-build:
@@ -62,7 +62,7 @@ package: clear-dist build electron-rebuild
 
 .PHONY: start-renderer
 start-dev-renderer:
-	npx cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts
+	npx cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./configs/webpack/webpack.config.renderer.dev.ts
 
 .PHONY: start-main
 start-main:
@@ -70,11 +70,11 @@ start-main:
 
 .PHONY: start-preload
 start-preload:
-	npx cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.preload.dev.ts
+	npx cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./configs/webpack/webpack.config.preload.dev.ts
 
 .PHONY: check-port
 check-port:
-	npx ts-node ./.erb/scripts/check-port-in-use.js
+	npx ts-node ./configs/scripts/check-port-in-use.js
 
 .PHONY: dev
 dev: check-port start-renderer
@@ -83,7 +83,7 @@ dev: check-port start-renderer
 
 .PHONY: check-native-deps
 check-native-deps:
-	npx ts-node .erb/scripts/check-native-dep.js
+	npx ts-node configs/scripts/check-native-dep.js
 
 .PHONY: app-deps
 app-deps:
