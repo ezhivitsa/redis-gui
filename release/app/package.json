@@ -1,0 +1,14 @@
+{
+  "name": "redis-gui",
+  "version": "4.6.0",
+  "license": "MIT",
+  "author": "Evgeny Zhivitsa <evgeny.zhivitsa@gmail.com>",
+  "main": "./dist/main/main.js",
+  "scripts": {
+    "rebuild": "node -r ts-node/register ../../configs/scripts/electron-rebuild.js",
+    "postinstall": "npm run rebuild && npm run link-modules",
+    "link-modules": "node -r ts-node/register ../../configs/scripts/link-modules.ts"
+  },
+  "dependencies": {
+  }
+}

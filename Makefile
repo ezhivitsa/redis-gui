@@ -87,7 +87,7 @@ check-native-deps:
 
 .PHONY: app-deps
 app-deps:
-	npx electron-builder install-app-deps
+	npm run app-deps
 
 .PHONY: postinstall
 postinstall: check-native-deps app-deps build-dev-dll-renderer
