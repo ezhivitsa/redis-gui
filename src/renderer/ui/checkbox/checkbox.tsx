@@ -4,9 +4,9 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { useStyles } from 'lib/theme';
+import { useStyles } from 'renderer/lib/theme';
 
-import { useIdHook } from 'hooks';
+import { useIdHook } from 'renderer/hooks';
 
 import styles from './checkbox.pcss';
 

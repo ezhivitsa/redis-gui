@@ -2,13 +2,13 @@ import React, { ReactElement, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { ipcRenderer } from 'electron';
 
-import { useStyles } from 'lib/theme';
-import { Redis } from 'lib/redis';
+import { useStyles } from 'renderer/lib/theme';
+import { Redis } from 'renderer/lib/redis';
 
-import { MenuEvent } from 'menu';
+import { MenuEvent } from 'main/menu';
 
-import { ConnectionsListModal } from 'scenes/connections-list-modal';
-import { EditValueForm } from 'scenes/edit-value-form';
+import { ConnectionsListModal } from 'renderer/scenes/connections-list-modal';
+import { EditValueForm } from 'renderer/scenes/edit-value-form';
 
 import { useStore } from './index';
 

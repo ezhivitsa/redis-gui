@@ -3,10 +3,10 @@ import ReactModal from 'react-modal';
 import classnames from 'classnames';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
-import { useStyles } from 'lib/theme';
+import { useStyles } from 'renderer/lib/theme';
 
-import { Heading, HeadingSize, HeadingView } from 'ui/heading';
-import { ButtonIcon } from 'ui/button-icon';
+import { Heading, HeadingSize, HeadingView } from 'renderer/ui/heading';
+import { ButtonIcon } from 'renderer/ui/button-icon';
 
 import styles from './modal.pcss';
 

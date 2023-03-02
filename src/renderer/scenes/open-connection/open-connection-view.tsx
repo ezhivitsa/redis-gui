@@ -4,13 +4,13 @@ import { faChevronRight, faDatabase, faLayerGroup, faKey, faTrash } from '@forta
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { useStyles } from 'lib/theme';
-import { handleEnterEvent } from 'lib/keyboard';
+import { useStyles } from 'renderer/lib/theme';
+import { handleEnterEvent } from 'renderer/lib/keyboard';
 
-import { ConnectionData } from 'stores';
+import { ConnectionData } from 'renderer/stores';
 
-import { ButtonIcon, ButtonIconView } from 'ui/button-icon';
-import { Spinner, SpinnerSize } from 'ui/spinner';
+import { ButtonIcon, ButtonIconView } from 'renderer/ui/button-icon';
+import { Spinner, SpinnerSize } from 'renderer/ui/spinner';
 
 import { Props, IconType } from './types';
 

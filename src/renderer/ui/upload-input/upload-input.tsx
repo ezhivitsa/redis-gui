@@ -1,12 +1,12 @@
 import React, { ReactElement, ReactNode, useRef, ChangeEvent } from 'react';
 import classnames from 'classnames';
 
-import { useStyles } from 'lib/theme';
-import { handleEnterEvent } from 'lib/keyboard';
+import { useStyles } from 'renderer/lib/theme';
+import { handleEnterEvent } from 'renderer/lib/keyboard';
 
-import { useIdHook } from 'hooks';
+import { useIdHook } from 'renderer/hooks';
 
-import { InputSize } from 'ui/input';
+import { InputSize } from 'renderer/ui/input';
 
 import styles from './upload-input.pcss';
 

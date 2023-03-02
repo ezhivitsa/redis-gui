@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { dbPromise, Connection } from 'lib/db';
+import { dbPromise, Connection } from 'renderer/lib/db';
 
-import { DB_CONNECTIONS_STORE } from 'constants/app-constants';
+import { DB_CONNECTIONS_STORE } from 'renderer/constants/app-constants';
 
 export async function list(): Promise<Connection[]> {
   const connections = (await dbPromise).getAll(DB_CONNECTIONS_STORE);

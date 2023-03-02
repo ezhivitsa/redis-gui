@@ -1,9 +1,9 @@
 import React, { ReactElement, ReactNode, ChangeEvent, FocusEvent, useState } from 'react';
 import classnames from 'classnames';
 
-import { useStyles } from 'lib/theme';
+import { useStyles } from 'renderer/lib/theme';
 
-import { useIdHook } from 'hooks';
+import { useIdHook } from 'renderer/hooks';
 
 import styles from './textarea.pcss';
 

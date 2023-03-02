@@ -4,16 +4,16 @@ import { Formik, FormikProps, Form } from 'formik';
 import { faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
 import { uniqBy } from 'lodash';
 
-import { useStyles } from 'lib/theme';
+import { useStyles } from 'renderer/lib/theme';
 
-import { FormikField } from 'ui/formik-field';
-import { Input, InputSize, InputWidth } from 'ui/input';
-import { ButtonIcon } from 'ui/button-icon';
-import { Button, ButtonSize, ButtonView } from 'ui/button';
-import { Select, SelectSize } from 'ui/select';
-import { NumberInput } from 'ui/number-input';
-import { Textarea, TextareaSize, TextareaWidth } from 'ui/textarea';
-import { Spinner, SpinnerView } from 'ui/spinner';
+import { FormikField } from 'renderer/ui/formik-field';
+import { Input, InputSize, InputWidth } from 'renderer/ui/input';
+import { ButtonIcon } from 'renderer/ui/button-icon';
+import { Button, ButtonSize, ButtonView } from 'renderer/ui/button';
+import { Select, SelectSize } from 'renderer/ui/select';
+import { NumberInput } from 'renderer/ui/number-input';
+import { Textarea, TextareaSize, TextareaWidth } from 'renderer/ui/textarea';
+import { Spinner, SpinnerView } from 'renderer/ui/spinner';
 
 import { editValueFormTexts } from 'texts';
 

@@ -1,4 +1,4 @@
-import { Redis } from 'lib/redis';
+import { Redis } from 'renderer/lib/redis';
 
 export interface Props {
   redis: Redis;

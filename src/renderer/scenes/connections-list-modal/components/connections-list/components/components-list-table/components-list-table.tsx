@@ -1,9 +1,9 @@
 import React, { ReactElement, ReactNode } from 'react';
 
-import { Connection } from 'lib/db';
-import { useStyles } from 'lib/theme';
+import { Connection } from 'renderer/lib/db';
+import { useStyles } from 'renderer/lib/theme';
 
-import { Table, TableSize } from 'ui/table';
+import { Table, TableSize } from 'renderer/ui/table';
 
 import styles from './components-list-table.pcss';
 

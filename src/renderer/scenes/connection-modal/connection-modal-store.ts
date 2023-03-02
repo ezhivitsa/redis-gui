@@ -1,9 +1,9 @@
 import { makeObservable, action, observable, computed, runInAction } from 'mobx';
 
-import { Connection, ConnectionType, SshAuthMethod, AuthenticationMethod, InvalidHostnames } from 'lib/db';
-import { Redis, SshRedisAddress } from 'lib/redis';
+import { Connection, ConnectionType, SshAuthMethod, AuthenticationMethod, InvalidHostnames } from 'renderer/lib/db';
+import { Redis, SshRedisAddress } from 'renderer/lib/redis';
 
-import { ConnectionsStore, ConnectionStore } from 'stores';
+import { ConnectionsStore, ConnectionStore } from 'renderer/stores';
 
 import { ConnectionFormikValues } from './types';
 
@@ -235,7 +235,8 @@ export class ConnectionModalStore {
       sshData = await this._redis.connectSsh();
     } catch (error) {
       runInAction(() => {
-        this._sshError = error;
+        // TODO: fix type casting
+        this._sshError = error as Error;
         this._isConnecting = false;
       });
       return;
@@ -245,7 +246,8 @@ export class ConnectionModalStore {
       await this._redis.connectRedis(sshData);
     } catch (error) {
       runInAction(() => {
-        this._connectError = error;
+        // TODO: fix type casting
+        this._connectError = error as Error;
       });
     }
 

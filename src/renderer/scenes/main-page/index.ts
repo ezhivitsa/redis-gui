@@ -1,6 +1,6 @@
-import { glueStore } from 'lib/mobx';
+import { glueStore } from 'renderer/lib/mobx';
 
-import { RootStore } from 'stores';
+import { RootStore } from 'renderer/stores';
 
 import { MainPageStore } from './main-page-store';
 import { MainPageView } from './main-page-view';

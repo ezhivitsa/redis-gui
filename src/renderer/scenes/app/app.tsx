@@ -2,9 +2,9 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { nativeTheme } from '@electron/remote';
 
-import { ThemeContextProvider, Theme } from 'lib/theme';
+import { ThemeContextProvider, Theme } from 'renderer/lib/theme';
 
-import { MainPage } from 'scenes/main-page';
+import { MainPage } from 'renderer/scenes/main-page';
 
 import 'styles/reset.pcss';
 

@@ -1,6 +1,6 @@
 import { openDB } from 'idb';
 
-import { DB_NAME, DB_VERSION, DB_CONNECTIONS_STORE } from 'constants/app-constants';
+import { DB_NAME, DB_VERSION, DB_CONNECTIONS_STORE } from 'renderer/constants/app-constants';
 
 import { Db } from './types';
 

@@ -3,9 +3,9 @@ import classnames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp, SizeProp } from '@fortawesome/fontawesome-svg-core';
 
-import { useStyles } from 'lib/theme';
+import { useStyles } from 'renderer/lib/theme';
 
-import { Spinner, SpinnerSize } from 'ui/spinner';
+import { Spinner, SpinnerSize } from 'renderer/ui/spinner';
 
 import styles from './button.pcss';
 

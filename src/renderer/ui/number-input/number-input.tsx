@@ -1,8 +1,8 @@
 import React, { ReactElement, ChangeEvent, useState } from 'react';
 
-import { parseNumber } from 'lib/numbers';
+import { parseNumber } from 'renderer/lib/numbers';
 
-import { Input, InputProps } from 'ui/input';
+import { Input, InputProps } from 'renderer/ui/input';
 
 interface Props extends Omit<InputProps, 'value' | 'onChange'> {
   step?: number;

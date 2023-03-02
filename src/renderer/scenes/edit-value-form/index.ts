@@ -1,6 +1,6 @@
-import { glueStore } from 'lib/mobx';
+import { glueStore } from 'renderer/lib/mobx';
 
-import { RootStore } from 'stores/root';
+import { RootStore } from 'renderer/stores/root';
 
 import { EditValueFormStore } from './edit-value-form-store';
 import { EditValueFormView } from './edit-value-form-view';

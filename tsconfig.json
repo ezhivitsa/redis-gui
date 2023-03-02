@@ -13,7 +13,8 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "allowJs": true,
-    "outDir": "configs/dll"
+    "outDir": "configs/dll",
+    "experimentalDecorators": true
   },
-  "exclude": ["test", "release/build", "release/app/dist", "configs/dll"]
+  "exclude": ["test", "release/build", "release/app/dist", "configs/dll", "node_modules"]
 }

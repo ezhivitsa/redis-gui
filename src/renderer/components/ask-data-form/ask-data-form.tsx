@@ -1,12 +1,12 @@
 import React, { ReactElement, ReactNode } from 'react';
 import { Formik, FormikProps } from 'formik';
 
-import { useStyles } from 'lib/theme';
+import { useStyles } from 'renderer/lib/theme';
 
-import { Modal } from 'ui/modal';
-import { FormikField } from 'ui/formik-field';
-import { PasswordInput, InputSize, InputWidth } from 'ui/password-input';
-import { Button, ButtonSize, ButtonView } from 'ui/button';
+import { Modal } from 'renderer/ui/modal';
+import { FormikField } from 'renderer/ui/formik-field';
+import { PasswordInput, InputSize, InputWidth } from 'renderer/ui/password-input';
+import { Button, ButtonSize, ButtonView } from 'renderer/ui/button';
 
 import { askDataTexts } from 'texts';
 

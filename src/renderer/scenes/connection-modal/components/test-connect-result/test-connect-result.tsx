@@ -4,13 +4,13 @@ import { faExclamationCircle, faCheckCircle } from '@fortawesome/free-solid-svg-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-import { useStyles } from 'lib/theme';
+import { useStyles } from 'renderer/lib/theme';
 
-import { Modal } from 'ui/modal';
-import { Spinner, SpinnerView } from 'ui/spinner';
-import { Paragraph, ParagraphSize } from 'ui/paragraph';
+import { Modal } from 'renderer/ui/modal';
+import { Spinner, SpinnerView } from 'renderer/ui/spinner';
+import { Paragraph, ParagraphSize } from 'renderer/ui/paragraph';
 
-import { useStore } from 'scenes/connection-modal';
+import { useStore } from 'renderer/scenes/connection-modal';
 
 import { testConnectResultTexts } from 'texts';
 

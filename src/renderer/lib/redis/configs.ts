@@ -8,7 +8,7 @@ import {
   ConnectionAuth,
   ConnectionTls,
   ConnectionAdvanced,
-} from 'lib/db';
+} from 'renderer/lib/db';
 
 interface RedisConfigData {
   main: ConnectionMain;

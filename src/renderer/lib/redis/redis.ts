@@ -1,7 +1,7 @@
 import { ConnectConfig as SshConfig } from 'ssh2';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Connection, ConnectionType } from 'lib/db';
+import { Connection, ConnectionType } from 'renderer/lib/db';
 
 import { getSshConfig, getRedisClusterConfig, getRedisDirectConfig, getRedisSentinelConfig } from './configs';
 import { IoRedis, IoRedisCluster } from './ioredis';

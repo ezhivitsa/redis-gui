@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp, SizeProp } from '@fortawesome/fontawesome-svg-core';
 
-import { useStyles } from 'lib/theme';
+import { useStyles } from 'renderer/lib/theme';
 
 import styles from './button-icon.pcss';
 

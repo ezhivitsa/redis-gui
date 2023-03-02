@@ -1,4 +1,5 @@
-/* eslint global-require: off, no-console: off, promise/always-return: off */
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint global-require: off, no-console: off */
 
 /**
  * This module executes inside of electron's main process. You can start
@@ -26,7 +27,7 @@ class AppUpdater {
 let mainWindow: BrowserWindow | null = null;
 
 ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
+  const msgTemplate = (pingPong: string): string => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
 });
@@ -42,7 +43,7 @@ if (isDebug) {
   require('electron-debug')();
 }
 
-const installExtensions = async () => {
+const installExtensions = async (): Promise<void> => {
   const installer = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   const extensions = ['REACT_DEVELOPER_TOOLS'];
@@ -55,7 +56,7 @@ const installExtensions = async () => {
     .catch(console.log);
 };
 
-const createWindow = async () => {
+const createWindow = async (): Promise<void> => {
   if (isDebug) {
     await installExtensions();
   }

@@ -1,4 +1,4 @@
-import { REDIS_PREFIX_SEPARATOR } from 'constants/app-constants';
+import { REDIS_PREFIX_SEPARATOR } from 'renderer/constants/app-constants';
 
 export function listToKey(items: string[] = []): string {
   return items.join(REDIS_PREFIX_SEPARATOR);

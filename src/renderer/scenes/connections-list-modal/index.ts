@@ -1,6 +1,6 @@
-import { glueStore } from 'lib/mobx';
+import { glueStore } from 'renderer/lib/mobx';
 
-import { RootStore } from 'stores';
+import { RootStore } from 'renderer/stores';
 
 import { ConnectionsListModalStore } from './connections-list-modal-store';
 import { ConnectionsListModalView } from './connections-list-modal-view';

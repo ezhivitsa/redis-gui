@@ -2,23 +2,23 @@ import React, { ReactElement, ReactNode } from 'react';
 import { FieldArray, FieldArrayRenderProps, FieldInputProps, FieldMetaProps, FieldHelperProps, useField } from 'formik';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
-import { ConnectionType } from 'lib/db';
-import { useStyles } from 'lib/theme';
+import { ConnectionType } from 'renderer/lib/db';
+import { useStyles } from 'renderer/lib/theme';
 
-import { FormikField } from 'ui/formik-field';
-import { Select, SelectSize, SelectWidth } from 'ui/select';
-import { Input, InputSize, InputWidth } from 'ui/input';
-import { ButtonIcon, ButtonIconView } from 'ui/button-icon';
-import { Button, ButtonSize } from 'ui/button';
-import { Label, LabelSize } from 'ui/label';
-import { Checkbox, CheckboxSize, CheckboxWidth } from 'ui/checkbox';
+import { FormikField } from 'renderer/ui/formik-field';
+import { Select, SelectSize, SelectWidth } from 'renderer/ui/select';
+import { Input, InputSize, InputWidth } from 'renderer/ui/input';
+import { ButtonIcon, ButtonIconView } from 'renderer/ui/button-icon';
+import { Button, ButtonSize } from 'renderer/ui/button';
+import { Label, LabelSize } from 'renderer/ui/label';
+import { Checkbox, CheckboxSize, CheckboxWidth } from 'renderer/ui/checkbox';
 
 import {
   ConnectionFormikField,
   ConnectionAddressFormikField,
   ConnectionMainFormikField,
   ConnectionMainFormikValues,
-} from 'scenes/connection-modal/types';
+} from 'renderer/scenes/connection-modal/types';
 
 import { mainFormTexts } from 'texts';
 

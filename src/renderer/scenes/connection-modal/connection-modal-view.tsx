@@ -3,13 +3,13 @@ import { Formik, FormikProps } from 'formik';
 import { observer } from 'mobx-react-lite';
 import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 
-import { useStyles } from 'lib/theme';
+import { useStyles } from 'renderer/lib/theme';
 
-import { Modal } from 'ui/modal';
-import { Tabs, TabItem } from 'ui/tabs';
-import { Button, ButtonSize, ButtonView } from 'ui/button';
+import { Modal } from 'renderer/ui/modal';
+import { Tabs, TabItem } from 'renderer/ui/tabs';
+import { Button, ButtonSize, ButtonView } from 'renderer/ui/button';
 
-import { AskDataForm, AskDataValues } from 'components/ask-data-form';
+import { AskDataForm, AskDataValues } from 'renderer/components/ask-data-form';
 
 import { connectionModalTexts } from 'texts';
 

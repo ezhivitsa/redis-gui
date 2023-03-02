@@ -1,9 +1,9 @@
 import { Redis as IORedisOrig, Cluster } from 'ioredis';
 import { uniq } from 'lodash';
 
-import { listToKey, keyToList } from 'lib/key';
+import { listToKey, keyToList } from 'renderer/lib/key';
 
-import { REDIS_PREFIX_SEPARATOR } from 'constants/app-constants';
+import { REDIS_PREFIX_SEPARATOR } from 'renderer/constants/app-constants';
 
 import { AskedRedisAuthData, PrefixesAndKeys, KeyData, SshRedisAddress } from './types';
 
@@ -97,7 +97,8 @@ export abstract class BaseRedis<R extends IORedisOrig | Cluster> {
         return;
       }
 
-      const stream = this._redis.scanStream({
+      // TODO: fix scan stream
+      const stream = (this._redis as IORedisOrig).scanStream({
         match: this._getMatchPrefix(prefix),
       });
 

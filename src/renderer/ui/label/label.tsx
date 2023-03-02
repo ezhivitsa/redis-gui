@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode } from 'react';
 import classnames from 'classnames';
 
-import { useStyles } from 'lib/theme';
+import { useStyles } from 'renderer/lib/theme';
 
 import styles from './label.pcss';
 

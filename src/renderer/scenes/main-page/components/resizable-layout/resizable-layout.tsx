@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode, useState, useRef, useEffect, useCallback } from 'react';
 import { throttle } from 'lodash';
 
-import { useStyles } from 'lib/theme';
+import { useStyles } from 'renderer/lib/theme';
 
 import styles from './resizable-layout.pcss';
 

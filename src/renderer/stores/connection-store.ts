@@ -1,6 +1,6 @@
-import { Connection } from 'lib/db';
+import { Connection } from 'renderer/lib/db';
 
-import { connectionsClient } from 'data';
+import { connectionsClient } from 'renderer/data';
 
 export class ConnectionStore {
   async createOrUpdate(data: Omit<Connection, 'id'>, id?: string): Promise<Connection> {

@@ -1,7 +1,7 @@
 import { observable, makeObservable, action, computed } from 'mobx';
 
-import { KeyData } from 'lib/redis';
-import { listToKey } from 'lib/key';
+import { KeyData } from 'renderer/lib/redis';
+import { listToKey } from 'renderer/lib/key';
 
 interface TabData {
   redisId: string;

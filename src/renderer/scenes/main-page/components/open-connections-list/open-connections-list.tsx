@@ -1,10 +1,10 @@
 import React, { ReactElement } from 'react';
 import { observer } from 'mobx-react-lite';
 
-import { useStyles } from 'lib/theme';
+import { useStyles } from 'renderer/lib/theme';
 
-import { useStore } from 'scenes/main-page';
-import { OpenConnection } from 'scenes/open-connection';
+import { useStore } from 'renderer/scenes/main-page';
+import { OpenConnection } from 'renderer/scenes/open-connection';
 
 import styles from './open-connections-list.pcss';
 

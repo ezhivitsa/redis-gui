@@ -1,8 +1,8 @@
 import { action, runInAction, makeObservable, observable, computed } from 'mobx';
 
-import { Connection } from 'lib/db';
+import { Connection } from 'renderer/lib/db';
 
-import { connectionsClient } from 'data';
+import { connectionsClient } from 'renderer/data';
 
 export class ConnectionsStore {
   @observable

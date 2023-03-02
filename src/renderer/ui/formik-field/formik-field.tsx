@@ -8,7 +8,7 @@ export type ExtendedComponentProps<FieldValue, ComponentProps> = ComponentProps 
   onClearClick?: () => void;
 };
 
-interface FormikFieldProps<FieldValue, ComponentProps> {
+interface FormikFieldProps<FieldValue, ComponentProps extends object> {
   name: string;
   component: FC<ComponentProps>;
   componentProps: ExtendedComponentProps<FieldValue, ComponentProps>;
@@ -21,7 +21,7 @@ interface FormikFieldProps<FieldValue, ComponentProps> {
   showErrorMessage: boolean;
 }
 
-export function FormikField<FieldValue, ComponentProps>({
+export function FormikField<FieldValue, ComponentProps extends object>({
   name,
   validate,
   showErrorMessage,

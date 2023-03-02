@@ -1,4 +1,4 @@
-import { yup } from 'lib/yup';
+import { yup } from 'renderer/lib/yup';
 
 export const validationSchema = yup.object().shape({
   key: yup.string().required(),

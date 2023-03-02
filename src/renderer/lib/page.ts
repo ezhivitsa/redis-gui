@@ -1,4 +1,4 @@
-import { PageState, AnyError } from 'types';
+import { PageState, AnyError } from 'renderer/types';
 
 interface StateData {
   loadingKeys: boolean[];

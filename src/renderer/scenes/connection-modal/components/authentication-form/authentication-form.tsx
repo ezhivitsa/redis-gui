@@ -1,20 +1,20 @@
 import React, { ReactElement, ReactNode } from 'react';
 import { useField, FieldInputProps, FieldMetaProps, FieldHelperProps } from 'formik';
 
-import { ConnectionType } from 'lib/db';
-import { useStyles } from 'lib/theme';
+import { ConnectionType } from 'renderer/lib/db';
+import { useStyles } from 'renderer/lib/theme';
 
-import { FormikField } from 'ui/formik-field';
-import { Checkbox, CheckboxSize, CheckboxWidth } from 'ui/checkbox';
-import { Input } from 'ui/input';
-import { PasswordInput, InputSize, InputWidth } from 'ui/password-input';
+import { FormikField } from 'renderer/ui/formik-field';
+import { Checkbox, CheckboxSize, CheckboxWidth } from 'renderer/ui/checkbox';
+import { Input } from 'renderer/ui/input';
+import { PasswordInput, InputSize, InputWidth } from 'renderer/ui/password-input';
 
 import {
   ConnectionFormikField,
   ConnectionAuthFormikField,
   ConnectionAuthFormikValues,
   ConnectionMainFormikField,
-} from 'scenes/connection-modal/types';
+} from 'renderer/scenes/connection-modal/types';
 
 import { authenticationFormTexts } from 'texts';
 

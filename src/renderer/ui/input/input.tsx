@@ -1,10 +1,10 @@
 import React, { ReactElement, ReactNode, useState, ChangeEvent, FocusEvent } from 'react';
 import classnames from 'classnames';
 
-import { useStyles } from 'lib/theme';
-import { handleEnterEvent } from 'lib/keyboard';
+import { useStyles } from 'renderer/lib/theme';
+import { handleEnterEvent } from 'renderer/lib/keyboard';
 
-import { useIdHook } from 'hooks';
+import { useIdHook } from 'renderer/hooks';
 
 import styles from './input.pcss';
 

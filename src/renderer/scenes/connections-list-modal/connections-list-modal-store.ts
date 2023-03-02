@@ -1,12 +1,12 @@
 import { makeObservable, observable, action, runInAction, computed } from 'mobx';
 
-import { calculatePageState } from 'lib/page';
-import { Connection } from 'lib/db';
-import { Redis } from 'lib/redis';
+import { calculatePageState } from 'renderer/lib/page';
+import { Connection } from 'renderer/lib/db';
+import { Redis } from 'renderer/lib/redis';
 
-import { PageState } from 'types';
+import { PageState } from 'renderer/types';
 
-import { ConnectionsStore } from 'stores';
+import { ConnectionsStore } from 'renderer/stores';
 
 interface Deps {
   connectionsStore: ConnectionsStore;

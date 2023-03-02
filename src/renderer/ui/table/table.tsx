@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode, CSSProperties, KeyboardEvent, useState, useEffect, useRef } from 'react';
 
-import { useStyles } from 'lib/theme';
-import { isEnterEvent } from 'lib/keyboard';
+import { useStyles } from 'renderer/lib/theme';
+import { isEnterEvent } from 'renderer/lib/keyboard';
 
 import styles from './table.pcss';
 

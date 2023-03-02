@@ -1,19 +1,19 @@
 import React, { ReactElement, ReactNode } from 'react';
 import { observer } from 'mobx-react-lite';
 
-import { PageState } from 'types';
+import { PageState } from 'renderer/types';
 
-import { Connection } from 'lib/db';
-import { useStyles } from 'lib/theme';
+import { Connection } from 'renderer/lib/db';
+import { useStyles } from 'renderer/lib/theme';
 
-import { Spinner, SpinnerView } from 'ui/spinner';
-import { Paragraph, ParagraphSize } from 'ui/paragraph';
+import { Spinner, SpinnerView } from 'renderer/ui/spinner';
+import { Paragraph, ParagraphSize } from 'renderer/ui/paragraph';
 
 import { connectionsListTexts } from 'texts';
 
 import { ComponentsListTable } from './components/components-list-table';
 
-import { useStore } from 'scenes/connections-list-modal';
+import { useStore } from 'renderer/scenes/connections-list-modal';
 
 import styles from './connections-list.pcss';
 

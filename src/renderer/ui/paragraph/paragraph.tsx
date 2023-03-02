@@ -1,6 +1,6 @@
 import React, { ReactElement, ReactNode } from 'react';
 
-import { useStyles } from 'lib/theme';
+import { useStyles } from 'renderer/lib/theme';
 
 import styles from './paragraph.pcss';
 

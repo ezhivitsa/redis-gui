@@ -2,9 +2,9 @@ import React, { ReactElement, ReactNode } from 'react';
 import { faServer, faBan, faTrash, faEject } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-import { useStyles } from 'lib/theme';
+import { useStyles } from 'renderer/lib/theme';
 
-import { ButtonIcon } from 'ui/button-icon';
+import { ButtonIcon } from 'renderer/ui/button-icon';
 
 import styles from './top-actions.pcss';
 

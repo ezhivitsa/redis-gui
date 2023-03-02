@@ -1,7 +1,7 @@
 import { Server, createServer, AddressInfo } from 'net';
 import { Client, ConnectConfig } from 'ssh2';
 
-import { ConnectionMain } from 'lib/db';
+import { ConnectionMain } from 'renderer/lib/db';
 
 import { AskedSshAuthData, SshRedisAddress } from './types';
 

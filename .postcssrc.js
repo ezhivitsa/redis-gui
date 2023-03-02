@@ -5,13 +5,13 @@ const postcssCustomProperties = require('postcss-custom-properties');
 
 const cssnano = require('cssnano');
 
-const mediaQueries = require('./src/mq.json');
+const mediaQueries = require('./src/renderer/mq.json');
 
 module.exports = {
   plugins: [
     postcssImport({
       path: [
-        './src/styles'
+        './src/renderer/styles'
       ]
     }),
     postcssNested,

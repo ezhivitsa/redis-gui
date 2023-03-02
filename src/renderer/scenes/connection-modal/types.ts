@@ -5,7 +5,7 @@ import {
   AuthenticationMethod,
   FileData,
   InvalidHostnames,
-} from 'lib/db';
+} from 'renderer/lib/db';
 
 export enum ConnectionFormikField {
   Main = 'main',
