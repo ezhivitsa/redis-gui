@@ -1,6 +1,6 @@
-import React, { ReactElement, ReactNode } from 'react';
-import { faServer, faBan, faTrash, faEject } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { faBan, faEject, faServer, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { ReactElement, ReactNode } from 'react';
 
 import { useStyles } from 'renderer/lib/theme';
 

@@ -1,4 +1,4 @@
-import { block, ClassNameGenerator } from 'renderer/lib/bem';
+import { ClassNameGenerator, block } from 'renderer/lib/bem';
 
 import { useTheme } from './context';
 

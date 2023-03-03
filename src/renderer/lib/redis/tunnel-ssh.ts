@@ -1,4 +1,4 @@
-import { Server, createServer, AddressInfo } from 'net';
+import { AddressInfo, Server, createServer } from 'net';
 import { Client, ConnectConfig } from 'ssh2';
 
 import { ConnectionMain } from 'renderer/lib/db';

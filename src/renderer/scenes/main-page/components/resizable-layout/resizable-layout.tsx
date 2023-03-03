@@ -1,5 +1,5 @@
-import React, { ReactElement, ReactNode, useState, useRef, useEffect, useCallback } from 'react';
 import { throttle } from 'lodash';
+import { ReactElement, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 
 import { useStyles } from 'renderer/lib/theme';
 

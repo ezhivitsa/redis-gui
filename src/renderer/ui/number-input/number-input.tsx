@@ -1,4 +1,4 @@
-import React, { ReactElement, ChangeEvent, useState } from 'react';
+import { ChangeEvent, ReactElement, useState } from 'react';
 
 import { parseNumber } from 'renderer/lib/numbers';
 

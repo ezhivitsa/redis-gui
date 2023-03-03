@@ -1,8 +1,8 @@
-import { action, observable, runInAction, makeObservable, computed } from 'mobx';
 import { uniq } from 'lodash';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import { Redis, KeyData } from 'renderer/lib/redis';
-import { listToKey, keyToList, hasPrefix } from 'renderer/lib/key';
+import { hasPrefix, keyToList, listToKey } from 'renderer/lib/key';
+import { KeyData, Redis } from 'renderer/lib/redis';
 
 import { ValueTabsStore } from './value-tabs-store';
 

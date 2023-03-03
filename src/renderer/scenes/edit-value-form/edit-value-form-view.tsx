@@ -1,24 +1,23 @@
-import React, { ReactElement, ReactNode, useEffect } from 'react';
-import { observer } from 'mobx-react-lite';
-import { Formik, FormikProps, Form } from 'formik';
 import { faEdit, faSave } from '@fortawesome/free-solid-svg-icons';
+import { Form, Formik, FormikProps } from 'formik';
 import { uniqBy } from 'lodash';
+import { observer } from 'mobx-react-lite';
+import { ReactElement, ReactNode, useEffect } from 'react';
 
 import { useStyles } from 'renderer/lib/theme';
 
+import { Button, ButtonSize, ButtonView } from 'renderer/ui/button';
+import { ButtonIcon } from 'renderer/ui/button-icon';
 import { FormikField } from 'renderer/ui/formik-field';
 import { Input, InputSize, InputWidth } from 'renderer/ui/input';
-import { ButtonIcon } from 'renderer/ui/button-icon';
-import { Button, ButtonSize, ButtonView } from 'renderer/ui/button';
-import { Select, SelectSize } from 'renderer/ui/select';
 import { NumberInput } from 'renderer/ui/number-input';
-import { Textarea, TextareaSize, TextareaWidth } from 'renderer/ui/textarea';
+import { Select, SelectSize } from 'renderer/ui/select';
 import { Spinner, SpinnerView } from 'renderer/ui/spinner';
+import { Textarea, TextareaSize, TextareaWidth } from 'renderer/ui/textarea';
 
 import { editValueFormTexts } from 'texts';
 
 import { useStore } from '.';
-
 import { EditDataField, EditDataValues, Props } from './types';
 import { validationSchema } from './validation';
 

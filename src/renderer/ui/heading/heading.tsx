@@ -1,5 +1,5 @@
-import React, { ReactElement, ReactNode } from 'react';
 import classnames from 'classnames';
+import React, { ReactElement, ReactNode } from 'react';
 
 import { useStyles } from 'renderer/lib/theme';
 

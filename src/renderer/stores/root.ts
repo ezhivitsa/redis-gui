@@ -1,6 +1,6 @@
-import { ConnectionsStore } from './connections-store';
 import { ConnectionStore } from './connection-store';
 import { ConnectionsDataStore } from './connections-data-store';
+import { ConnectionsStore } from './connections-store';
 import { ValueTabsStore } from './value-tabs-store';
 
 const valueTabsStore = new ValueTabsStore();

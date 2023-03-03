@@ -1,5 +1,5 @@
-import React, { ReactElement, ReactNode, ChangeEvent, FocusEvent, useState } from 'react';
 import classnames from 'classnames';
+import { ChangeEvent, FocusEvent, ReactElement, ReactNode, useState } from 'react';
 
 import { useStyles } from 'renderer/lib/theme';
 

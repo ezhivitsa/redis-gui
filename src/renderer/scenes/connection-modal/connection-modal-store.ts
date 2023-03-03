@@ -1,9 +1,9 @@
-import { makeObservable, action, observable, computed, runInAction } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import { Connection, ConnectionType, SshAuthMethod, AuthenticationMethod, InvalidHostnames } from 'renderer/lib/db';
+import { AuthenticationMethod, Connection, ConnectionType, InvalidHostnames, SshAuthMethod } from 'renderer/lib/db';
 import { Redis, SshRedisAddress } from 'renderer/lib/redis';
 
-import { ConnectionsStore, ConnectionStore } from 'renderer/stores';
+import { ConnectionStore, ConnectionsStore } from 'renderer/stores';
 
 import { ConnectionFormikValues } from './types';
 

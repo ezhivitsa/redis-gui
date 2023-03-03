@@ -1,4 +1,4 @@
-import React, { ReactElement, FC, createContext, useContext, useMemo } from 'react';
+import React, { FC, ReactElement, createContext, useContext, useMemo } from 'react';
 
 type UseStoreFn<Store> = () => Store;
 

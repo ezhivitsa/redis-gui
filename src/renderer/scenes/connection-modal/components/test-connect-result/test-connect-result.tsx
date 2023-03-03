@@ -1,14 +1,14 @@
-import React, { ReactElement, ReactNode } from 'react';
-import { observer } from 'mobx-react-lite';
-import { faExclamationCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { faCheckCircle, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { observer } from 'mobx-react-lite';
+import { ReactElement, ReactNode } from 'react';
 
 import { useStyles } from 'renderer/lib/theme';
 
 import { Modal } from 'renderer/ui/modal';
-import { Spinner, SpinnerView } from 'renderer/ui/spinner';
 import { Paragraph, ParagraphSize } from 'renderer/ui/paragraph';
+import { Spinner, SpinnerView } from 'renderer/ui/spinner';
 
 import { useStore } from 'renderer/scenes/connection-modal';
 

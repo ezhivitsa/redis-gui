@@ -1,7 +1,8 @@
-import Redis, { RedisOptions, Redis as IORedisOrig, ClusterOptions, Cluster, NodeConfiguration } from 'ioredis';
+import Redis, { Cluster, ClusterNode, ClusterOptions, Redis as IORedisOrig, RedisOptions } from 'ioredis';
+
+import { isObject } from 'renderer/lib/assert';
 
 import { BaseRedis } from './base-redis';
-
 import { AskedRedisAuthData, SshRedisAddress } from './types';
 
 export class IoRedis extends BaseRedis<IORedisOrig> {
@@ -68,10 +69,10 @@ export class IoRedis extends BaseRedis<IORedisOrig> {
 }
 
 export class IoRedisCluster extends BaseRedis<Cluster> {
-  private _nodes: NodeConfiguration[];
+  private _nodes: ClusterNode[];
   private _options?: ClusterOptions;
 
-  constructor(nodes: NodeConfiguration[], options?: ClusterOptions) {
+  constructor(nodes: ClusterNode[], options?: ClusterOptions) {
     super();
 
     this._nodes = nodes;
@@ -92,7 +93,12 @@ export class IoRedisCluster extends BaseRedis<Cluster> {
           }
         : undefined;
 
-      const nodes = this._nodes.map(({ host, port }) => {
+      const nodes = this._nodes.map((clusterNode): ClusterNode => {
+        if (!isObject(clusterNode)) {
+          return clusterNode;
+        }
+
+        const { host, port } = clusterNode;
         const sshAddress = sshData[`${host}:${port}`];
         if (sshAddress) {
           return {

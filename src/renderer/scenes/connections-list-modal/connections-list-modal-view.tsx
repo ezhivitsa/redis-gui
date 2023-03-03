@@ -1,12 +1,12 @@
-import React, { ReactElement, ReactNode, useEffect } from 'react';
+import { faClone, faPen, faPlug, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { observer } from 'mobx-react-lite';
-import { faTrashAlt, faPen, faClone, faPlug } from '@fortawesome/free-solid-svg-icons';
+import { ReactElement, ReactNode, useEffect } from 'react';
 
-import { useStyles } from 'renderer/lib/theme';
 import { Redis } from 'renderer/lib/redis';
+import { useStyles } from 'renderer/lib/theme';
 
-import { Modal } from 'renderer/ui/modal';
 import { Button, ButtonSize, ButtonView } from 'renderer/ui/button';
+import { Modal } from 'renderer/ui/modal';
 
 import { AskDataForm, AskDataValues } from 'renderer/components/ask-data-form';
 
@@ -14,9 +14,9 @@ import { ConnectionModal } from 'renderer/scenes/connection-modal';
 
 import { connectionsListTexts } from 'texts';
 
-import { useStore } from './index';
-
 import { ConnectionsList } from './components/connections-list';
+
+import { useStore } from './index';
 
 import styles from './connections-list-modal.pcss';
 

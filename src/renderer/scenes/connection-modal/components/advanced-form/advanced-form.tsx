@@ -1,15 +1,15 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 
 import { useStyles } from 'renderer/lib/theme';
 
+import { Checkbox, CheckboxSize, CheckboxWidth } from 'renderer/ui/checkbox';
 import { FormikField } from 'renderer/ui/formik-field';
 import { Input, InputSize, InputWidth } from 'renderer/ui/input';
 import { NumberInput } from 'renderer/ui/number-input';
-import { Checkbox, CheckboxSize, CheckboxWidth } from 'renderer/ui/checkbox';
+
+import { ConnectionAdvancedFormikField, ConnectionFormikField } from 'renderer/scenes/connection-modal/types';
 
 import { advancedFormTexts } from 'texts';
-
-import { ConnectionFormikField, ConnectionAdvancedFormikField } from 'renderer/scenes/connection-modal/types';
 
 import styles from './advanced-form.pcss';
 

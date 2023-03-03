@@ -1,4 +1,4 @@
-import { State, ClassNameGenerator } from './types';
+import { ClassNameGenerator, State } from './types';
 
 const hyphenRegExp = /-([a-z])/g;
 

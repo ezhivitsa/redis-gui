@@ -1,9 +1,9 @@
-import { action, observable, runInAction, makeObservable, computed } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import { Redis } from 'renderer/lib/redis';
 import { listToKey } from 'renderer/lib/key';
+import { Redis } from 'renderer/lib/redis';
 
-import { ConnectionsDataStore, ConnectionDataStore, ValueTabsStore, ConnectionData } from 'renderer/stores';
+import { ConnectionData, ConnectionDataStore, ConnectionsDataStore, ValueTabsStore } from 'renderer/stores';
 
 interface Deps {
   connectionsDataStore: ConnectionsDataStore;

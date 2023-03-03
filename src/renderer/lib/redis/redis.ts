@@ -3,13 +3,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Connection, ConnectionType } from 'renderer/lib/db';
 
-import { getSshConfig, getRedisClusterConfig, getRedisDirectConfig, getRedisSentinelConfig } from './configs';
+import { BaseRedis } from './base-redis';
+import { getRedisClusterConfig, getRedisDirectConfig, getRedisSentinelConfig, getSshConfig } from './configs';
 import { IoRedis, IoRedisCluster } from './ioredis';
 import { TunnelSsh } from './tunnel-ssh';
-
-import { BaseRedis } from './base-redis';
-
-import { PrefixesAndKeys, KeyData, SshRedisAddress } from './types';
+import { KeyData, PrefixesAndKeys, SshRedisAddress } from './types';
 
 export class Redis {
   private _id: string;

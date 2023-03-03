@@ -1,5 +1,5 @@
-import React, { ReactElement, ChangeEvent, FocusEvent, FC } from 'react';
 import { useField } from 'formik';
+import React, { ChangeEvent, FC, FocusEvent, ReactElement } from 'react';
 
 export type ExtendedComponentProps<FieldValue, ComponentProps> = ComponentProps & {
   error?: React.ReactNode;

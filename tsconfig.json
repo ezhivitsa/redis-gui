@@ -14,7 +14,8 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "outDir": "configs/dll",
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "skipLibCheck": true
   },
-  "exclude": ["test", "release/build", "release/app/dist", "configs/dll", "node_modules"]
+  "exclude": ["test", "release/build", "release/app/dist", "configs/dll"]
 }

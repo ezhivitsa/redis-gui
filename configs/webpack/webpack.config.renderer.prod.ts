@@ -81,15 +81,6 @@ const configuration: webpack.Configuration = {
     minimize: true,
     minimizer: [
       new TerserPlugin({
-        extractComments: false,
-      }),
-    ],
-  },
-
-  optimization: {
-    minimize: true,
-    minimizer: [
-      new TerserPlugin({
         parallel: true,
       }),
       new CssMinimizerPlugin(),

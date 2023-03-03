@@ -115,6 +115,7 @@
     "@electron/notarize": "1.2.3",
     "@electron/rebuild": "3.2.10",
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.10",
+    "@trivago/prettier-plugin-sort-imports": "4.1.1",
     "@teamsupercell/typings-for-css-modules-loader": "2.5.2",
     "@types/lodash": "4.14.191",
     "@types/node": "18.14.4",

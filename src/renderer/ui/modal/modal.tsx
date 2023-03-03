@@ -1,12 +1,12 @@
-import React, { ReactElement, ReactNode } from 'react';
-import ReactModal from 'react-modal';
-import classnames from 'classnames';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import classnames from 'classnames';
+import { ReactElement, ReactNode } from 'react';
+import ReactModal from 'react-modal';
 
 import { useStyles } from 'renderer/lib/theme';
 
-import { Heading, HeadingSize, HeadingView } from 'renderer/ui/heading';
 import { ButtonIcon } from 'renderer/ui/button-icon';
+import { Heading, HeadingSize, HeadingView } from 'renderer/ui/heading';
 
 import styles from './modal.pcss';
 

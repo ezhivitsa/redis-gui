@@ -1,12 +1,12 @@
-import React, { ReactElement, ReactNode } from 'react';
 import { Formik, FormikProps } from 'formik';
+import { ReactElement, ReactNode } from 'react';
 
 import { useStyles } from 'renderer/lib/theme';
 
-import { Modal } from 'renderer/ui/modal';
-import { FormikField } from 'renderer/ui/formik-field';
-import { PasswordInput, InputSize, InputWidth } from 'renderer/ui/password-input';
 import { Button, ButtonSize, ButtonView } from 'renderer/ui/button';
+import { FormikField } from 'renderer/ui/formik-field';
+import { Modal } from 'renderer/ui/modal';
+import { InputSize, InputWidth, PasswordInput } from 'renderer/ui/password-input';
 
 import { askDataTexts } from 'texts';
 
@@ -85,16 +85,15 @@ export function AskDataForm({
     );
   }
 
+  const initialValues: AskDataValues = {
+    sshPassphrase: askSshPassphrase ? '' : undefined,
+    sshPassword: askSshPassword ? '' : undefined,
+    tlsPassphrase: askTlsPassphrase ? '' : undefined,
+  };
+
   return (
     <Modal open={open} onClose={onClose} title={askDataTexts.title}>
-      <Formik
-        initialValues={{
-          sshPassphrase: askSshPassphrase ? '' : undefined,
-          sshPassword: askSshPassword ? '' : undefined,
-          tlsPassphrase: askTlsPassphrase ? '' : undefined,
-        }}
-        onSubmit={onSave}
-      >
+      <Formik initialValues={initialValues} onSubmit={onSave}>
         {renderForm}
       </Formik>
     </Modal>

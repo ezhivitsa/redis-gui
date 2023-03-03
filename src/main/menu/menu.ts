@@ -1,4 +1,4 @@
-import { app, Menu, shell, BrowserWindow, MenuItemConstructorOptions, MenuItem } from 'electron';
+import { BrowserWindow, Menu, MenuItem, MenuItemConstructorOptions, app, shell } from 'electron';
 
 import { MenuEvent } from './types';
 

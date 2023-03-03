@@ -1,11 +1,11 @@
-import { Redis as IORedisOrig, Cluster } from 'ioredis';
+import { Cluster, Redis as IORedisOrig } from 'ioredis';
 import { uniq } from 'lodash';
 
-import { listToKey, keyToList } from 'renderer/lib/key';
+import { keyToList, listToKey } from 'renderer/lib/key';
 
 import { REDIS_PREFIX_SEPARATOR } from 'renderer/constants/app-constants';
 
-import { AskedRedisAuthData, PrefixesAndKeys, KeyData, SshRedisAddress } from './types';
+import { AskedRedisAuthData, KeyData, PrefixesAndKeys, SshRedisAddress } from './types';
 
 export const NO_VALUE = -1;
 

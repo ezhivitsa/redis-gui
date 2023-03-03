@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-import { getMatchMedia, releaseMatchMedia } from './utils';
 import { Media } from './types';
+import { getMatchMedia, releaseMatchMedia } from './utils';
 
 const IS_BROWSER = window !== undefined;
 const SUPPORTS_TOUCH = (IS_BROWSER && 'ontouchstart' in window) || navigator.maxTouchPoints > 0;

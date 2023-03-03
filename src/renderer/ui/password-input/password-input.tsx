@@ -1,9 +1,9 @@
-import React, { ReactElement, FocusEvent, ChangeEvent, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SizeProp } from '@fortawesome/fontawesome-svg-core';
-import { faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ChangeEvent, FocusEvent, ReactElement, useState } from 'react';
 
-import { Input, InputProps, InputType, InputSize } from 'renderer/ui/input';
+import { Input, InputProps, InputSize, InputType } from 'renderer/ui/input';
 
 type Props = Omit<InputProps, 'rightAddon' | 'onRightAddonClick' | 'type'>;
 

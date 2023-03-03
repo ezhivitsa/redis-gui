@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { dbPromise, Connection } from 'renderer/lib/db';
+import { Connection, dbPromise } from 'renderer/lib/db';
 
 import { DB_CONNECTIONS_STORE } from 'renderer/constants/app-constants';
 

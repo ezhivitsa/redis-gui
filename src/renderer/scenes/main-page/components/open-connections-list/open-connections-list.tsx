@@ -1,5 +1,5 @@
-import React, { ReactElement } from 'react';
 import { observer } from 'mobx-react-lite';
+import { ReactElement } from 'react';
 
 import { useStyles } from 'renderer/lib/theme';
 

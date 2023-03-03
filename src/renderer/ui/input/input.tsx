@@ -1,8 +1,8 @@
-import React, { ReactElement, ReactNode, useState, ChangeEvent, FocusEvent } from 'react';
 import classnames from 'classnames';
+import { ChangeEvent, FocusEvent, ReactElement, ReactNode, useState } from 'react';
 
-import { useStyles } from 'renderer/lib/theme';
 import { handleEnterEvent } from 'renderer/lib/keyboard';
+import { useStyles } from 'renderer/lib/theme';
 
 import { useIdHook } from 'renderer/hooks';
 

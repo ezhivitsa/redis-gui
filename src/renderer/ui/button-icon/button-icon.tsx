@@ -1,7 +1,7 @@
-import React, { ReactElement } from 'react';
-import classnames from 'classnames';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp, SizeProp } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import classnames from 'classnames';
+import { ReactElement } from 'react';
 
 import { useStyles } from 'renderer/lib/theme';
 

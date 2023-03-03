@@ -1,13 +1,13 @@
+import { ClusterNode, ClusterOptions, RedisOptions } from 'ioredis';
 import { ConnectConfig as SshConfig } from 'ssh2';
-import { RedisOptions, NodeConfiguration, ClusterOptions } from 'ioredis';
 
 import {
-  ConnectionSsh,
-  SshAuthMethod,
-  ConnectionMain,
-  ConnectionAuth,
-  ConnectionTls,
   ConnectionAdvanced,
+  ConnectionAuth,
+  ConnectionMain,
+  ConnectionSsh,
+  ConnectionTls,
+  SshAuthMethod,
 } from 'renderer/lib/db';
 
 interface RedisConfigData {
@@ -82,14 +82,9 @@ export function getRedisDirectConfig({ main, auth, tls, advanced }: RedisConfigD
   };
 }
 
-export function getRedisClusterConfig({
-  main,
-  auth,
-  tls,
-  advanced,
-}: RedisConfigData): [NodeConfiguration[], ClusterOptions] {
+export function getRedisClusterConfig({ main, auth, tls, advanced }: RedisConfigData): [ClusterNode[], ClusterOptions] {
   const nodes = main.addresses.map(
-    (address): NodeConfiguration => ({
+    (address): ClusterNode => ({
       host: address.host,
       port: Number(address.port) || undefined,
     }),

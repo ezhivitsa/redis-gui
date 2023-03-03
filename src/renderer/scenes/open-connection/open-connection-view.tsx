@@ -1,20 +1,19 @@
-import React, { ReactElement, ReactNode, useEffect } from 'react';
-import { observer } from 'mobx-react-lite';
-import { faChevronRight, faDatabase, faLayerGroup, faKey, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { faChevronRight, faDatabase, faKey, faLayerGroup, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { observer } from 'mobx-react-lite';
+import { ReactElement, ReactNode, useEffect } from 'react';
 
-import { useStyles } from 'renderer/lib/theme';
 import { handleEnterEvent } from 'renderer/lib/keyboard';
+import { useStyles } from 'renderer/lib/theme';
 
 import { ConnectionData } from 'renderer/stores';
 
 import { ButtonIcon, ButtonIconView } from 'renderer/ui/button-icon';
 import { Spinner, SpinnerSize } from 'renderer/ui/spinner';
 
-import { Props, IconType } from './types';
-
 import { useStore } from './index';
+import { IconType, Props } from './types';
 
 import styles from './open-connection.pcss';
 

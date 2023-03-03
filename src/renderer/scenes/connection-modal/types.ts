@@ -1,10 +1,10 @@
 import {
-  ConnectionType,
-  ConnectionData,
-  SshAuthMethod,
   AuthenticationMethod,
+  ConnectionData,
+  ConnectionType,
   FileData,
   InvalidHostnames,
+  SshAuthMethod,
 } from 'renderer/lib/db';
 
 export enum ConnectionFormikField {

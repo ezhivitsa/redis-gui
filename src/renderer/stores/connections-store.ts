@@ -1,4 +1,4 @@
-import { action, runInAction, makeObservable, observable, computed } from 'mobx';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { Connection } from 'renderer/lib/db';
 

@@ -1,10 +1,10 @@
-import { makeObservable, observable, action, runInAction, computed } from 'mobx';
-
-import { calculatePageState } from 'renderer/lib/page';
-import { Connection } from 'renderer/lib/db';
-import { Redis } from 'renderer/lib/redis';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { PageState } from 'renderer/types';
+
+import { Connection } from 'renderer/lib/db';
+import { calculatePageState } from 'renderer/lib/page';
+import { Redis } from 'renderer/lib/redis';
 
 import { ConnectionsStore } from 'renderer/stores';
 

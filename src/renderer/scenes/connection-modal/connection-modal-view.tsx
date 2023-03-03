@@ -1,27 +1,26 @@
-import React, { ReactElement, ReactNode, useState, useEffect } from 'react';
+import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { Formik, FormikProps } from 'formik';
 import { observer } from 'mobx-react-lite';
-import { faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { ReactElement, ReactNode, useEffect, useState } from 'react';
 
 import { useStyles } from 'renderer/lib/theme';
 
-import { Modal } from 'renderer/ui/modal';
-import { Tabs, TabItem } from 'renderer/ui/tabs';
 import { Button, ButtonSize, ButtonView } from 'renderer/ui/button';
+import { Modal } from 'renderer/ui/modal';
+import { TabItem, Tabs } from 'renderer/ui/tabs';
 
 import { AskDataForm, AskDataValues } from 'renderer/components/ask-data-form';
 
 import { connectionModalTexts } from 'texts';
 
-import { MainForm } from './components/main-form';
-import { AuthenticationForm } from './components/authentication-form';
-import { SshForm } from './components/ssh-form';
-import { TlsForm } from './components/tls-form';
 import { AdvancedForm } from './components/advanced-form';
+import { AuthenticationForm } from './components/authentication-form';
+import { MainForm } from './components/main-form';
+import { SshForm } from './components/ssh-form';
 import { TestConnectResult } from './components/test-connect-result';
+import { TlsForm } from './components/tls-form';
 
 import { useStore } from './index';
-
 import { ConnectionFormikValues } from './types';
 
 import styles from './connection-modal.pcss';

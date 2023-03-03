@@ -1,5 +1,5 @@
-import { Media } from './types';
 import { mediaQueries } from './mq';
+import { Media } from './types';
 
 const pool: Record<string, MediaQueryList> = {};
 const refCounters: Record<string, number> = {};

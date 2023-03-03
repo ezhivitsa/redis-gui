@@ -1,14 +1,13 @@
-import React, { ReactElement, useEffect, useState } from 'react';
-import { hot } from 'react-hot-loader/root';
 import { nativeTheme } from '@electron/remote';
+import { ReactElement, useEffect, useState } from 'react';
 
-import { ThemeContextProvider, Theme } from 'renderer/lib/theme';
+import { Theme, ThemeContextProvider } from 'renderer/lib/theme';
 
 import { MainPage } from 'renderer/scenes/main-page';
 
 import 'styles/reset.pcss';
 
-function AppComponent(): ReactElement {
+export function App(): ReactElement {
   const [shouldUseDarkColors, setShouldUseDarkColors] = useState(nativeTheme.shouldUseDarkColors);
 
   useEffect(() => {
@@ -29,4 +28,3 @@ function AppComponent(): ReactElement {
     </ThemeContextProvider>
   );
 }
-export const App = hot(AppComponent);

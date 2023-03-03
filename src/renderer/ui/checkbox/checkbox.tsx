@@ -1,8 +1,8 @@
-import React, { ReactElement, ReactNode, ChangeEvent, FocusEvent } from 'react';
-import classnames from 'classnames';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { SizeProp } from '@fortawesome/fontawesome-svg-core';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import classnames from 'classnames';
+import { ChangeEvent, FocusEvent, ReactElement, ReactNode } from 'react';
 
 import { useStyles } from 'renderer/lib/theme';
 

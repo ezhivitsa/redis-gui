@@ -1,20 +1,20 @@
-import React, { ReactElement, useEffect } from 'react';
-import { observer } from 'mobx-react-lite';
 import { ipcRenderer } from 'electron';
-
-import { useStyles } from 'renderer/lib/theme';
-import { Redis } from 'renderer/lib/redis';
+import { observer } from 'mobx-react-lite';
+import { ReactElement, useEffect } from 'react';
 
 import { MenuEvent } from 'main/menu';
+
+import { Redis } from 'renderer/lib/redis';
+import { useStyles } from 'renderer/lib/theme';
 
 import { ConnectionsListModal } from 'renderer/scenes/connections-list-modal';
 import { EditValueForm } from 'renderer/scenes/edit-value-form';
 
-import { useStore } from './index';
-
 import { OpenConnectionsList } from './components/open-connections-list';
-import { TopActions } from './components/top-actions';
 import { ResizableLayout } from './components/resizable-layout';
+import { TopActions } from './components/top-actions';
+
+import { useStore } from './index';
 
 import styles from './main-page.pcss';
 

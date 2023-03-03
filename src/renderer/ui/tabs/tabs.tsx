@@ -1,8 +1,8 @@
-import React, { ReactElement, ReactNode } from 'react';
 import classnames from 'classnames';
+import { ReactElement, ReactNode } from 'react';
 
-import { useStyles } from 'renderer/lib/theme';
 import { handleEnterEvent } from 'renderer/lib/keyboard';
+import { useStyles } from 'renderer/lib/theme';
 
 import styles from './tabs.pcss';
 

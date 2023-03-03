@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 import { Connection } from 'renderer/lib/db';
 import { useStyles } from 'renderer/lib/theme';
