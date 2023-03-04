@@ -61,7 +61,7 @@ package: clear-dist build electron-rebuild
 # Start rules
 
 .PHONY: start-renderer
-start-dev-renderer:
+start-renderer:
 	npx cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./configs/webpack/webpack.config.renderer.dev.ts
 
 .PHONY: start-main

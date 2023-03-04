@@ -5,7 +5,7 @@ import { Theme, ThemeContextProvider } from 'renderer/lib/theme';
 
 import { MainPage } from 'renderer/scenes/main-page';
 
-import 'styles/reset.pcss';
+import 'renderer/styles/reset.pcss';
 
 export function App(): ReactElement {
   const [shouldUseDarkColors, setShouldUseDarkColors] = useState(nativeTheme.shouldUseDarkColors);

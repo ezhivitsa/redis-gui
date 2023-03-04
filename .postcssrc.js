@@ -1,32 +1,26 @@
 const postcssImport = require('postcss-import');
 const postcssPresetEnv = require('postcss-preset-env');
 const postcssNested = require('postcss-nested');
-const postcssCustomProperties = require('postcss-custom-properties');
-
+const postcssImportJson = require('@daltontan/postcss-import-json');
 const cssnano = require('cssnano');
-
-const mediaQueries = require('./src/renderer/mq.json');
+const path = require('path');
 
 module.exports = {
   plugins: [
     postcssImport({
       path: [
-        './src/renderer/styles'
+        path.join(__dirname, './src/renderer/styles')
       ]
     }),
     postcssNested,
-    postcssCustomProperties({preserve: false}),
+    postcssImportJson(),
     postcssPresetEnv({
       stage: 2,
       features: {
-        'custom-media-queries': {
-          importFrom: [
-            {
-              customMedia: mediaQueries
-            }
-          ]
-        },
-        'custom-properties': false
+        'custom-media-queries': true,
+        'custom-properties': {
+          preserve: false,
+        }
       }
     }),
     cssnano({

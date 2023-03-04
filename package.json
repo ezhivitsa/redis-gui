@@ -7,7 +7,6 @@
   "scripts": {
     "postinstall": "make postinstall",
     "app-deps": "electron-builder install-app-deps",
-    "check-native-deps": "ts-node configs/scripts/check-native-dep.js",
     "start": "make dev",
     "prepare": "husky install"
   },
@@ -112,6 +111,7 @@
     "yup": "0.32.9"
   },
   "devDependencies": {
+    "@daltontan/postcss-import-json": "1.1.1",
     "@electron/notarize": "1.2.3",
     "@electron/rebuild": "3.2.10",
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.10",
@@ -153,7 +153,6 @@
     "lint-staged": "13.1.2",
     "mini-css-extract-plugin": "2.7.2",
     "postcss": "8.4.21",
-    "postcss-custom-properties": "13.1.4",
     "postcss-import": "15.1.0",
     "postcss-loader": "7.0.2",
     "postcss-nested": "6.0.1",

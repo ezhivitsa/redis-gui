@@ -9,6 +9,8 @@ module.exports = {
       {
         "ignorePseudoClasses": ["global"]
       }
-    ]
+    ],
+    "selector-class-pattern": null,
+    "custom-property-pattern": null
   }
 };

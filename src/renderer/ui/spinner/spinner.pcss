@@ -1,7 +1,7 @@
-@import 'variables.pcss';
+@import url('variables.pcss');
 
-@import './spinner_theme_dark.pcss';
-@import './spinner_theme_light.pcss';
+@import url('./spinner_theme_dark.pcss');
+@import url('./spinner_theme_light.pcss');
 
 .spinner {
   display: flex;
@@ -12,7 +12,7 @@
     height: 100%;
     min-height: calc(var(--grid5) * 10);
   }
-  
+
   &__loader {
     display: inline-block;
     position: relative;
@@ -63,7 +63,7 @@
         left: var(--grid4);
       }
     }
-    
+
     &_size_m {
       width: var(--grid2);
       animation: lds-m 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
@@ -96,6 +96,7 @@
     top: 0;
     height: var(--grid4);
   }
+
   50%, 100% {
     top: var(--grid1);
     height: var(--grid2);
@@ -107,6 +108,7 @@
     top: 0;
     height: var(--grid6);
   }
+
   50%, 100% {
     top: var(--grid1);
     height: var(--grid4);
@@ -118,6 +120,7 @@
     top: var(--grid2);
     height: var(--grid16);
   }
+
   50%, 100% {
     top: var(--grid6);
     height: var(--grid8);

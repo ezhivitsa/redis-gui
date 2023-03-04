@@ -1,5 +1,10 @@
-@import './vars/border.pcss';
-@import './vars/color.pcss';
-@import './vars/font.pcss';
-@import './vars/grid.pcss';
-@import './vars/opacity.pcss';
+@import url('./vars/border.pcss');
+@import url('./vars/color.pcss');
+@import url('./vars/font.pcss');
+@import url('./vars/grid.pcss');
+@import url('./vars/opacity.pcss');
+
+:root {
+  /* stylelint-disable-next-line at-rule-no-unknown */
+  @import-json '../mq.json';
+}
