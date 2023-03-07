@@ -1,30 +1,35 @@
-import { nativeTheme } from '@electron/remote';
+// import { nativeTheme } from '@electron/remote';
 import { ReactElement, useEffect, useState } from 'react';
 
-import { Theme, ThemeContextProvider } from 'renderer/lib/theme';
+import { UpdatedNativeThemeData } from 'main/ipc-renderer/native-theme/types';
 
-import { MainPage } from 'renderer/scenes/main-page';
+// import { Theme, ThemeContextProvider } from 'renderer/lib/theme';
 
-import 'renderer/styles/reset.pcss';
+// import { MainPage } from 'renderer/scenes/main-page';
+
+// import 'renderer/styles/reset.pcss';
 
 export function App(): ReactElement {
-  const [shouldUseDarkColors, setShouldUseDarkColors] = useState(nativeTheme.shouldUseDarkColors);
+  const [shouldUseDarkColors, setShouldUseDarkColors] = useState(false);
 
   useEffect(() => {
-    nativeTheme.addListener('updated', handleThemeChange);
+    console.log(window.electron.nativeTheme);
+    const unsubscribe = window.electron.nativeTheme.on('NATIVE_THEME_UPDATED', handleThemeChange);
 
     return () => {
-      nativeTheme.removeListener('updated', handleThemeChange);
+      unsubscribe();
     };
   }, []);
 
-  function handleThemeChange(): void {
-    setShouldUseDarkColors(nativeTheme.shouldUseDarkColors);
+  function handleThemeChange({ shouldUseDarkColors }: UpdatedNativeThemeData): void {
+    setShouldUseDarkColors(shouldUseDarkColors);
   }
 
-  return (
-    <ThemeContextProvider systemTheme={shouldUseDarkColors ? Theme.Dark : Theme.Light} useSystemTheme>
-      <MainPage />
-    </ThemeContextProvider>
-  );
+  return <div>shouldUseDarkColors: {shouldUseDarkColors}</div>;
+
+  // return (
+  //   <ThemeContextProvider systemTheme={shouldUseDarkColors ? Theme.Dark : Theme.Light} useSystemTheme>
+  //     <MainPage />
+  //   </ThemeContextProvider>
+  // );
 }
