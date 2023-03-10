@@ -87,7 +87,6 @@
     "typescript"
   ],
   "dependencies": {
-    "@electron/remote": "2.0.9",
     "@fortawesome/fontawesome-svg-core": "6.3.0",
     "@fortawesome/free-solid-svg-icons": "6.3.0",
     "@fortawesome/react-fontawesome": "0.2.0",

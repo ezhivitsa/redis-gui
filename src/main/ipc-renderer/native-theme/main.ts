@@ -1,38 +1,36 @@
-import { IpcMainEvent, nativeTheme } from 'electron';
+import { BrowserWindow, nativeTheme } from 'electron';
 
-import { IpcMainBase } from '../main-base';
-import { Channel, UnsubscribeFn } from '../types';
+import { getIpcMainBase } from '../main-base';
+import { Channel, IpcMainBase } from '../types';
 
-import { NativeThemeInputData, NativeThemeOutputData } from './types';
+import { NativeThemeData, NativeThemeInvokeData, NativeThemeToRendererData } from './types';
 
-export class NativeThemeMain extends IpcMainBase<NativeThemeInputData, NativeThemeOutputData> {
-  protected channel = Channel.NATIVE_THEME;
+const ipcMainBase = getIpcMainBase<NativeThemeToRendererData, never, NativeThemeInvokeData>(Channel.NATIVE_THEME);
 
-  initialize(): UnsubscribeFn {
-    nativeTheme.on('updated', this.sendDataToHost);
-
-    return super.initialize();
-  }
-
-  destroy(): void {
-    super.destroy();
-
-    nativeTheme.removeListener('updated', this.sendDataToHost);
-  }
-
-  protected handleEvents = (_event: IpcMainEvent, data: NativeThemeInputData): void => {
-    switch (data.type) {
-      case 'DATA_REQUEST':
-        this.sendDataToHost();
-    }
-  };
-
-  private sendDataToHost = (): void => {
-    this.sendData({
-      type: 'NATIVE_THEME_UPDATED',
-      data: {
-        shouldUseDarkColors: nativeTheme.shouldUseDarkColors,
-      },
-    });
-  };
+function sendDataToHost(): void {
+  ipcMainBase.sendMessage({
+    type: 'NATIVE_THEME_UPDATED',
+    data: {
+      shouldUseDarkColors: nativeTheme.shouldUseDarkColors,
+    },
+  });
 }
+
+export const nativeThemeMain: IpcMainBase<NativeThemeToRendererData, never, NativeThemeInvokeData> = {
+  ...ipcMainBase,
+
+  initialize(mainWindow: BrowserWindow): void {
+    ipcMainBase.initialize(mainWindow);
+    ipcMainBase.handle('GET_NATIVE_THEME', async (): Promise<NativeThemeData> => {
+      return {
+        shouldUseDarkColors: nativeTheme.shouldUseDarkColors,
+      };
+    });
+    nativeTheme.on('updated', sendDataToHost);
+  },
+
+  destroy() {
+    nativeTheme.removeListener('updated', sendDataToHost);
+    ipcMainBase.destroy();
+  },
+};

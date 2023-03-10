@@ -1,6 +1,15 @@
 import { IpcRendererEvent, ipcRenderer } from 'electron';
 
-import { BaseEvent, EventData, EventHandler, EventType, UnsubscribeFn } from './types';
+import {
+  BaseEvent,
+  BaseInvokeEvent,
+  EventData,
+  EventHandler,
+  EventResponse,
+  EventType,
+  IpcRendererBase,
+  UnsubscribeFn,
+} from './types';
 
 // export abstract class IpcRendererBase<TInput extends BaseEvent, TOutput extends BaseEvent> {
 //   protected abstract channel: string;
@@ -27,12 +36,49 @@ import { BaseEvent, EventData, EventHandler, EventType, UnsubscribeFn } from './
 //   }
 // }
 
-interface IpcRendererBase<TInput extends BaseEvent, TOutput extends BaseEvent> {
-  sendMessage(data: TInput): void;
-  on<Type extends EventType<TOutput>>(eventType: Type, func: EventHandler<EventData<TOutput, Type>>): UnsubscribeFn;
-  once(func: EventHandler<TOutput>): void;
-}
+export function getBaseIpcRenderer<
+  TToRenderer extends BaseEvent,
+  TFromRenderer extends BaseEvent,
+  TInvokeFromRendererData extends BaseInvokeEvent,
+>(channel: string): IpcRendererBase<TToRenderer, TFromRenderer, TInvokeFromRendererData> {
+  return {
+    sendMessage(data: TFromRenderer): void {
+      ipcRenderer.send(channel, data);
+    },
 
-export function getBaseIpcRenderer(channel: string): IpcRendererBase {
-  return {};
+    on<Type extends EventType<TToRenderer>>(
+      eventType: Type,
+      func: EventHandler<EventData<TToRenderer, Type>>,
+    ): UnsubscribeFn {
+      const subscription = (_event: IpcRendererEvent, data: TToRenderer): void => {
+        if (data.type === eventType) {
+          func(data.data);
+        }
+      };
+      ipcRenderer.on(channel, subscription);
+
+      return () => {
+        ipcRenderer.removeListener(channel, subscription);
+      };
+    },
+
+    once<Type extends EventType<TToRenderer>>(eventType: Type, func: EventHandler<EventData<TToRenderer, Type>>): void {
+      const subscription = (_event: IpcRendererEvent, data: TToRenderer): void => {
+        if (data.type === eventType) {
+          func(data.data);
+        }
+      };
+      ipcRenderer.once(channel, subscription);
+    },
+
+    invoke<Type extends EventType<TInvokeFromRendererData>>(
+      eventType: Type,
+      data: EventData<TInvokeFromRendererData, Type>,
+    ): Promise<EventResponse<TInvokeFromRendererData, Type>> {
+      return ipcRenderer.invoke(channel, {
+        type: eventType,
+        data,
+      });
+    },
+  };
 }

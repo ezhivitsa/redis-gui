@@ -1,8 +1,8 @@
-import { NativeThemeRenderer } from './ipc-renderer/renderer';
+import { nativeThemeRenderer } from './ipc-renderer/renderer';
 import { contextBridge } from 'electron';
 
 const electronHandler = {
-  nativeTheme: new NativeThemeRenderer(),
+  nativeTheme: nativeThemeRenderer,
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);

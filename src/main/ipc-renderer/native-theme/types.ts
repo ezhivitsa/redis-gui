@@ -1,9 +1,9 @@
-import { BaseEvent } from '../types';
+import { BaseEvent, BaseInvokeEvent } from '../types';
 
-export interface UpdatedNativeThemeData {
+export interface NativeThemeData {
   shouldUseDarkColors: boolean;
 }
 
-export type NativeThemeOutputData = BaseEvent<'NATIVE_THEME_UPDATED', UpdatedNativeThemeData>;
+export type NativeThemeToRendererData = BaseEvent<'NATIVE_THEME_UPDATED', NativeThemeData>;
 
-export type NativeThemeInputData = BaseEvent<'DATA_REQUEST'>;
+export type NativeThemeInvokeData = BaseInvokeEvent<'GET_NATIVE_THEME', undefined, NativeThemeData>;
