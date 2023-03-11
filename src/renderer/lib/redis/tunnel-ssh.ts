@@ -1,5 +1,6 @@
-import { AddressInfo, Server, createServer } from 'net';
+// import { AddressInfo, Server, createServer } from 'net';
 import { Client, ConnectConfig } from 'ssh2';
+import { createTunnel } from 'tunnel-ssh';
 
 import { ConnectionMain } from 'renderer/lib/db';
 
@@ -7,8 +8,29 @@ import { AskedSshAuthData, SshRedisAddress } from './types';
 
 const LOCAL_HOST = '127.0.0.1';
 
+const port = 27017;
+
+const tunnelOptions = {
+  autoClose: true,
+};
+const serverOptions = {
+  port: port,
+};
+const sshOptions = {
+  host: '192.168.100.100',
+  port: 22,
+  username: 'frylock',
+  password: 'nodejsrules',
+};
+const forwardOptions = {
+  srcAddr: '0.0.0.0',
+  srcPort: port,
+  dstAddr: '127.0.0.1',
+  dstPort: port,
+};
+
 export class TunnelSsh {
-  private _sshServer?: Server;
+  // private _sshServer?: Server;
   private _config?: ConnectConfig;
 
   constructor(config?: ConnectConfig) {
@@ -16,49 +38,51 @@ export class TunnelSsh {
   }
 
   private _sshConnect(data: AskedSshAuthData, host?: string, port?: number): Promise<SshRedisAddress | undefined> {
-    return new Promise((resolve, reject) => {
-      if (!this._config || !host || !port) {
-        resolve(undefined);
-        return;
-      }
+    return createTunnel(tunnelOptions, serverOptions, sshOptions, forwardOptions).then(() => undefined);
+    // return Promise.resolve(undefined);
+    // return new Promise((resolve, reject) => {
+    //   if (!this._config || !host || !port) {
+    //     resolve(undefined);
+    //     return;
+    //   }
 
-      const config: ConnectConfig = {
-        ...this._config,
-        password: this._config.password || data.password,
-        passphrase: this._config.passphrase || data.passphrase,
-      };
+    //   const config: ConnectConfig = {
+    //     ...this._config,
+    //     password: this._config.password || data.password,
+    //     passphrase: this._config.passphrase || data.passphrase,
+    //   };
 
-      const conn = new Client();
-      conn
-        .on('ready', () => {
-          const server = (this._sshServer = createServer(function (sock) {
-            const { remoteAddress, remotePort } = sock;
-            if (!remoteAddress || !remotePort) {
-              return;
-            }
+    //   const conn = new Client();
+    //   conn
+    //     .on('ready', () => {
+    //       const server = (this._sshServer = createServer(function (sock) {
+    //         const { remoteAddress, remotePort } = sock;
+    //         if (!remoteAddress || !remotePort) {
+    //           return;
+    //         }
 
-            conn.forwardOut(remoteAddress, remotePort, host, port, (err, stream) => {
-              if (err) {
-                sock.end();
-              } else {
-                sock.pipe(stream).pipe(sock);
-              }
-            });
-          }).listen(0, function () {
-            resolve({
-              originalHost: host,
-              originalPort: port,
-              host: LOCAL_HOST,
-              port: (server.address() as AddressInfo).port,
-            });
-          }));
-        })
-        .on('error', (err) => {
-          reject(err);
-        });
+    //         conn.forwardOut(remoteAddress, remotePort, host, port, (err, stream) => {
+    //           if (err) {
+    //             sock.end();
+    //           } else {
+    //             sock.pipe(stream).pipe(sock);
+    //           }
+    //         });
+    //       }).listen(0, function () {
+    //         resolve({
+    //           originalHost: host,
+    //           originalPort: port,
+    //           host: LOCAL_HOST,
+    //           port: (server.address() as AddressInfo).port,
+    //         });
+    //       }));
+    //     })
+    //     .on('error', (err) => {
+    //       reject(err);
+    //     });
 
-      conn.connect(config);
-    });
+    //   conn.connect(config);
+    // });
   }
 
   async connect(main: ConnectionMain, data: AskedSshAuthData): Promise<Record<string, SshRedisAddress>> {
@@ -78,20 +102,21 @@ export class TunnelSsh {
   }
 
   async disconnect(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if (!this._sshServer) {
-        resolve();
-        return;
-      }
+    return Promise.resolve();
+    // return new Promise((resolve, reject) => {
+    //   if (!this._sshServer) {
+    //     resolve();
+    //     return;
+    //   }
 
-      this._sshServer.close((err) => {
-        if (err) {
-          reject(err);
-          return;
-        }
+    //   this._sshServer.close((err) => {
+    //     if (err) {
+    //       reject(err);
+    //       return;
+    //     }
 
-        resolve();
-      });
-    });
+    //     resolve();
+    //   });
+    // });
   }
 }

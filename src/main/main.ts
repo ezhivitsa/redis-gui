@@ -10,7 +10,7 @@
  * When running `npm run build` or `npm run build:main`, this file is compiled to
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
-import { nativeThemeMain } from './ipc-renderer/main';
+import { menuMain, nativeThemeMain } from './ipc-renderer/main';
 import { BrowserWindow, app, ipcMain, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
@@ -84,6 +84,7 @@ const createWindow = async (): Promise<void> => {
     },
   });
   nativeThemeMain.initialize(mainWindow);
+  menuMain.initialize(mainWindow);
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 

@@ -4,7 +4,8 @@ import { NativeThemeData } from 'main/ipc-renderer/native-theme/types';
 
 import { Theme, ThemeContextProvider } from 'renderer/lib/theme';
 
-// import { MainPage } from 'renderer/scenes/main-page';
+import { MainPage } from 'renderer/scenes/main-page';
+
 import 'renderer/styles/reset.pcss';
 
 export function App(): ReactElement {
@@ -34,8 +35,7 @@ export function App(): ReactElement {
 
   return (
     <ThemeContextProvider systemTheme={shouldUseDarkColors ? Theme.Dark : Theme.Light} useSystemTheme>
-      Test
-      {/* <MainPage /> */}
+      <MainPage />
     </ThemeContextProvider>
   );
 }

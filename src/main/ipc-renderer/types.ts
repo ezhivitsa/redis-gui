@@ -2,6 +2,7 @@ import { BrowserWindow } from 'electron';
 
 export enum Channel {
   NATIVE_THEME = 'native-theme',
+  MENU = 'menu',
 }
 
 export type EventHandler<T> = (value: T) => void;

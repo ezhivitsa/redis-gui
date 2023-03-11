@@ -1,8 +1,5 @@
-import { ipcRenderer } from 'electron';
 import { observer } from 'mobx-react-lite';
 import { ReactElement, useEffect } from 'react';
-
-import { MenuEvent } from 'main/menu';
 
 import { Redis } from 'renderer/lib/redis';
 import { useStyles } from 'renderer/lib/theme';
@@ -26,10 +23,10 @@ export const MainPageView = observer((): ReactElement => {
     pageStore;
 
   useEffect(() => {
-    ipcRenderer.on(MenuEvent.OpenConnectionsList, handleOpenConnections);
+    const unsubscribe = window.electron.menu.on('OPEN_CONNECTIONS_LIST', handleOpenConnections);
 
     return () => {
-      ipcRenderer.off(MenuEvent.OpenConnectionsList, handleOpenConnections);
+      unsubscribe();
     };
   }, []);
 

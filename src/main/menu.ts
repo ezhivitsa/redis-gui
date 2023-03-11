@@ -1,6 +1,5 @@
+import { menuMain } from './ipc-renderer/main';
 import { BrowserWindow, Menu, MenuItem, MenuItemConstructorOptions, app, shell } from 'electron';
-
-import { MenuEvent } from './types';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -57,7 +56,7 @@ export class MenuBuilder {
             {
               label: 'List',
               accelerator: 'Command+N',
-              click: () => this.mainWindow.webContents.send(MenuEvent.OpenConnectionsList),
+              click: () => menuMain.sendMessage({ type: 'OPEN_CONNECTIONS_LIST', data: undefined }),
             },
           ],
         },
