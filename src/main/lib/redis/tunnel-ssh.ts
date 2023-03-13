@@ -2,7 +2,7 @@
 import { ConnectConfig } from 'ssh2';
 import { createTunnel } from 'tunnel-ssh';
 
-import { ConnectionMain } from 'renderer/lib/db';
+import { ConnectionMain } from 'main/lib/db';
 
 import { AskedSshAuthData, SshRedisAddress } from './types';
 

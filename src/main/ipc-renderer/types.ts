@@ -3,6 +3,7 @@ import { BrowserWindow } from 'electron';
 export enum Channel {
   NATIVE_THEME = 'native-theme',
   MENU = 'menu',
+  REDIS = 'redis',
 }
 
 export type EventHandler<T> = (value: T) => void;
@@ -31,7 +32,6 @@ export type EventResponse<T, Type> = T extends { type: Type; response: any } ? T
 export type EventAnyResponse<T> = T extends { response: any } ? T['response'] : never;
 
 export type InvokeListener<TInvokeFromRendererData extends BaseInvokeEvent, Type> = (
-  eventType: Type,
   data: EventData<TInvokeFromRendererData, Type>,
 ) => Promise<EventResponse<TInvokeFromRendererData, Type>>;
 

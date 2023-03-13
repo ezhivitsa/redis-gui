@@ -5,7 +5,8 @@ import { Connection, dbPromise } from 'renderer/lib/db';
 import { DB_CONNECTIONS_STORE } from 'renderer/constants/app-constants';
 
 export async function list(): Promise<Connection[]> {
-  const connections = (await dbPromise).getAll(DB_CONNECTIONS_STORE);
+  const db = await dbPromise;
+  const connections = await db.getAll(DB_CONNECTIONS_STORE);
   return connections;
 }
 

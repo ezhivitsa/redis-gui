@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default function checkNodeEnv(expectedEnv) {
   if (!expectedEnv) {
     throw new Error('"expectedEnv" not set');

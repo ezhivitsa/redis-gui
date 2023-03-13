@@ -6,6 +6,8 @@
   "tabWidth": 2,
   "importOrder": [
     "<THIRD_PARTY_MODULES>",
+    "^main/lib/(.*)$",
+    "^main/constants/(.*)$",
     "^main(/.*)$",
     "^renderer/types(/.*)?$",
     "^renderer/lib/(.*)$",

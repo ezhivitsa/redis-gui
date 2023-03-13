@@ -15,6 +15,7 @@ import { BrowserWindow, app, ipcMain, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
+import { createTunnel } from 'tunnel-ssh';
 
 import { MenuBuilder } from './menu';
 import { resolveHtmlPath } from './util';
@@ -46,22 +47,11 @@ if (isDebug) {
   require('electron-debug')();
 }
 
-const installExtensions = async (): Promise<void> => {
-  const installer = require('electron-devtools-installer');
-  const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS'];
-
-  return installer
-    .default(
-      extensions.map((name) => installer[name]),
-      forceDownload,
-    )
-    .catch(console.log);
-};
-
 const createWindow = async (): Promise<void> => {
-  if (isDebug) {
-    await installExtensions();
+  try {
+    console.error('createTunnel', createTunnel);
+  } catch (e) {
+    console.error(e);
   }
 
   const RESOURCES_PATH = app.isPackaged

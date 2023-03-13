@@ -1,6 +1,6 @@
 import Redis, { Cluster, ClusterNode, ClusterOptions, Redis as IORedisOrig, RedisOptions } from 'ioredis';
 
-import { isObject } from 'renderer/lib/assert';
+import { isObject } from 'main/lib/assert';
 
 import { BaseRedis } from './base-redis';
 import { AskedRedisAuthData, SshRedisAddress } from './types';
