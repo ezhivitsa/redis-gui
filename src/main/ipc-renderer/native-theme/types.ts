@@ -6,4 +6,4 @@ export interface NativeThemeData {
 
 export type NativeThemeToRendererData = BaseEvent<'NATIVE_THEME_UPDATED', NativeThemeData>;
 
-export type NativeThemeInvokeData = BaseInvokeEvent<'GET_NATIVE_THEME', undefined, NativeThemeData>;
+export type NativeThemeInvokeData = BaseInvokeEvent<'GET_NATIVE_THEME', void, NativeThemeData>;
