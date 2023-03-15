@@ -207,15 +207,23 @@ export class ConnectionsListModalStore {
   }
 
   @action
-  openConnection(): void {
+  async openConnection(): Promise<void> {
     if (!this.selectedConnection) {
       return;
     }
 
-    this._redis = new Redis(this.selectedConnection);
-    if (this._redis.hasDataToAsk) {
-      this._showAskDataForm = true;
+    const redis = new Redis(this.selectedConnection);
+    await redis.init();
+
+    if (redis.hasDataToAsk) {
+      runInAction(() => {
+        this._redis = redis;
+        this._showAskDataForm = true;
+      });
     } else {
+      runInAction(() => {
+        this._redis = redis;
+      });
       this.connect();
     }
   }
@@ -228,15 +236,11 @@ export class ConnectionsListModalStore {
 
     const { askForSshPassphraseEachTime, askForSshPasswordEachTime, askForTlsPassphraseEachTime } = this._redis;
 
-    if (askForSshPassphraseEachTime) {
-      this._redis.setSshPassphrase(values.sshPassphrase || '');
-    }
-    if (askForSshPasswordEachTime) {
-      this._redis.setSshPassword(values.sshPassword || '');
-    }
-    if (askForTlsPassphraseEachTime) {
-      this._redis.setTlsPassphrase(values.tlsPassphrase || '');
-    }
+    await Promise.all([
+      askForSshPassphraseEachTime ? this._redis.setSshPassphrase(values.sshPassphrase || '') : Promise.resolve(),
+      askForSshPasswordEachTime ? this._redis.setSshPassword(values.sshPassword || '') : Promise.resolve(),
+      askForTlsPassphraseEachTime ? this._redis.setTlsPassphrase(values.tlsPassphrase || '') : Promise.resolve(),
+    ]);
 
     this._isConnecting = true;
     this._isConnected = false;
@@ -259,6 +263,7 @@ export class ConnectionsListModalStore {
     this._isConnected = false;
     this._selectedConnectionId = null;
     this._redis = undefined;
+    // TODO: call delete on redis
 
     this._connectionsStore.dispose();
   }

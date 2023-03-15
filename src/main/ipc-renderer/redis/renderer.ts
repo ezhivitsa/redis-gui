@@ -4,7 +4,7 @@ import { KeyData, PrefixesAndKeys, SshRedisAddress } from 'main/lib/redis';
 import { getBaseIpcRenderer } from '../renderer-base';
 import { Channel } from '../types';
 
-import { DataToAsk, IpcRendererRedis, RedisInvokeData } from './types';
+import { IpcRendererRedis, RedisInvokeData } from './types';
 
 const baseIpRenderer = getBaseIpcRenderer<never, never, RedisInvokeData>(Channel.REDIS);
 
@@ -14,12 +14,6 @@ export const redisRenderer: IpcRendererRedis = {
   },
   deleteRedis(id: string): Promise<void> {
     return baseIpRenderer.invoke('DELETE_REDIS', id);
-  },
-  getHasDataToAsk(id: string): Promise<boolean> {
-    return baseIpRenderer.invoke('GET_HAS_DATA_TO_ASK', id);
-  },
-  getDataToAsk(id: string): Promise<DataToAsk> {
-    return baseIpRenderer.invoke('GET_DATA_TO_ASK', id);
   },
   connectSsh(id: string): Promise<Record<string, SshRedisAddress>> {
     return baseIpRenderer.invoke('CONNECT_SSH', id);
@@ -41,5 +35,14 @@ export const redisRenderer: IpcRendererRedis = {
   },
   deleteKey(data: { id: string; key: string }): Promise<void> {
     return baseIpRenderer.invoke('DELETE_KEY', data);
+  },
+  setSshPassphrase(data: { id: string; passphrase: string }): Promise<void> {
+    return baseIpRenderer.invoke('SET_SSH_PASSPHRASE', data);
+  },
+  setSshPassword(data: { id: string; password: string }): Promise<void> {
+    return baseIpRenderer.invoke('SET_SSH_PASSWORD', data);
+  },
+  setTlsPassphrase(data: { id: string; passphrase: string }): Promise<void> {
+    return baseIpRenderer.invoke('SET_TLS_PASSPHRASE', data);
   },
 };

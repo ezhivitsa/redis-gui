@@ -7,7 +7,7 @@ import { KeyData, PrefixesAndKeys, SshRedisAddress } from 'main/lib/redis';
 import { getIpcMainBase } from '../main-base';
 import { Channel, IpcMainBase } from '../types';
 
-import { DataToAsk, RedisInvokeData } from './types';
+import { RedisInvokeData } from './types';
 
 const ipcMainBase = getIpcMainBase<never, never, RedisInvokeData>(Channel.REDIS);
 
@@ -30,19 +30,6 @@ async function handleCreateRedis(data: Omit<Connection, 'id'>): Promise<string> 
 
 async function handleDeleteRedis(id: string): Promise<void> {
   delete redisStore[id];
-}
-
-async function handleGetHasDataToAsk(id: string): Promise<boolean> {
-  return getRedis(id).hasDataToAsk;
-}
-
-async function handleGetDataToAsk(id: string): Promise<DataToAsk> {
-  const redis = getRedis(id);
-  return {
-    askForSshPassphraseEachTime: redis.askForSshPassphraseEachTime,
-    askForSshPasswordEachTime: redis.askForSshPasswordEachTime,
-    askForTlsPassphraseEachTime: redis.askForTlsPassphraseEachTime,
-  };
 }
 
 async function handleConnectSsh(id: string): Promise<Record<string, SshRedisAddress>> {
@@ -79,6 +66,18 @@ async function handleDeleteKey({ id, key }: { id: string; key: string }): Promis
   return getRedis(id).deleteKey(key);
 }
 
+async function handleSetSshPassphrase({ id, passphrase }: { id: string; passphrase: string }): Promise<void> {
+  return getRedis(id).setSshPassphrase(passphrase);
+}
+
+async function handleSetSshPassword({ id, password }: { id: string; password: string }): Promise<void> {
+  return getRedis(id).setSshPassword(password);
+}
+
+async function handleSetTlsPassphrase({ id, passphrase }: { id: string; passphrase: string }): Promise<void> {
+  return getRedis(id).setTlsPassphrase(passphrase);
+}
+
 export const redisMain: IpcMainBase<never, never, RedisInvokeData> = {
   ...ipcMainBase,
 
@@ -87,8 +86,6 @@ export const redisMain: IpcMainBase<never, never, RedisInvokeData> = {
 
     ipcMainBase.handle('CREATE_REDIS', handleCreateRedis);
     ipcMainBase.handle('DELETE_REDIS', handleDeleteRedis);
-    ipcMainBase.handle('GET_HAS_DATA_TO_ASK', handleGetHasDataToAsk);
-    ipcMainBase.handle('GET_DATA_TO_ASK', handleGetDataToAsk);
     ipcMainBase.handle('CONNECT_SSH', handleConnectSsh);
     ipcMainBase.handle('CONNECT_REDIS', handleConnectRedis);
     ipcMainBase.handle('DISCONNECT', handleDisconnect);
@@ -96,5 +93,8 @@ export const redisMain: IpcMainBase<never, never, RedisInvokeData> = {
     ipcMainBase.handle('GET_KEY_DATA', handleGetKeyData);
     ipcMainBase.handle('SET_KEY_DATA', handleSetKeyData);
     ipcMainBase.handle('DELETE_KEY', handleDeleteKey);
+    ipcMainBase.handle('SET_SSH_PASSPHRASE', handleSetSshPassphrase);
+    ipcMainBase.handle('SET_SSH_PASSWORD', handleSetSshPassword);
+    ipcMainBase.handle('SET_TLS_PASSPHRASE', handleSetTlsPassphrase);
   },
 };

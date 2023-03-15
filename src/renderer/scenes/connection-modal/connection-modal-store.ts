@@ -1,7 +1,9 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
+import { SshRedisAddress } from 'main/lib/redis';
+
 import { AuthenticationMethod, Connection, ConnectionType, InvalidHostnames, SshAuthMethod } from 'renderer/lib/db';
-import { Redis, SshRedisAddress } from 'renderer/lib/redis';
+import { Redis } from 'renderer/lib/redis';
 
 import { ConnectionStore, ConnectionsStore } from 'renderer/stores';
 
@@ -192,11 +194,19 @@ export class ConnectionModalStore {
   }
 
   @action
-  createTestConnection(values: ConnectionFormikValues): void {
-    this._redis = new Redis(values);
-    if (this._redis.hasDataToAsk) {
-      this._showAskDataForm = true;
+  async createTestConnection(values: ConnectionFormikValues): Promise<void> {
+    const redis = new Redis(values);
+    await redis.init();
+
+    if (redis.hasDataToAsk) {
+      runInAction(() => {
+        this._redis = redis;
+        this._showAskDataForm = true;
+      });
     } else {
+      runInAction(() => {
+        this._redis = redis;
+      });
       this.testConnect();
     }
   }
@@ -214,15 +224,11 @@ export class ConnectionModalStore {
 
     const { askForSshPassphraseEachTime, askForSshPasswordEachTime, askForTlsPassphraseEachTime } = this._redis;
 
-    if (askForSshPassphraseEachTime) {
-      this._redis.setSshPassphrase(values.sshPassphrase || '');
-    }
-    if (askForSshPasswordEachTime) {
-      this._redis.setSshPassword(values.sshPassword || '');
-    }
-    if (askForTlsPassphraseEachTime) {
-      this._redis.setTlsPassphrase(values.tlsPassphrase || '');
-    }
+    await Promise.all([
+      askForSshPassphraseEachTime ? this._redis.setSshPassphrase(values.sshPassphrase || '') : Promise.resolve(),
+      askForSshPasswordEachTime ? this._redis.setSshPassword(values.sshPassword || '') : Promise.resolve(),
+      askForTlsPassphraseEachTime ? this._redis.setTlsPassphrase(values.tlsPassphrase || '') : Promise.resolve(),
+    ]);
 
     this._showAskDataForm = false;
     this._isConnecting = true;
@@ -251,11 +257,12 @@ export class ConnectionModalStore {
       });
     }
 
+    await this._redis.disconnect();
+    await this._redis.delete();
     runInAction(() => {
       this._isConnecting = false;
+      this._redis = undefined;
     });
-
-    await this._redis.disconnect();
   }
 
   @action
