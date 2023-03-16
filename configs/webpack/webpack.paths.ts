@@ -21,6 +21,8 @@ const distRendererPath = path.join(distPath, 'renderer');
 
 const buildPath = path.join(releasePath, 'build');
 
+const tsConfig = path.join(rootPath, 'tsconfig.json');
+
 export default {
   rootPath,
   dllPath,
@@ -36,4 +38,5 @@ export default {
   distMainPath,
   distRendererPath,
   buildPath,
+  tsConfig,
 };

@@ -1,4 +1,5 @@
-import { Connection } from 'main/lib/db';
+import { Connection } from 'data';
+
 import { KeyData, PrefixesAndKeys, SshRedisAddress } from 'main/lib/redis';
 
 import { getBaseIpcRenderer } from '../renderer-base';

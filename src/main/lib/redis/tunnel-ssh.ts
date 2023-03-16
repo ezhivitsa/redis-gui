@@ -2,7 +2,7 @@
 import { ConnectConfig } from 'ssh2';
 import { createTunnel } from 'tunnel-ssh';
 
-import { ConnectionMain } from 'main/lib/db';
+import { ConnectionMain } from 'data';
 
 import { AskedSshAuthData, SshRedisAddress } from './types';
 
@@ -80,11 +80,6 @@ export class TunnelSsh {
   }
 
   async connect(main: ConnectionMain, data: AskedSshAuthData): Promise<Record<string, SshRedisAddress>> {
-    try {
-      console.log('createTunnel', createTunnel);
-    } catch (e) {
-      console.log(e);
-    }
     const result: Record<string, SshRedisAddress> = {};
 
     const connectResult = await Promise.all(

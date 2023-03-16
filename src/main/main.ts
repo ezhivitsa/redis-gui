@@ -10,12 +10,11 @@
  * When running `npm run build` or `npm run build:main`, this file is compiled to
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
-import { menuMain, nativeThemeMain } from './ipc-renderer/main';
+import { menuMain, nativeThemeMain, redisMain } from './ipc-renderer/main';
 import { BrowserWindow, app, ipcMain, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
-import { createTunnel } from 'tunnel-ssh';
 
 import { MenuBuilder } from './menu';
 import { resolveHtmlPath } from './util';
@@ -48,12 +47,6 @@ if (isDebug) {
 }
 
 const createWindow = async (): Promise<void> => {
-  try {
-    console.error('createTunnel', createTunnel);
-  } catch (e) {
-    console.error(e);
-  }
-
   const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, 'assets')
     : path.join(__dirname, '../../assets');
@@ -75,6 +68,7 @@ const createWindow = async (): Promise<void> => {
   });
   nativeThemeMain.initialize(mainWindow);
   menuMain.initialize(mainWindow);
+  redisMain.initialize(mainWindow);
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 

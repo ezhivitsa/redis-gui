@@ -1,9 +1,7 @@
 import { Cluster, Redis as IORedisOrig } from 'ioredis';
 import { uniq } from 'lodash';
 
-import { keyToList, listToKey } from 'main/lib/key';
-
-import { REDIS_PREFIX_SEPARATOR } from 'main/constants/app-constants';
+import { listToKey, parseKey } from 'lib/key';
 
 import { AskedRedisAuthData, KeyData, PrefixesAndKeys, SshRedisAddress } from './types';
 
@@ -21,20 +19,12 @@ export abstract class BaseRedis<R extends IORedisOrig | Cluster> {
     const matchPrefix = listToKey(prefix);
 
     for (let i = 0; i < keys.length; i++) {
-      const key: string = keys[i];
-      const keyEnd = matchPrefix && key.startsWith(matchPrefix) ? key.substring(matchPrefix.length + 1) : key;
-      const isKey = !keyEnd.includes(REDIS_PREFIX_SEPARATOR);
-
-      if (isKey) {
-        result.keys.push(keyEnd);
+      const { key, prefix } = parseKey(keys[i], matchPrefix);
+      if (prefix) {
+        result.prefixes[prefix] = result.prefixes[prefix] || [];
+        result.prefixes[prefix].push(key);
       } else {
-        const parts = keyToList(keyEnd);
-        const resultPrefix = parts.slice(0, parts.length - 1);
-        const resultKey = parts[parts.length - 1];
-        const resultPrefixStr = listToKey(resultPrefix);
-
-        result.prefixes[resultPrefixStr] = result.prefixes[resultPrefixStr] || [];
-        result.prefixes[resultPrefixStr].push(resultKey);
+        result.keys.push(key);
       }
     }
 

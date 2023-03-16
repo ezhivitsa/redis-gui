@@ -1,6 +1,6 @@
 import Redis, { Cluster, ClusterNode, ClusterOptions, Redis as IORedisOrig, RedisOptions } from 'ioredis';
 
-import { isObject } from 'main/lib/assert';
+import { isObject } from 'lib/assert';
 
 import { BaseRedis } from './base-redis';
 import { AskedRedisAuthData, SshRedisAddress } from './types';
@@ -14,7 +14,6 @@ export class IoRedis extends BaseRedis<IORedisOrig> {
   }
 
   async connect(sshData: Record<string, SshRedisAddress>, data: AskedRedisAuthData): Promise<void> {
-    console.log('connect');
     return new Promise((resolve, reject) => {
       const options: RedisOptions = {
         ...this._options,
@@ -48,8 +47,6 @@ export class IoRedis extends BaseRedis<IORedisOrig> {
         options.port = sshAddress.port;
       }
 
-      console.log(options);
-      console.log(Redis);
       this._redis = new Redis(options);
 
       this._redis.on('ready', () => {

@@ -29,7 +29,6 @@ export function App(): ReactElement {
   }
 
   function handleThemeChange({ shouldUseDarkColors }: NativeThemeData): void {
-    console.log('handleThemeChange', shouldUseDarkColors);
     setShouldUseDarkColors(shouldUseDarkColors);
   }
 

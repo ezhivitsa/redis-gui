@@ -1,9 +1,8 @@
 import { BrowserWindow } from 'electron';
 
-import { Connection } from 'main/lib/db';
-import { Redis } from 'main/lib/redis';
-import { KeyData, PrefixesAndKeys, SshRedisAddress } from 'main/lib/redis';
+import { Connection } from 'data';
 
+import { KeyData, PrefixesAndKeys, Redis, SshRedisAddress } from '../../lib/redis';
 import { getIpcMainBase } from '../main-base';
 import { Channel, IpcMainBase } from '../types';
 

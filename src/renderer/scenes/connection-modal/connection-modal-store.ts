@@ -230,11 +230,13 @@ export class ConnectionModalStore {
       askForTlsPassphraseEachTime ? this._redis.setTlsPassphrase(values.tlsPassphrase || '') : Promise.resolve(),
     ]);
 
-    this._showAskDataForm = false;
-    this._isConnecting = true;
-    this._showConnectionResult = true;
-    this._connectError = undefined;
-    this._sshError = undefined;
+    runInAction(() => {
+      this._showAskDataForm = false;
+      this._isConnecting = true;
+      this._showConnectionResult = true;
+      this._connectError = undefined;
+      this._sshError = undefined;
+    });
 
     let sshData: Record<string, SshRedisAddress>;
     try {

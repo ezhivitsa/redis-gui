@@ -242,9 +242,11 @@ export class ConnectionsListModalStore {
       askForTlsPassphraseEachTime ? this._redis.setTlsPassphrase(values.tlsPassphrase || '') : Promise.resolve(),
     ]);
 
-    this._isConnecting = true;
-    this._isConnected = false;
-    this._showAskDataForm = false;
+    runInAction(() => {
+      this._isConnecting = true;
+      this._isConnected = false;
+      this._showAskDataForm = false;
+    });
 
     await this._redis.connect();
 
@@ -255,17 +257,23 @@ export class ConnectionsListModalStore {
   }
 
   @action
-  dispose(): void {
-    this._isLoading = false;
-    this._isDeleting = false;
-    this._isConnecting = false;
-    this._showAskDataForm = false;
-    this._isConnected = false;
-    this._selectedConnectionId = null;
-    this._redis = undefined;
-    // TODO: call delete on redis
+  async dispose(): Promise<void> {
+    if (this._redis !== undefined) {
+      await this._redis.disconnect();
+      await this._redis.delete();
+    }
 
-    this._connectionsStore.dispose();
+    runInAction(() => {
+      this._isLoading = false;
+      this._isDeleting = false;
+      this._isConnecting = false;
+      this._showAskDataForm = false;
+      this._isConnected = false;
+      this._selectedConnectionId = null;
+      this._redis = undefined;
+
+      this._connectionsStore.dispose();
+    });
   }
 
   @action

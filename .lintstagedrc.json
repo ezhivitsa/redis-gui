@@ -1,7 +1,7 @@
 {
   "src/**/*.{ts,tsx}": [
     "npx eslint \"src/**/*.{ts,tsx}\"",
-    "tsc-files --noEmit -p tsconfig.json"
+    "tsc-files --noEmit --project tsconfig.json"
   ],
   "src/**/*.pcss": [
     "npx stylelint \"src/**/*.pcss\""

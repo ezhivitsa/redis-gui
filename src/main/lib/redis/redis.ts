@@ -1,7 +1,7 @@
 import { ConnectConfig as SshConfig } from 'ssh2';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Connection, ConnectionType } from 'main/lib/db';
+import { Connection, ConnectionType } from 'data';
 
 import { BaseRedis } from './base-redis';
 import { getRedisClusterConfig, getRedisDirectConfig, getRedisSentinelConfig, getSshConfig } from './configs';

@@ -1,5 +1,9 @@
-import { assertExists } from 'main/lib/assert';
-import { Connection } from 'main/lib/db';
+import { cloneDeep } from 'lodash';
+
+import { Connection } from 'data';
+
+import { assertExists } from 'lib/assert';
+
 import { KeyData, PrefixesAndKeys, SshRedisAddress } from 'main/lib/redis';
 
 export class Redis {
@@ -11,7 +15,7 @@ export class Redis {
   }
 
   async init(): Promise<void> {
-    this._id = await window.electron.redis.createRedis(this._connection);
+    this._id = await window.electron.redis.createRedis(cloneDeep(this._connection));
   }
 
   async delete(): Promise<void> {
@@ -62,16 +66,6 @@ export class Redis {
     return window.electron.redis.setTlsPassphrase({ id: this.id, passphrase });
   }
 
-  // async connect(): Promise<void> {
-  //   const sshResultData = await window.electron.redis.connectSsh(this.id);
-  //   return window.electron.redis.connectRedis({ id: this.id, sshData: sshResultData });
-  // }
-
-  // async connect(): Promise<void> {
-  //   const sshResultData = await window.electron.redis.connectSsh(this.id);
-  //   return window.electron.redis.connectRedis({ id: this.id, sshData: sshResultData });
-  // }
-
   async connect(): Promise<void> {
     const sshResultData = await this.connectSsh();
     await this.connectRedis(sshResultData);
@@ -82,7 +76,7 @@ export class Redis {
   }
 
   async connectRedis(sshResultData: Record<string, SshRedisAddress>): Promise<void> {
-    return window.electron.redis.connectRedis({ id: this.id, sshData: sshResultData });
+    return window.electron.redis.connectRedis({ id: this.id, sshData: cloneDeep(sshResultData) });
   }
 
   async disconnect(): Promise<void> {
@@ -90,15 +84,15 @@ export class Redis {
   }
 
   async getPrefixesAndKeys(prefix: string[] = []): Promise<PrefixesAndKeys> {
-    return window.electron.redis.getPrefixesAndKeys({ id: this.id, prefix });
+    return window.electron.redis.getPrefixesAndKeys({ id: this.id, prefix: cloneDeep(prefix) });
   }
 
   async getKeyData(prefix: string[] = []): Promise<KeyData | undefined> {
-    return window.electron.redis.getKeyData({ id: this.id, prefix });
+    return window.electron.redis.getKeyData({ id: this.id, prefix: cloneDeep(prefix) });
   }
 
   async setKeyData(data: KeyData): Promise<void> {
-    return window.electron.redis.setKeyData({ id: this.id, data });
+    return window.electron.redis.setKeyData({ id: this.id, data: cloneDeep(data) });
   }
 
   async deleteKey(key: string): Promise<void> {

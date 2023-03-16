@@ -1,4 +1,5 @@
-import { Connection } from 'main/lib/db';
+import { Connection } from 'data';
+
 import { AskedRedisAuthData, KeyData, PrefixesAndKeys, SshRedisAddress } from 'main/lib/redis';
 
 import { BaseInvokeEvent } from '../types';

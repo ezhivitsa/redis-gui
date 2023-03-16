@@ -1,7 +1,8 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import { keyToList } from 'renderer/lib/key';
-import { KeyData } from 'renderer/lib/redis';
+import { keyToList } from 'lib/key';
+
+import { KeyData } from 'main/lib/redis';
 
 import { ConnectionDataStore, ConnectionsDataStore, ValueTabsStore } from 'renderer/stores';
 
