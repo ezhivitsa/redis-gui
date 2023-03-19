@@ -17,6 +17,13 @@
     "experimentalDecorators": true,
     "useDefineForClassFields": true,
     "skipLibCheck": true,
+    "paths": {
+      "lib/*": ["lib/*"],
+      "main/*": ["main/*"],
+      "renderer/*": ["renderer/*"],
+      "data": ["data"],
+      "*" : ["renderer/@types/*"],
+    }
   },
   "exclude": ["test", "release/build", "release/app/dist", "configs/dll"]
 }
