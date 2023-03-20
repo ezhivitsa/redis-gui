@@ -1,15 +1,17 @@
-// import { AddressInfo, Server, createServer } from 'net';
-import { ConnectConfig } from 'ssh2';
-import { createTunnel } from 'tunnel-ssh';
+import { AddressInfo, Server } from 'net';
+import { Client, ConnectConfig } from 'ssh2';
 
 import { ConnectionMain } from 'data';
+
+import { createTunnel } from '../tunnel-ssh';
 
 import { AskedSshAuthData, SshRedisAddress } from './types';
 
 const LOCAL_HOST = '127.0.0.1';
 
 export class TunnelSsh {
-  // private _sshServer?: Server;
+  private _sshServer?: Server;
+  private _sshClient?: Client;
   private _config?: ConnectConfig;
 
   constructor(config?: ConnectConfig) {
@@ -32,7 +34,17 @@ export class TunnelSsh {
       srcPort: port,
       dstAddr: host,
       dstPort: port,
-    }).then(() => undefined);
+    }).then(([server, client]) => {
+      this._sshServer = server;
+      this._sshClient = client;
+
+      return {
+        originalHost: host,
+        originalPort: port,
+        host: LOCAL_HOST,
+        port: (server.address() as AddressInfo).port,
+      };
+    });
     // return Promise.resolve(undefined);
     // return new Promise((resolve, reject) => {
     //   if (!this._config || !host || !port) {
@@ -96,21 +108,24 @@ export class TunnelSsh {
   }
 
   async disconnect(): Promise<void> {
-    return Promise.resolve();
-    // return new Promise((resolve, reject) => {
-    //   if (!this._sshServer) {
-    //     resolve();
-    //     return;
-    //   }
+    return new Promise((resolve, reject) => {
+      this._sshClient?.end();
 
-    //   this._sshServer.close((err) => {
-    //     if (err) {
-    //       reject(err);
-    //       return;
-    //     }
+      if (!this._sshServer) {
+        resolve();
+        return;
+      }
 
-    //     resolve();
-    //   });
-    // });
+      this._sshServer.close((err) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        resolve();
+      });
+      this._sshServer = undefined;
+      this._sshClient = undefined;
+    });
   }
 }

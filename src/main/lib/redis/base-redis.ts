@@ -1,7 +1,7 @@
 import { Cluster, Redis as IORedisOrig } from 'ioredis';
 import { uniq } from 'lodash';
 
-import { listToKey, parseKey } from 'lib/key';
+import { listToKey, parseKey } from '../../../lib/key';
 
 import { AskedRedisAuthData, KeyData, PrefixesAndKeys, SshRedisAddress } from './types';
 

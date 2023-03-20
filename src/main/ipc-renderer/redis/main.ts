@@ -2,8 +2,7 @@ import { BrowserWindow } from 'electron';
 
 import { Connection } from 'data';
 
-import { KeyData, PrefixesAndKeys, Redis, SshRedisAddress } from 'main/lib/redis';
-
+import { KeyData, PrefixesAndKeys, Redis, SshRedisAddress } from '../../lib/redis';
 import { getIpcMainBase } from '../main-base';
 import { Channel, IpcMainBase } from '../types';
 
@@ -34,6 +33,10 @@ async function handleDeleteRedis(id: string): Promise<void> {
 
 async function handleConnectSsh(id: string): Promise<Record<string, SshRedisAddress>> {
   return getRedis(id).connectSsh();
+}
+
+async function handleDisconnectSsh(id: string): Promise<void> {
+  return getRedis(id).disconnectSsh();
 }
 
 async function handleConnectRedis({
@@ -87,6 +90,7 @@ export const redisMain: IpcMainBase<never, never, RedisInvokeData> = {
     ipcMainBase.handle('CREATE_REDIS', handleCreateRedis);
     ipcMainBase.handle('DELETE_REDIS', handleDeleteRedis);
     ipcMainBase.handle('CONNECT_SSH', handleConnectSsh);
+    ipcMainBase.handle('DISCONNECT_SSH', handleDisconnectSsh);
     ipcMainBase.handle('CONNECT_REDIS', handleConnectRedis);
     ipcMainBase.handle('DISCONNECT', handleDisconnect);
     ipcMainBase.handle('GET_PREFIXES_AND_KEYS', handleGetPrefixesAndKeys);

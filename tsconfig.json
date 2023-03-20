@@ -22,6 +22,7 @@
       "main/*": ["main/*"],
       "renderer/*": ["renderer/*"],
       "data": ["data"],
+      "texts": ["texts"],
       "*" : ["renderer/@types/*"],
     }
   },

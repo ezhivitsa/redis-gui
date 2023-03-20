@@ -75,6 +75,10 @@ export class Redis {
     return window.electron.redis.connectSsh(this.id);
   }
 
+  disconnectSsh(): Promise<void> {
+    return window.electron.redis.disconnectSsh(this.id);
+  }
+
   async connectRedis(sshResultData: Record<string, SshRedisAddress>): Promise<void> {
     return window.electron.redis.connectRedis({ id: this.id, sshData: cloneDeep(sshResultData) });
   }

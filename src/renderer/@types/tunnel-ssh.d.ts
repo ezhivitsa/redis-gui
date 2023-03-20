@@ -3,7 +3,7 @@ declare module 'tunnel-ssh' {
   import { ConnectConfig, Client } from 'ssh2';
 
   export function createTunnel(
-    tunnelOptions: createTunnel.Config,
+    tunnelOptions: createTunnel.TunnelOptions,
     serverOptions: ListenOptions,
     sshOptions: ConnectConfig,
     forwardOptions: createTunnel.ForwardOptions,

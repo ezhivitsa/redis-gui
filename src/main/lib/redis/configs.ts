@@ -1,7 +1,14 @@
 import { ClusterNode, ClusterOptions, RedisOptions } from 'ioredis';
 import { ConnectConfig as SshConfig } from 'ssh2';
 
-import { ConnectionAdvanced, ConnectionAuth, ConnectionMain, ConnectionSsh, ConnectionTls, SshAuthMethod } from 'data';
+import {
+  ConnectionAdvanced,
+  ConnectionAuth,
+  ConnectionMain,
+  ConnectionSsh,
+  ConnectionTls,
+  SshAuthMethod,
+} from '../../../data';
 
 interface RedisConfigData {
   main: ConnectionMain;

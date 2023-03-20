@@ -19,6 +19,9 @@ export const redisRenderer: IpcRendererRedis = {
   connectSsh(id: string): Promise<Record<string, SshRedisAddress>> {
     return baseIpRenderer.invoke('CONNECT_SSH', id);
   },
+  disconnectSsh(id: string): Promise<void> {
+    return baseIpRenderer.invoke('DISCONNECT_SSH', id);
+  },
   connectRedis(data: { id: string; sshData: Record<string, SshRedisAddress> }): Promise<void> {
     return baseIpRenderer.invoke('CONNECT_REDIS', data);
   },
