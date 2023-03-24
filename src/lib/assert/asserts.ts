@@ -8,3 +8,8 @@ export function assertExists<T>(arg: T): asserts arg is NonNullable<T> {
     throw new Error(`Argument ${arg} is not valid`);
   }
 }
+
+export function castExists<T>(arg: T): NonNullable<T> {
+  assertExists(arg);
+  return arg;
+}

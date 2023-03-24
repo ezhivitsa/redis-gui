@@ -16,13 +16,13 @@ export const redisRenderer: IpcRendererRedis = {
   deleteRedis(id: string): Promise<void> {
     return baseIpRenderer.invoke('DELETE_REDIS', id);
   },
-  connectSsh(id: string): Promise<Record<string, SshRedisAddress>> {
+  connectSsh(id: string): Promise<{ data?: Record<string, SshRedisAddress>; error?: string }> {
     return baseIpRenderer.invoke('CONNECT_SSH', id);
   },
   disconnectSsh(id: string): Promise<void> {
     return baseIpRenderer.invoke('DISCONNECT_SSH', id);
   },
-  connectRedis(data: { id: string; sshData: Record<string, SshRedisAddress> }): Promise<void> {
+  connectRedis(data: { id: string; sshData: Record<string, SshRedisAddress> }): Promise<{ error?: string }> {
     return baseIpRenderer.invoke('CONNECT_REDIS', data);
   },
   disconnect(id: string): Promise<void> {

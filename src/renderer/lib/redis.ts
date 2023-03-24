@@ -2,7 +2,7 @@ import { cloneDeep } from 'lodash';
 
 import { Connection } from 'data';
 
-import { assertExists } from 'lib/assert';
+import { assertExists, castExists } from 'lib/assert';
 
 import { KeyData, PrefixesAndKeys, SshRedisAddress } from 'main/lib/redis';
 
@@ -71,8 +71,13 @@ export class Redis {
     await this.connectRedis(sshResultData);
   }
 
-  connectSsh(): Promise<Record<string, SshRedisAddress>> {
-    return window.electron.redis.connectSsh(this.id);
+  async connectSsh(): Promise<Record<string, SshRedisAddress>> {
+    const { data, error } = await window.electron.redis.connectSsh(this.id);
+    if (error) {
+      throw new Error(error);
+    } else {
+      return castExists(data);
+    }
   }
 
   disconnectSsh(): Promise<void> {
@@ -80,7 +85,10 @@ export class Redis {
   }
 
   async connectRedis(sshResultData: Record<string, SshRedisAddress>): Promise<void> {
-    return window.electron.redis.connectRedis({ id: this.id, sshData: cloneDeep(sshResultData) });
+    const { error } = await window.electron.redis.connectRedis({ id: this.id, sshData: cloneDeep(sshResultData) });
+    if (error) {
+      throw new Error(error);
+    }
   }
 
   async disconnect(): Promise<void> {

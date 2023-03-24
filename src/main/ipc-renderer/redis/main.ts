@@ -31,8 +31,17 @@ async function handleDeleteRedis(id: string): Promise<void> {
   delete redisStore[id];
 }
 
-async function handleConnectSsh(id: string): Promise<Record<string, SshRedisAddress>> {
-  return getRedis(id).connectSsh();
+async function handleConnectSsh(id: string): Promise<{ data?: Record<string, SshRedisAddress>; error?: string }> {
+  try {
+    const data = await getRedis(id).connectSsh();
+    return { data };
+  } catch (err) {
+    if (err instanceof Error) {
+      return { error: err.message };
+    } else {
+      return { error: 'Connection Error' };
+    }
+  }
 }
 
 async function handleDisconnectSsh(id: string): Promise<void> {
@@ -45,8 +54,17 @@ async function handleConnectRedis({
 }: {
   id: string;
   sshData: Record<string, SshRedisAddress>;
-}): Promise<void> {
-  return getRedis(id).connectRedis(sshData);
+}): Promise<{ error?: string }> {
+  try {
+    await getRedis(id).connectRedis(sshData);
+    return {};
+  } catch (err) {
+    if (err instanceof Error) {
+      return { error: err.message };
+    } else {
+      return { error: 'Connection Error' };
+    }
+  }
 }
 
 async function handleDisconnect(id: string): Promise<void> {

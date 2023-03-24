@@ -12,9 +12,9 @@ export interface BaseRedis {
 export type RedisInvokeData =
   | BaseInvokeEvent<'CREATE_REDIS', Omit<Connection, 'id'>, string>
   | BaseInvokeEvent<'DELETE_REDIS', string, void>
-  | BaseInvokeEvent<'CONNECT_SSH', string, Record<string, SshRedisAddress>>
+  | BaseInvokeEvent<'CONNECT_SSH', string, { data?: Record<string, SshRedisAddress>; error?: string }>
   | BaseInvokeEvent<'DISCONNECT_SSH', string, void>
-  | BaseInvokeEvent<'CONNECT_REDIS', { id: string; sshData: Record<string, SshRedisAddress> }, void>
+  | BaseInvokeEvent<'CONNECT_REDIS', { id: string; sshData: Record<string, SshRedisAddress> }, { error?: string }>
   | BaseInvokeEvent<'DISCONNECT', string, void>
   | BaseInvokeEvent<'GET_PREFIXES_AND_KEYS', { id: string; prefix: string[] }, PrefixesAndKeys>
   | BaseInvokeEvent<'GET_KEY_DATA', { id: string; prefix: string[] }, KeyData | undefined>
@@ -27,9 +27,9 @@ export type RedisInvokeData =
 export interface IpcRendererRedis {
   createRedis(data: Omit<Connection, 'id'>): Promise<string>;
   deleteRedis(id: string): Promise<void>;
-  connectSsh(id: string): Promise<Record<string, SshRedisAddress>>;
+  connectSsh(id: string): Promise<{ data?: Record<string, SshRedisAddress>; error?: string }>;
   disconnectSsh(id: string): Promise<void>;
-  connectRedis(data: { id: string; sshData: Record<string, SshRedisAddress> }): Promise<void>;
+  connectRedis(data: { id: string; sshData: Record<string, SshRedisAddress> }): Promise<{ error?: string }>;
   disconnect(id: string): Promise<void>;
   getPrefixesAndKeys(data: { id: string; prefix: string[] }): Promise<PrefixesAndKeys>;
   getKeyData(data: { id: string; prefix: string[] }): Promise<KeyData | undefined>;
