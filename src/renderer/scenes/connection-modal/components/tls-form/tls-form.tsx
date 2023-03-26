@@ -1,7 +1,8 @@
 import { FieldHelperProps, FieldInputProps, FieldMetaProps, useField } from 'formik';
 import { ReactElement, ReactNode } from 'react';
 
-import { AuthenticationMethod, InvalidHostnames } from 'renderer/lib/db';
+import { AuthenticationMethod, InvalidHostnames } from 'data';
+
 import { useStyles } from 'renderer/lib/theme';
 
 import { Checkbox, CheckboxSize, CheckboxWidth } from 'renderer/ui/checkbox';

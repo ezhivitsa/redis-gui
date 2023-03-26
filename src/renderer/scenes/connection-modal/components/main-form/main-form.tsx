@@ -2,7 +2,8 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FieldArray, FieldArrayRenderProps, FieldHelperProps, FieldInputProps, FieldMetaProps, useField } from 'formik';
 import { ReactElement, ReactNode } from 'react';
 
-import { ConnectionType } from 'renderer/lib/db';
+import { ConnectionType } from 'data';
+
 import { useStyles } from 'renderer/lib/theme';
 
 import { Button, ButtonSize } from 'renderer/ui/button';

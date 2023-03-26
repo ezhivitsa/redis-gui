@@ -1,8 +1,9 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
+import { Connection } from 'data';
+
 import { PageState } from 'renderer/types';
 
-import { Connection } from 'renderer/lib/db';
 import { calculatePageState } from 'renderer/lib/page';
 import { Redis } from 'renderer/lib/redis';
 

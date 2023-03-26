@@ -1,6 +1,6 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import { Connection } from 'renderer/lib/db';
+import { Connection } from 'data';
 
 import { connectionsClient } from 'renderer/data';
 

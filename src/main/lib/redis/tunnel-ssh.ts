@@ -9,6 +9,9 @@ import { AskedSshAuthData, SshRedisAddress } from './types';
 
 const LOCAL_HOST = '127.0.0.1';
 
+// Initial port for creating ssh server
+let PORT = 40000;
+
 export class TunnelSsh {
   private _sshServer?: Server;
   private _sshClient?: Client;
@@ -29,7 +32,7 @@ export class TunnelSsh {
       passphrase: this._config.passphrase || data.passphrase,
     };
 
-    return createTunnel({ autoClose: true }, { port }, config, {
+    return createTunnel({ autoClose: true }, { port: PORT++ }, config, {
       srcAddr: LOCAL_HOST,
       srcPort: port,
       dstAddr: host,
@@ -45,50 +48,6 @@ export class TunnelSsh {
         port: (server.address() as AddressInfo).port,
       };
     });
-    // return Promise.resolve(undefined);
-    // return new Promise((resolve, reject) => {
-    //   if (!this._config || !host || !port) {
-    //     resolve(undefined);
-    //     return;
-    //   }
-
-    //   const config: ConnectConfig = {
-    //     ...this._config,
-    //     password: this._config.password || data.password,
-    //     passphrase: this._config.passphrase || data.passphrase,
-    //   };
-
-    //   const conn = new Client();
-    //   conn
-    //     .on('ready', () => {
-    //       const server = (this._sshServer = createServer(function (sock) {
-    //         const { remoteAddress, remotePort } = sock;
-    //         if (!remoteAddress || !remotePort) {
-    //           return;
-    //         }
-
-    //         conn.forwardOut(remoteAddress, remotePort, host, port, (err, stream) => {
-    //           if (err) {
-    //             sock.end();
-    //           } else {
-    //             sock.pipe(stream).pipe(sock);
-    //           }
-    //         });
-    //       }).listen(0, function () {
-    //         resolve({
-    //           originalHost: host,
-    //           originalPort: port,
-    //           host: LOCAL_HOST,
-    //           port: (server.address() as AddressInfo).port,
-    //         });
-    //       }));
-    //     })
-    //     .on('error', (err) => {
-    //       reject(err);
-    //     });
-
-    //   conn.connect(config);
-    // });
   }
 
   async connect(main: ConnectionMain, data: AskedSshAuthData): Promise<Record<string, SshRedisAddress>> {

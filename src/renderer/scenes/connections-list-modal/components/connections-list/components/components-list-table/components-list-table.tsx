@@ -1,6 +1,7 @@
 import { ReactElement, ReactNode } from 'react';
 
-import { Connection } from 'renderer/lib/db';
+import { Connection } from 'data';
+
 import { useStyles } from 'renderer/lib/theme';
 
 import { Table, TableSize } from 'renderer/ui/table';

@@ -1,8 +1,9 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
+import { AuthenticationMethod, Connection, ConnectionType, InvalidHostnames, SshAuthMethod } from 'data';
+
 import { SshRedisAddress } from 'main/lib/redis';
 
-import { AuthenticationMethod, Connection, ConnectionType, InvalidHostnames, SshAuthMethod } from 'renderer/lib/db';
 import { Redis } from 'renderer/lib/redis';
 
 import { ConnectionStore, ConnectionsStore } from 'renderer/stores';

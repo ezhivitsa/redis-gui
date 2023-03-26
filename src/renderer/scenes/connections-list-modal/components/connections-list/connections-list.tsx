@@ -1,9 +1,10 @@
 import { observer } from 'mobx-react-lite';
 import { ReactElement, ReactNode } from 'react';
 
+import { Connection } from 'data';
+
 import { PageState } from 'renderer/types';
 
-import { Connection } from 'renderer/lib/db';
 import { useStyles } from 'renderer/lib/theme';
 
 import { Paragraph, ParagraphSize } from 'renderer/ui/paragraph';
